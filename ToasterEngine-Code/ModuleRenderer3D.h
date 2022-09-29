@@ -22,19 +22,6 @@ public:
 	// Instantly Color Change
 	void SetBGColor(int R, int G, int B);
 
-	// Change by time
-	void ChangeColor(Color colorToChange);
-
-	// Updates color by dt
-	void ColorUpdate();
-
-	// 2D Textures Render
-
-	uint LoadTexture(const char* path);
-	void UnloadTexture(uint id);
-
-	void DrawTexture(uint texture, vec3 pos, float size, bool orientationY = true);
-
 public:
 
 	p2List<uint> textures;
