@@ -88,12 +88,6 @@ bool ModuleRenderer3D::Init()
 		lights[0].SetPos(0.0f, 0.0f, 2.5f);
 		lights[0].Init();
 
-		lights[1].ref = GL_LIGHT1;
-		lights[1].ambient.Set(0.1f, 0.1f, 0.1f, 1.0f);
-		lights[1].diffuse.Set(0.75f, 0.75f, 0.75f, 1.0f);
-		lights[1].SetPos(0.0f, 100.0f, 0.0f);
-		lights[1].Init();
-
 		GLfloat MaterialAmbient[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, MaterialAmbient);
 
@@ -101,7 +95,7 @@ bool ModuleRenderer3D::Init()
 		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, MaterialDiffuse);
 
 		glEnable(GL_DEPTH_TEST);
-		//glEnable(GL_CULL_FACE);
+		glEnable(GL_CULL_FACE);
 
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -137,72 +131,11 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	// light 0 on cam pos
 	lights[0].SetPos(app->camera->Position.x, app->camera->Position.y, app->camera->Position.z);
 
-	lights[1].SetPos(app->scene_intro->sun.SunBall.GetPos().x, app->scene_intro->sun.SunBall.GetPos().y, app->scene_intro->sun.SunBall.GetPos().z);
-
 	for (uint i = 0; i < MAX_LIGHTS; ++i) {
 		lights[i].Render();
 	}
 
-	// ====================================
-	//		   	 Color change
-	// ====================================
-
-	if (app->scene_intro->sun.SunBall.GetPos().y < 100 && app->scene_intro->sun.SunBall.GetPos().y > -50) {
-		ChangeColor(Orange);
-	}
-	if (app->scene_intro->sun.SunBall.GetPos().y < -50) {
-		ChangeColor(Black);
-	}
-	if (app->scene_intro->sun.SunBall.GetPos().y > 100) {
-		ChangeColor(Cyan);
-	}
-
-	if (colorChanged != true) {
-		ColorUpdate();
-	}
-
 	return UPDATE_CONTINUE;
-}
-
-void ModuleRenderer3D::ColorUpdate() {
-	// R
-	if (currentColor.r < desiredColor.r) {
-		currentColor.r += colorChangeSpeed;
-	}
-	else if (currentColor.r > desiredColor.r) {
-		currentColor.r -= colorChangeSpeed;
-	}
-	else {
-		redChanged = true;
-	}
-
-	// G
-	if (currentColor.g < desiredColor.g) {
-		currentColor.g += colorChangeSpeed;
-	}
-	else if (currentColor.g > desiredColor.g) {
-		currentColor.g -= colorChangeSpeed;
-	}
-	else {
-		greenChanged = true;
-	}
-
-	// B
-	if (currentColor.b < desiredColor.b) {
-		currentColor.b += colorChangeSpeed;
-	}
-	else if (currentColor.b > desiredColor.b) {
-		currentColor.b -= colorChangeSpeed;
-	}
-	else {
-		blueChanged = true;
-	}
-
-	glClearColor(currentColor.r, currentColor.g, currentColor.b, 1.0f);
-
-	if (redChanged == true && greenChanged == true && blueChanged == true) {
-		colorChanged = true;
-	}
 }
 
 // PostUpdate present buffer to screen
@@ -239,65 +172,4 @@ void ModuleRenderer3D::OnResize(int width, int height)
 void ModuleRenderer3D::SetBGColor(int R, int G, int B)
 {
 	glClearColor(R, G, B, 1.0f);
-}
-
-void ModuleRenderer3D::ChangeColor(Color colorToChange) {
-	desiredColor = colorToChange;
-	colorChanged = redChanged = greenChanged = blueChanged = false;
-}
-
-uint ModuleRenderer3D::LoadTexture(const char* path) {
-	LOG("Loading texture");
-	SDL_Surface* surface = IMG_Load(path);
-
-	if (surface == NULL)
-	{
-		LOG("error loading image %s", IMG_GetError());
-		return 0;
-	}
-
-	Uint32 texture = NULL;
-
-	glGenTextures(1, &texture);
-
-	glBindTexture(GL_TEXTURE_2D, texture);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface->w, surface->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, surface->pixels);
-	int ret = glGetError();
-	if (ret != GL_NO_ERROR)
-	{
-		LOG("GL Error in loadTexture: %i", ret);
-	}
-
-	SDL_FreeSurface(surface);
-	return texture;
-}
-
-void ModuleRenderer3D::DrawTexture(uint texture, vec3 pos, float size, bool orientationY) {
-
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, texture);
-
-	glBegin(GL_QUADS);
-	if (orientationY == true) {
-		glTexCoord2f(0, 0); glVertex3f(pos.x, pos.y, pos.z);
-		glTexCoord2f(0, 1); glVertex3f(pos.x, pos.y + size, pos.z);
-		glTexCoord2f(1, 1); glVertex3f(pos.x + size, pos.y + size, pos.z);
-		glTexCoord2f(1, 0); glVertex3f(pos.x + size, pos.y, pos.z);
-	}
-	else {
-		pos.x -= 37.5;
-		pos.y += 0;
-		pos.z -= 37.5;
-		glTexCoord2f(0, 0); glVertex3f(pos.x, pos.y, pos.z);
-		glTexCoord2f(0, 1); glVertex3f(pos.x, pos.y, pos.z + size);
-		glTexCoord2f(1, 1); glVertex3f(pos.x + size, pos.y, pos.z + size);
-		glTexCoord2f(1, 0); glVertex3f(pos.x + size, pos.y, pos.z);
-	}
-	glEnd();
-
-	glDisable(GL_TEXTURE_2D);
-
 }
