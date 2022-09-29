@@ -8,27 +8,18 @@
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="Color.cpp">
-      <Filter>Sources\Cosas utiles</Filter>
+      <Filter>Sources\Tools</Filter>
     </ClCompile>
     <ClCompile Include="glmath.cpp">
-      <Filter>Sources\Cosas utiles</Filter>
+      <Filter>Sources\Tools</Filter>
     </ClCompile>
     <ClCompile Include="log.cpp">
-      <Filter>Sources\Cosas utiles</Filter>
+      <Filter>Sources\Tools</Filter>
     </ClCompile>
     <ClCompile Include="Timer.cpp">
-      <Filter>Sources\Cosas utiles\Timer</Filter>
+      <Filter>Sources\Tools\Timer</Filter>
     </ClCompile>
     <ClCompile Include="Light.cpp">
-      <Filter>Sources\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="ModuleRenderer3D.cpp">
-      <Filter>Sources\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="ModuleWindow.cpp">
-      <Filter>Sources\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="ModuleCamera3D.cpp">
       <Filter>Sources\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Primitive.cpp">
@@ -40,6 +31,15 @@
     <ClCompile Include="ModuleSceneIntro.cpp">
       <Filter>Sources\Gameplay</Filter>
     </ClCompile>
+    <ClCompile Include="ModuleCamera3D.cpp">
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleRenderer3D.cpp">
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleWindow.cpp">
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -49,33 +49,24 @@
       <Filter>Sources</Filter>
     </ClInclude>
     <ClInclude Include="Color.h">
-      <Filter>Sources\Cosas utiles</Filter>
+      <Filter>Sources\Tools</Filter>
     </ClInclude>
     <ClInclude Include="glmath.h">
-      <Filter>Sources\Cosas utiles</Filter>
+      <Filter>Sources\Tools</Filter>
     </ClInclude>
     <ClInclude Include="p2DynArray.h">
-      <Filter>Sources\Cosas utiles</Filter>
+      <Filter>Sources\Tools</Filter>
     </ClInclude>
     <ClInclude Include="p2List.h">
-      <Filter>Sources\Cosas utiles</Filter>
+      <Filter>Sources\Tools</Filter>
     </ClInclude>
     <ClInclude Include="p2Point.h">
-      <Filter>Sources\Cosas utiles</Filter>
+      <Filter>Sources\Tools</Filter>
     </ClInclude>
     <ClInclude Include="Timer.h">
-      <Filter>Sources\Cosas utiles\Timer</Filter>
+      <Filter>Sources\Tools\Timer</Filter>
     </ClInclude>
     <ClInclude Include="Light.h">
-      <Filter>Sources\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="ModuleRenderer3D.h">
-      <Filter>Sources\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="ModuleWindow.h">
-      <Filter>Sources\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="ModuleCamera3D.h">
       <Filter>Sources\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Primitive.h">
@@ -93,16 +84,19 @@
     <ClInclude Include="resource.h">
       <Filter>Resources</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleCamera3D.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleRenderer3D.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleWindow.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Sources">
       <UniqueIdentifier>{77c82dfb-0a16-4dcf-aa48-a8d530e6bdfd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Sources\Cosas utiles">
-      <UniqueIdentifier>{a4a3eef1-8011-4fdb-8918-abc87c273c96}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Sources\Cosas utiles\Timer">
-      <UniqueIdentifier>{1a653962-d2f9-448e-8b2e-e6ea286a4252}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\Physics">
       <UniqueIdentifier>{0fd8c2b6-d1c4-4b01-aa03-1e4b3ba7d713}</UniqueIdentifier>
@@ -118,6 +112,12 @@
     </Filter>
     <Filter Include="Resources">
       <UniqueIdentifier>{d8de4395-6c34-4b90-bb49-04cec04be843}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Tools">
+      <UniqueIdentifier>{a4a3eef1-8011-4fdb-8918-abc87c273c96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Tools\Timer">
+      <UniqueIdentifier>{1a653962-d2f9-448e-8b2e-e6ea286a4252}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
