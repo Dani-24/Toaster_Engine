@@ -9,7 +9,6 @@
 
 #include "glmath.h"
 #include <cmath>
-#include "Bullet/include/btBulletDynamicsCommon.h"
 
 // ------------------------------------------------------------
 Primitive::Primitive() : transform(IdentityMatrix), color(White), wire(false), axis(false), type(PrimitiveTypes::Primitive_Point)
@@ -102,15 +101,15 @@ void Primitive::SetRotation(float angle, const vec3 &u)
 	transform.rotate(angle, u);
 }
 
-void Primitive::SetRotationEuler(btQuaternion q)
-{
-	float angle = 2 * acos(q.getW());
-	float x = q.getX() / sqrt(1 - q.getW() * q.getW());
-	float y = q.getY() / sqrt(1 - q.getW() * q.getW());
-	float z = q.getZ() / sqrt(1 - q.getW() * q.getW());
-
-	transform.rotate(angle, {x,y,z});
-}
+//void Primitive::SetRotationEuler(btQuaternion q)
+//{
+//	float angle = 2 * acos(q.getW());
+//	float x = q.getX() / sqrt(1 - q.getW() * q.getW());
+//	float y = q.getY() / sqrt(1 - q.getW() * q.getW());
+//	float z = q.getZ() / sqrt(1 - q.getW() * q.getW());
+//
+//	transform.rotate(angle, {x,y,z});
+//}
 
 // ------------------------------------------------------------
 void Primitive::Scale(float x, float y, float z)
