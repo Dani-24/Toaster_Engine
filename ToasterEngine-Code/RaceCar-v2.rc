@@ -61,8 +61,8 @@ IDI_ICON1               ICON                    "icon1.ico"
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,0,0,0
- PRODUCTVERSION 1,0,0,0
+ FILEVERSION 0,0,0,1
+ PRODUCTVERSION 0,0,0,1
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -78,13 +78,13 @@ BEGIN
         BLOCK "0c0a04b0"
         BEGIN
             VALUE "CompanyName", "Dani Toledo"
-            VALUE "FileDescription", "Best race car game EVER"
-            VALUE "FileVersion", "1.0.0.0"
-            VALUE "InternalName", "RaceCar.exe"
+            VALUE "FileDescription", "Toaster Engine"
+            VALUE "FileVersion", "0.0.0.1"
+            VALUE "InternalName", "Toaster.exe"
             VALUE "LegalCopyright", "Copyright (C) 2022"
-            VALUE "OriginalFilename", "RaceCar.exe"
-            VALUE "ProductName", "Racing GP Piston Cup ?"
-            VALUE "ProductVersion", "1.0.0.0"
+            VALUE "OriginalFilename", "Toaster.exe"
+            VALUE "ProductName", "Toaster Engine by Dani Toledo"
+            VALUE "ProductVersion", "0.0.0.1"
         END
     END
     BLOCK "VarFileInfo"
