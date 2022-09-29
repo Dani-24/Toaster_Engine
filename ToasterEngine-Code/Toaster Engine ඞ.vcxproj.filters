@@ -121,7 +121,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="RaceCar-v2.rc">
+    <ResourceCompile Include="ToasterEngine-v2.rc">
       <Filter>Resources</Filter>
     </ResourceCompile>
   </ItemGroup>
