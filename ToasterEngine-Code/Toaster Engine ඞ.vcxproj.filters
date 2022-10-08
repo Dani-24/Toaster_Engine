@@ -75,6 +75,15 @@
     <ClInclude Include="glmath.h">
       <Filter>Sources\Tools</Filter>
     </ClInclude>
+    <ClInclude Include="p2DynArray.h">
+      <Filter>Sources\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="p2List.h">
+      <Filter>Sources\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="p2Point.h">
+      <Filter>Sources\Tools</Filter>
+    </ClInclude>
     <ClInclude Include="Timer.h">
       <Filter>Sources\Tools\Timer</Filter>
     </ClInclude>
