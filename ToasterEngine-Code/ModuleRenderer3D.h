@@ -24,7 +24,7 @@ public:
 
 public:
 
-	p2List<uint> textures;
+	std::vector<uint> textures;
 
 	Light lights[MAX_LIGHTS];
 	SDL_GLContext context;
@@ -33,7 +33,6 @@ public:
 
 private:
 	// Color
-	Timer colorChangeTimer;
 	Color currentColor, desiredColor;
 	bool colorChanged, redChanged, greenChanged, blueChanged;
 	float colorChangeSpeed = 0.005f;
