@@ -23,13 +23,12 @@ Application::Application()
 
 Application::~Application()
 {
-	p2List_item<Module*>* item = list_modules.getLast();
-
-	while(item != NULL)
-	{
-		delete item->data;
-		item = item->prev;
+	for (int i = list_modules.size() - 1; i >= 0; i--) {
+		delete list_modules[i];
+		list_modules[i] = nullptr;
 	}
+
+	list_modules.clear();
 }
 
 bool Application::Init()
@@ -37,22 +36,15 @@ bool Application::Init()
 	bool ret = true;
 
 	// Call Init() in all modules
-	p2List_item<Module*>* item = list_modules.getFirst();
-
-	while(item != NULL && ret == true)
-	{
-		ret = item->data->Init();
-		item = item->next;
+	for (uint i = 0; i < list_modules.size() && ret == true; i++) {
+		ret = list_modules[i]->Init();
 	}
 
 	// After all Init calls we call Start() in all modules
-	LOG("Application Start --------------");
-	item = list_modules.getFirst();
-
-	while(item != NULL && ret == true)
-	{
-		ret = item->data->Start();
-		item = item->next;
+	LOG("Application Startooooooooooo");
+	
+	for (uint i = 0; i < list_modules.size() && ret == true; i++) {
+		list_modules[i]->Start();
 	}
 	
 	ms_timer.Start();
@@ -87,28 +79,18 @@ update_status Application::Update()
 	update_status ret = UPDATE_CONTINUE;
 	PrepareUpdate();
 	
-	p2List_item<Module*>* item = list_modules.getFirst();
-	
-	while(item != NULL && ret == UPDATE_CONTINUE)
-	{
-		ret = item->data->PreUpdate(dt);
-		item = item->next;
+	// cual era el objetivo de p2List y p2Point si el pto visual tiene funciones que hacen lo mismo y mejor
+
+	for (uint i = 0; i < list_modules.size() && ret == UPDATE_CONTINUE; i++) {
+		ret = list_modules[i]->PreUpdate(dt);
 	}
 
-	item = list_modules.getFirst();
-
-	while(item != NULL && ret == UPDATE_CONTINUE)
-	{
-		ret = item->data->Update(dt);
-		item = item->next;
+	for (uint i = 0; i < list_modules.size() && ret == UPDATE_CONTINUE; i++) {
+		ret = list_modules[i]->Update(dt);
 	}
 
-	item = list_modules.getFirst();
-
-	while(item != NULL && ret == UPDATE_CONTINUE)
-	{
-		ret = item->data->PostUpdate(dt);
-		item = item->next;
+	for (uint i = 0; i < list_modules.size() && ret == UPDATE_CONTINUE; i++) {
+		ret = list_modules[i]->PostUpdate(dt);
 	}
 
 	FinishUpdate();
@@ -118,17 +100,15 @@ update_status Application::Update()
 bool Application::CleanUp()
 {
 	bool ret = true;
-	p2List_item<Module*>* item = list_modules.getLast();
 
-	while(item != NULL && ret == true)
-	{
-		ret = item->data->CleanUp();
-		item = item->prev;
+	for (uint i = list_modules.size() - 1; i >= 0 && ret == true; i--) {
+		ret = list_modules[i]->CleanUp();
 	}
+
 	return ret;
 }
 
 void Application::AddModule(Module* mod)
 {
-	list_modules.add(mod);
+	list_modules.push_back(mod);
 }
