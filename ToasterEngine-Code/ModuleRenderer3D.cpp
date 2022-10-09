@@ -6,16 +6,14 @@
 #pragma comment (lib, "Glew/libx86/glew32.lib") /* link Microsoft OpenGL lib   */
 
 #include "Glew/include/glew.h"
-#include <Windows.h>
-#include "SDL\include\SDL_opengl.h"
 #include <gl/GL.h>
 #include <gl/GLU.h>
 
+#include <Windows.h>
+#include "SDL\include\SDL_opengl.h"
+
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
-
-#include "SDL_image/include/SDL_image.h"
-#pragma comment( lib, "SDL_image/libx86/SDL2_image.lib" )
 
 #include "ImGui/imgui.h"
 #include "ImGui/backends/imgui_impl_sdl.h"
@@ -110,6 +108,7 @@ bool ModuleRenderer3D::Init()
 		GLfloat MaterialDiffuse[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, MaterialDiffuse);
 
+		// COSAS COMO EL CULL (CORTE DE COSAS)
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_CULL_FACE);
 
@@ -123,6 +122,8 @@ bool ModuleRenderer3D::Init()
 		lights[1].Active(true);
 		glEnable(GL_LIGHTING);
 		glEnable(GL_COLOR_MATERIAL);
+
+		glEnable(GL_TEXTURE_2D);
 	}
 
 	// Projection matrix for
@@ -210,8 +211,6 @@ bool ModuleRenderer3D::CleanUp()
 
 	SDL_GL_DeleteContext(context);
 
-	IMG_Quit();
-
 	return true;
 }
 
@@ -231,3 +230,66 @@ void ModuleRenderer3D::SetBGColor(int R, int G, int B)
 {
 	glClearColor(R, G, B, 1.0f);
 }
+
+//void ModuleRenderer3D::DrawCube(float4x4 cube) {
+//	glBegin(GL_TRIANGLES);  // draw a cube with 12 triangles
+//
+//	// front face =================
+//	glVertex3fv(&cube.At(0, 0));    // v0-v1-v2
+//	glVertex3fv(&cube.At(1, 0));
+//	glVertex3fv(&cube.At(2, 0));
+//
+//	glVertex3fv(&cube.At(2, 0));    // v2-v3-v0
+//	glVertex3fv(&cube.At(0, 1));
+//	glVertex3fv(v0);
+//
+//	// right face =================
+//	glVertex3fv(v0);    // v0-v3-v4
+//	glVertex3fv(v3);
+//	glVertex3fv(v4);
+//
+//	glVertex3fv(v4);    // v4-v5-v0
+//	glVertex3fv(v5);
+//	glVertex3fv(v0);
+//
+//	// top face ===================
+//	glVertex3fv(v0);    // v0-v5-v6
+//	glVertex3fv(v5);
+//	glVertex3fv(v6);
+//
+//	glVertex3fv(v6);    // v6-v1-v0
+//	glVertex3fv(v1);
+//	glVertex3fv(v0);
+//
+//	// back
+//
+//	glVertex3fv(v5);
+//	glVertex3fv(v6);
+//	glVertex3fv(v7);
+//
+//	glVertex3fv(v7);
+//	glVertex3fv(v4);
+//	glVertex3fv(v5);
+//
+//	// left
+//
+//	glVertex3fv(v1);
+//	glVertex3fv(v2);
+//	glVertex3fv(v7);
+//
+//	glVertex3fv(v7);
+//	glVertex3fv(v6);
+//	glVertex3fv(v1);
+//
+//	// down
+//
+//	glVertex3fv(v3);
+//	glVertex3fv(v4);
+//	glVertex3fv(v7);
+//
+//	glVertex3fv(v7);
+//	glVertex3fv(v2);
+//	glVertex3fv(v3);
+//
+//	glEnd();
+//}

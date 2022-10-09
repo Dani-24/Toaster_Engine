@@ -22,6 +22,8 @@ public:
 	// Instantly Color Change
 	void SetBGColor(int R, int G, int B);
 
+	void DrawCube(float4x4 cube);
+
 public:
 
 	Light lights[MAX_LIGHTS];
