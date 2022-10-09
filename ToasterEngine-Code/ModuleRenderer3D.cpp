@@ -22,8 +22,6 @@
 #include "ImGui/backends/imgui_impl_opengl3.h"
 #include <stdio.h>
 
-#include "Module_UI.h"
-
 //#ifdef _DEBUG
 //#pragma comment (lib, "MathGeoLib/libx86/MGDebug/MathGeoLib.lib")
 //#else
