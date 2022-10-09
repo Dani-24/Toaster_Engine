@@ -1,5 +1,7 @@
 #pragma once
 
+#include "MathGeoLib/include/MathGeoLib.h"
+
 class Application;
 struct PhysBody3D;
 
@@ -49,4 +51,10 @@ public:
 
 	virtual void OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 	{}
+
+	virtual int RandomIntValue() {
+		LCG rand;
+		return rand.Int();
+	}
+
 };

@@ -24,6 +24,8 @@ bool ModuleSceneIntro::Start()
 update_status ModuleSceneIntro::Update(float dt)
 {
 
+	LOG("%d", RandomIntValue());
+
 	return UPDATE_CONTINUE;
 }
 
