@@ -31,7 +31,6 @@ public:
 
 private:
 	// Color
-	Timer colorChangeTimer;
 	Color currentColor, desiredColor;
 	bool colorChanged, redChanged, greenChanged, blueChanged;
 	float colorChangeSpeed = 0.005f;

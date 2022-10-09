@@ -30,8 +30,6 @@ bool ModuleRenderer3D::Init()
 	LOG("Creating 3D Renderer context");
 	bool ret = true;
 
-	colorChangeTimer.Start();
-
 	//Create context
 	context = SDL_GL_CreateContext(app->window->window);
 	if (context == NULL)
@@ -122,8 +120,12 @@ bool ModuleRenderer3D::Init()
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 
-	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+	// IMGUI CONFIG Flags
+
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;		// Enable Keyboard Controls
 	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+	//io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;			// Enable Docking
+	//io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
 
 	ImGui::StyleColorsDark();
 
@@ -166,6 +168,10 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 
 
 	ImGui::ShowDemoWindow();
+
+	ImGui::ShowAboutWindow();
+
+	ImGui::ShowDebugLogWindow();
 
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 
