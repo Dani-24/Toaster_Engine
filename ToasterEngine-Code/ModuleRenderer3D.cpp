@@ -22,6 +22,8 @@
 #include "ImGui/backends/imgui_impl_opengl3.h"
 #include <stdio.h>
 
+#include "Module_UI.h"
+
 //#ifdef _DEBUG
 //#pragma comment (lib, "MathGeoLib/libx86/MGDebug/MathGeoLib.lib")
 //#else
@@ -137,8 +139,8 @@ bool ModuleRenderer3D::Init()
 
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;		// Enable Keyboard Controls
 	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-	//io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;			// Enable Docking
-	//io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;			// Enable Docking
+	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
 
 	ImGui::StyleColorsDark();
 
@@ -181,18 +183,20 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 
 
 	ImGui::ShowDemoWindow();
-
 	ImGui::ShowAboutWindow();
-
 	ImGui::ShowDebugLogWindow();
 
-	ImGuiIO& io = ImGui::GetIO(); (void)io;
-
 	// Rendering
-	ImGui::Render();
+
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
+
+	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
+
+	ImGui::UpdatePlatformWindows();
+	ImGui::RenderPlatformWindowsDefault();
 
 	SDL_GL_SwapWindow(app->window->window);
 	return UPDATE_CONTINUE;

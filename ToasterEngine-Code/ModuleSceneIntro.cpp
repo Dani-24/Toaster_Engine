@@ -20,10 +20,22 @@ bool ModuleSceneIntro::Start()
 	return ret;
 }
 
+update_status ModuleSceneIntro::PreUpdate(float dt) {
+
+
+	return UPDATE_CONTINUE;
+}
+
 update_status ModuleSceneIntro::Update(float dt)
 {
 
 	//LOG("%d", RandomIntValue());
+
+	return UPDATE_CONTINUE;
+}
+
+update_status ModuleSceneIntro::PostUpdate(float dt) {
+
 
 	return UPDATE_CONTINUE;
 }
