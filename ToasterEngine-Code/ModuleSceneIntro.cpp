@@ -6,8 +6,7 @@
 #include "MathGeoLib/include/MathGeoLib.h"
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
-{
-}
+{}
 
 ModuleSceneIntro::~ModuleSceneIntro()
 {}
@@ -31,7 +30,7 @@ update_status ModuleSceneIntro::Update(float dt)
 
 bool ModuleSceneIntro::CleanUp()
 {
-	LOG("Unloading Intro scene");
+	LOG("Unloading scene");
 
 	return true;
 }

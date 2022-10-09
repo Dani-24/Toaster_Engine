@@ -3,9 +3,9 @@
 #include <gl/GL.h>
 #include <gl/GLU.h>
 #include "Primitive.h"
-#include "glut/glut.h"
 
-#pragma comment (lib, "glut/glut32.lib")
+//#include "glut/glut.h"
+//#pragma comment (lib, "glut/glut32.lib")
 
 #include "glmath.h"
 #include <cmath>
@@ -188,7 +188,7 @@ Sphere::Sphere(float radius) : Primitive(), radius(radius)
 
 void Sphere::InnerRender() const
 {
-	glutSolidSphere(radius, 25, 25);
+	//glutSolidSphere(radius, 25, 25);
 }
 
 
