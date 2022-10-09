@@ -29,7 +29,7 @@
       <Filter>Sources\Modules</Filter>
     </ClCompile>
     <ClCompile Include="ModuleSceneIntro.cpp">
-      <Filter>Sources\Gameplay</Filter>
+      <Filter>Sources\Engine</Filter>
     </ClCompile>
     <ClCompile Include="ModuleCamera3D.cpp">
       <Filter>Sources\Modules</Filter>
@@ -187,7 +187,7 @@
       <Filter>Sources\Modules</Filter>
     </ClInclude>
     <ClInclude Include="ModuleSceneIntro.h">
-      <Filter>Sources\Gameplay</Filter>
+      <Filter>Sources\Engine</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Resources</Filter>
@@ -422,9 +422,6 @@
     <Filter Include="Sources\Graphics">
       <UniqueIdentifier>{a82c5027-ded8-4f79-beff-c8e399fa9e98}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\Gameplay">
-      <UniqueIdentifier>{caed3b5a-d947-49f2-a802-7f51244d2cee}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Resources">
       <UniqueIdentifier>{d8de4395-6c34-4b90-bb49-04cec04be843}</UniqueIdentifier>
     </Filter>
@@ -457,6 +454,9 @@
     </Filter>
     <Filter Include="Sources\MathGeoLib\Algorithm\Random">
       <UniqueIdentifier>{e910d9eb-94ed-4387-833c-f606c407acd0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Engine">
+      <UniqueIdentifier>{caed3b5a-d947-49f2-a802-7f51244d2cee}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
