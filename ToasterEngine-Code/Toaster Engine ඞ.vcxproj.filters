@@ -160,6 +160,9 @@
     <ClCompile Include="ModuleEditor.cpp">
       <Filter>Sources\Engine</Filter>
     </ClCompile>
+    <ClCompile Include="parson\parson.c">
+      <Filter>Sources\Parson</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -414,6 +417,9 @@
     <ClInclude Include="ModuleEditor.h">
       <Filter>Sources\Engine</Filter>
     </ClInclude>
+    <ClInclude Include="parson\parson.h">
+      <Filter>Sources\Parson</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Sources">
@@ -463,6 +469,9 @@
     </Filter>
     <Filter Include="Sources\Engine">
       <UniqueIdentifier>{caed3b5a-d947-49f2-a802-7f51244d2cee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Parson">
+      <UniqueIdentifier>{dc819435-a4dc-46fa-a19d-410d71bcf816}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
