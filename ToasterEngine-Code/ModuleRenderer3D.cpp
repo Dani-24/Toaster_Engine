@@ -179,10 +179,9 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	ImGui_ImplSDL2_NewFrame(app->window->window);
 	ImGui::NewFrame();
 
-
 	ImGui::ShowDemoWindow();
-	ImGui::ShowAboutWindow();
-	ImGui::ShowDebugLogWindow();
+
+	app->editor->Draw();
 
 	// Rendering
 

@@ -157,6 +157,9 @@
     <ClCompile Include="MathGeoLib\include\Time\Clock.cpp">
       <Filter>Sources\MathGeoLib\Time</Filter>
     </ClCompile>
+    <ClCompile Include="ModuleEditor.cpp">
+      <Filter>Sources\Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -407,6 +410,9 @@
     </ClInclude>
     <ClInclude Include="MathGeoLib\include\Time\Clock.h">
       <Filter>Sources\MathGeoLib\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleEditor.h">
+      <Filter>Sources\Engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "MathGeoLib/include/MathGeoLib.h"
+#include "SDL/include/SDL.h"
 
 class Application;
 struct PhysBody3D;
@@ -55,6 +56,10 @@ public:
 	virtual int RandomIntValue() {
 		LCG rand;
 		return rand.Int();
+	}
+
+	virtual void OpenURL(const char* link) {
+		SDL_OpenURL(link);
 	}
 
 };
