@@ -6,7 +6,7 @@
 # User-specific files
 *.rsuser
 *.suo
-*.user
+.user
 *.userosscache
 *.sln.docstates
 
@@ -349,3 +349,18 @@ MigrationBackup/
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
 ToasterEngine-Code/Engine_Output/imgui.ini
+ToasterEngine-Code/Debug Citm/vc142.idb
+ToasterEngine-Code/Debug Citm/ToasterEngine-v2.res
+ToasterEngine-Code/Debug Citm/Toaster.tlog/Toaster.lastbuildstate
+ToasterEngine-Code/Debug Citm/Toaster.tlog/rc.write.1.tlog
+ToasterEngine-Code/Debug Citm/Toaster.tlog/rc.read.1.tlog
+ToasterEngine-Code/Debug Citm/Toaster.tlog/rc.command.1.tlog
+ToasterEngine-Code/Debug Citm/Toaster.tlog/link.write.1.tlog
+ToasterEngine-Code/Debug Citm/Toaster.tlog/link.read.1.tlog
+ToasterEngine-Code/Debug Citm/Toaster.tlog/link.command.1.tlog
+ToasterEngine-Code/Debug Citm/Toaster.tlog/CL.write.1.tlog
+ToasterEngine-Code/Debug Citm/Toaster.tlog/CL.read.1.tlog
+ToasterEngine-Code/Debug Citm/Toaster.tlog/CL.command.1.tlog
+ToasterEngine-Code/Debug Citm/Toaster Engine ඞ/Engine_Output.exe.recipe
+ToasterEngine-Code/Debug Citm/Toaster Engine ඞ/Engine_Output.exe
+ToasterEngine-Code/Debug Citm/Toaster Engine ඞ.vcxproj.FileListAbsolute.txt
