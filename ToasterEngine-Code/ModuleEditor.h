@@ -20,7 +20,12 @@ public:
 
 private:
 
+	bool showCloseMenu = false;
+	float cooldown = 0, maxCooldown = 100;
+	void AreYouSureAboutThat(bool open);
+
 	void ShowFileMenu();
 	void ShowEditMenu();
 	void SendHelpPls();
+
 };

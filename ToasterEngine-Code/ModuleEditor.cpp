@@ -53,21 +53,57 @@ void ModuleEditor::Draw(){
 
 		ImGui::EndMainMenuBar();
 	}
+
+	static bool closeOpenClose = true;
+
+	if(showCloseMenu) AreYouSureAboutThat(closeOpenClose);
 }
 
 void ModuleEditor::ShowFileMenu() {
 	if (ImGui::MenuItem("New", "Ctrl+N")) {
 		
 	}
+
 	if (ImGui::MenuItem("Open", "Ctrl+O")) {
 
 	}
+
 	if (ImGui::MenuItem("Save", "Ctrl+S")) {
 
 	}
-	if (ImGui::MenuItem("Suicide", "Ctrl+Alt+S")) {
+
+	if (ImGui::MenuItem("Save and Close", "Ctrl+Alt+F4")) {
 
 	}
+
+	if (ImGui::MenuItem("Suicide", "Ctrl+Alt+F4")) {
+		showCloseMenu = true;
+	}
+}
+
+void ModuleEditor::AreYouSureAboutThat(bool open) {
+
+	ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
+
+	if (!ImGui::Begin("This shit will close in :", &open)) {
+		ImGui::End();
+	}
+	else{
+
+		if (cooldown >= maxCooldown) {
+		}
+		else {
+			cooldown += 1;
+		}
+
+		char progressText[32];
+		sprintf(progressText, "%.0f/%.0f", cooldown, maxCooldown);
+
+		ImGui::ProgressBar(cooldown / maxCooldown, ImVec2(-1, 0), progressText);
+
+		ImGui::End();
+	}
+
 }
 
 void ModuleEditor::ShowEditMenu() {

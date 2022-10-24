@@ -1782,8 +1782,8 @@ static void ShowDemoWindowWidgets()
 
         float progress_saturated = IM_CLAMP(progress, 0.0f, 1.0f);
         char buf[32];
-        sprintf(buf, "%d/%d", (int)(progress_saturated * 1753), 1753);
-        ImGui::ProgressBar(progress, ImVec2(0.f, 0.f), buf);
+        sprintf(buf, "%d/%d %", (int)(progress_saturated * 1753), 1753);
+        ImGui::ProgressBar(progress, ImVec2(-1, 0.f), buf);
         ImGui::TreePop();
     }
 
