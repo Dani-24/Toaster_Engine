@@ -71,13 +71,13 @@
 // SDL
 // (the multi-viewports feature requires SDL features supported from SDL 2.0.4+. SDL 2.0.5+ is highly recommended)
 
-#ifdef _DEBUGCITM
+#ifdef _TOASTER
 #include <C:\Users\danieltr1\Desktop\Github\Toaster_Engine\ToasterEngine-Code/SDL\include\SDL.h>
 #include <C:\Users\danieltr1\Desktop\Github\Toaster_Engine\ToasterEngine-Code/SDL\include\SDL_syswm.h>
 #else
 #include <../../SDL/include/SDL.h>
 #include <../../SDL/include/SDL_syswm.h>
-#endif // DEBUGCITM
+#endif // _TOASTER
 
 #if defined(__APPLE__)
 #include <TargetConditionals.h>
@@ -904,7 +904,7 @@ static void ImGui_ImplSDL2_SwapBuffers(ImGuiViewport* viewport, void*)
 // SDL is graceful enough to _not_ need <vulkan/vulkan.h> so we can safely include this.
 #if SDL_HAS_VULKAN
 
-#ifdef _DEBUGCITM
+#ifdef _TOASTER
 #include <C:\Users\danieltr1\Desktop\Github\Toaster_Engine\ToasterEngine-Code/SDL\include\SDL_vulkan.h>
 #else
 #include <../../SDL/include/SDL_vulkan.h>

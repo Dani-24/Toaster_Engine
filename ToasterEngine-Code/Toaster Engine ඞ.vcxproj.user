@@ -4,7 +4,11 @@
     <LocalDebuggerWorkingDirectory>$(ProjectDir)\Engine_Output</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Citm|Win32'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Toaster|Win32'">
+    <LocalDebuggerWorkingDirectory>$(ProjectDir)\Engine_Output</LocalDebuggerWorkingDirectory>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugCitm|Win32'">
     <LocalDebuggerWorkingDirectory>$(ProjectDir)\Engine_Output</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
