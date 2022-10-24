@@ -181,7 +181,6 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	ImGui::NewFrame();
 
 	ImGui::ShowDemoWindow();
-
 	app->editor->Draw();
 
 	// Rendering

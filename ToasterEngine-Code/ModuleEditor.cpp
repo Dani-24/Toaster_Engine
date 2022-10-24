@@ -1,4 +1,4 @@
-#include "Application.h"
+﻿#include "Application.h"
 #include "ModuleEditor.h"
 
 ModuleEditor::ModuleEditor(Application* app, bool start_enabled) : Module(app, start_enabled){}
@@ -35,22 +35,66 @@ bool ModuleEditor::CleanUp() {
 
 void ModuleEditor::Draw(){
 
-	if (ImGui::BeginMenu("Help")) {
-		if (ImGui::MenuItem("About Demo")) {
-			ImGui::ShowAboutWindow();
+	if (ImGui::BeginMainMenuBar()) {
+		if (ImGui::BeginMenu("File")) {
+			ShowFileMenu();
+			ImGui::EndMenu();
 		}
 
-		if (ImGui::MenuItem("Debug Log Demo")) {
-			ImGui::ShowDebugLogWindow();
+		if (ImGui::BeginMenu("Edit")) {
+			ShowEditMenu();
+			ImGui::EndMenu();
 		}
 
-		if (ImGui::MenuItem("Engine Documentation")) {
-			OpenURL("https://github.com/Dani-24/Toaster_Engine");
+		if (ImGui::BeginMenu("Help")) {
+			SendHelpPls();
+			ImGui::EndMenu();
 		}
 
-		ImGui::EndMenu();
+		ImGui::EndMainMenuBar();
+	}
+}
+
+void ModuleEditor::ShowFileMenu() {
+	if (ImGui::MenuItem("New", "Ctrl+N")) {
+		
+	}
+	if (ImGui::MenuItem("Open", "Ctrl+O")) {
+
+	}
+	if (ImGui::MenuItem("Save", "Ctrl+S")) {
+
+	}
+	if (ImGui::MenuItem("Suicide", "Ctrl+Alt+S")) {
+
+	}
+}
+
+void ModuleEditor::ShowEditMenu() {
+	if (ImGui::MenuItem("Undo", "Ctrl+Z")) {
+
+	}
+	if (ImGui::MenuItem("Redo", "Ctrl+Alt+Z")) {
+
+	}
+	if (ImGui::MenuItem("AMOng US?", "Ctrl+SUS")) {
+
+	}
+}
+
+void ModuleEditor::SendHelpPls() {
+
+	if (ImGui::MenuItem("About Demo")) {
+		ImGui::ShowAboutWindow();
 	}
 
-	//ImGui::EndMainMenuBar();
-
+	if (ImGui::MenuItem("Debug Log Demo"))
+	{
+		ImGui::ShowDebugLogWindow();
+	}
+	
+	if (ImGui::MenuItem("Engine Documentation"))
+	{
+		OpenURL("https://github.com/Dani-24/Toaster_Engine");
+	}
 }

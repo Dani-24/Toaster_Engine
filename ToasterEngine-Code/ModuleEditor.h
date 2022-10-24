@@ -20,4 +20,7 @@ public:
 
 private:
 
+	void ShowFileMenu();
+	void ShowEditMenu();
+	void SendHelpPls();
 };
