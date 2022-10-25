@@ -20,11 +20,12 @@ public:
 
 private:
 
-	bool showCloseMenu = false;
-	float cooldown = 0, maxCooldown = 100;
-	void AreYouSureAboutThat(bool open);
+	float cooldown = 100, maxCooldown = 100, minCooldown = 0;
 
-	void ShowFileMenu();
+	bool exit = false;
+
+	void AreYouSureAboutThat(bool *open);
+
 	void ShowEditMenu();
 	void SendHelpPls();
 

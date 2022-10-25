@@ -10,22 +10,23 @@ bool ModuleEditor::Start() {
 	return true;
 }
 
-update_status ModuleEditor::PreUpdate(float dt) {
-
+update_status ModuleEditor::PreUpdate(float dt) 
+{
 	return UPDATE_CONTINUE;
 }
 
 update_status ModuleEditor::Update(float dt) {
 
-	
-
 	return UPDATE_CONTINUE;
 }
 
 update_status ModuleEditor::PostUpdate(float dt) {
-
-
-	return UPDATE_CONTINUE;
+	if (!exit) {
+		return UPDATE_CONTINUE;
+	}
+	else {
+		return UPDATE_STOP;
+	}
 }
 
 bool ModuleEditor::CleanUp() {
@@ -35,9 +36,31 @@ bool ModuleEditor::CleanUp() {
 
 void ModuleEditor::Draw(){
 
+	static bool closeOpenClose = false;
+
+	if (closeOpenClose) AreYouSureAboutThat(&closeOpenClose);
+
 	if (ImGui::BeginMainMenuBar()) {
 		if (ImGui::BeginMenu("File")) {
-			ShowFileMenu();
+			if (ImGui::MenuItem("New", "Ctrl+N")) {
+
+			}
+
+			if (ImGui::MenuItem("Open", "Ctrl+O")) {
+
+			}
+
+			if (ImGui::MenuItem("Save", "Ctrl+S")) {
+
+			}
+
+			if (ImGui::MenuItem("Save and Close", "Ctrl+Alt+F4")) {
+
+			}
+
+			if (ImGui::MenuItem("Suicide", "Ctrl+Alt+F4", &closeOpenClose)) {
+
+			}
 			ImGui::EndMenu();
 		}
 
@@ -53,47 +76,22 @@ void ModuleEditor::Draw(){
 
 		ImGui::EndMainMenuBar();
 	}
-
-	static bool closeOpenClose = true;
-
-	if(showCloseMenu) AreYouSureAboutThat(closeOpenClose);
 }
 
-void ModuleEditor::ShowFileMenu() {
-	if (ImGui::MenuItem("New", "Ctrl+N")) {
-		
-	}
-
-	if (ImGui::MenuItem("Open", "Ctrl+O")) {
-
-	}
-
-	if (ImGui::MenuItem("Save", "Ctrl+S")) {
-
-	}
-
-	if (ImGui::MenuItem("Save and Close", "Ctrl+Alt+F4")) {
-
-	}
-
-	if (ImGui::MenuItem("Suicide", "Ctrl+Alt+F4")) {
-		showCloseMenu = true;
-	}
-}
-
-void ModuleEditor::AreYouSureAboutThat(bool open) {
+void ModuleEditor::AreYouSureAboutThat(bool *open) {
 
 	ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
 
-	if (!ImGui::Begin("This shit will close in :", &open)) {
+	if (!ImGui::Begin("Closing this toaster in :", open)) {
 		ImGui::End();
 	}
 	else{
 
-		if (cooldown >= maxCooldown) {
+		if (cooldown <= minCooldown) {
+			exit = true;
 		}
 		else {
-			cooldown += 1;
+			cooldown -= 2;
 		}
 
 		char progressText[32];

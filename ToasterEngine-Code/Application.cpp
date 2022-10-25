@@ -104,7 +104,7 @@ bool Application::CleanUp()
 {
 	bool ret = true;
 
-	for (uint i = list_modules.size() - 1; i >= 0 && ret == true; i--) {
+	for (uint i = list_modules.size() - 1; i > -1 && ret == true; i--) {
 		ret = list_modules[i]->CleanUp();
 	}
 
