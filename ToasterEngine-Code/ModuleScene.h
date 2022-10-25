@@ -16,4 +16,9 @@ public:
 	bool CleanUp();
 
 private:
+
+
+public:
+	bool axis = true;
+
 };

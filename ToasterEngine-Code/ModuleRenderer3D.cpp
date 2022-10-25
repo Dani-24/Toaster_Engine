@@ -2,18 +2,7 @@
 #include "Application.h"
 #include "ModuleRenderer3D.h"
 
-#pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
-#pragma comment (lib, "Glew/libx86/glew32.lib") /* link Microsoft OpenGL lib   */
-
-#include "Glew/include/glew.h"
-#include <gl/GL.h>
-#include <gl/GLU.h>
-
-#include <Windows.h>
-#include "SDL\include\SDL_opengl.h"
-
-#pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
-#pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
+#include "OpenGL.h"
 
 #include "ImGui/imgui.h"
 #include "ImGui/backends/imgui_impl_sdl.h"
@@ -180,7 +169,6 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	ImGui_ImplSDL2_NewFrame(app->window->window);
 	ImGui::NewFrame();
 
-	ImGui::ShowDemoWindow();
 	app->editor->Draw();
 
 	// Rendering

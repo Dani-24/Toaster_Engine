@@ -1,5 +1,6 @@
 ﻿#include "Application.h"
 #include "ModuleEditor.h"
+#include "ModuleScene.h"
 
 ModuleEditor::ModuleEditor(Application* app, bool start_enabled) : Module(app, start_enabled){}
 
@@ -37,8 +38,10 @@ bool ModuleEditor::CleanUp() {
 void ModuleEditor::Draw(){
 
 	static bool closeOpenClose = false;
+	static bool showDemoWindow = false;
 
 	if (closeOpenClose) AreYouSureAboutThat(&closeOpenClose);
+	if (showDemoWindow) ImGui::ShowDemoWindow(&showDemoWindow);
 
 	if (ImGui::BeginMainMenuBar()) {
 		if (ImGui::BeginMenu("File")) {
@@ -70,12 +73,25 @@ void ModuleEditor::Draw(){
 		}
 
 		if (ImGui::BeginMenu("Help")) {
-			SendHelpPls();
+			if (ImGui::MenuItem("Show Demo Window",NULL, &showDemoWindow)) {
+
+			}
+
+			if (ImGui::MenuItem("Debug Log"))
+			{
+				
+			}
+
+			if (ImGui::MenuItem("Engine Documentation"))
+			{
+				OpenURL("https://github.com/Dani-24/Toaster_Engine");
+			}
 			ImGui::EndMenu();
 		}
 
 		ImGui::EndMainMenuBar();
 	}
+
 }
 
 void ModuleEditor::AreYouSureAboutThat(bool *open) {
@@ -114,21 +130,7 @@ void ModuleEditor::ShowEditMenu() {
 	if (ImGui::MenuItem("AMOng US?", "Ctrl+SUS")) {
 
 	}
-}
-
-void ModuleEditor::SendHelpPls() {
-
-	if (ImGui::MenuItem("About Demo")) {
-		ImGui::ShowAboutWindow();
-	}
-
-	if (ImGui::MenuItem("Debug Log Demo"))
-	{
-		ImGui::ShowDebugLogWindow();
-	}
-	
-	if (ImGui::MenuItem("Engine Documentation"))
-	{
-		OpenURL("https://github.com/Dani-24/Toaster_Engine");
+	if (ImGui::MenuItem("Show Grid", "Or Hide it")) {
+		app->scene->axis = !app->scene->axis;
 	}
 }

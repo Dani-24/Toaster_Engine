@@ -224,6 +224,7 @@
     <ClInclude Include="ModuleInput.h" />
     <ClInclude Include="ModuleScene.h" />
     <ClInclude Include="ModuleWindow.h" />
+    <ClInclude Include="OpenGL.h" />
     <ClInclude Include="parson\parson.h" />
     <ClInclude Include="Primitive.h" />
     <ClInclude Include="resource.h" />

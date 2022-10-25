@@ -27,6 +27,5 @@ private:
 	void AreYouSureAboutThat(bool *open);
 
 	void ShowEditMenu();
-	void SendHelpPls();
 
 };

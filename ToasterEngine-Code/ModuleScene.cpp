@@ -5,6 +5,8 @@
 
 #include "MathGeoLib/include/MathGeoLib.h"
 
+#include "OpenGL.h"
+
 ModuleScene::ModuleScene(Application* app, bool start_enabled) : Module(app, start_enabled)
 {}
 
@@ -31,13 +33,16 @@ update_status ModuleScene::Update(float dt)
 
 	//LOG("%d", RandomIntValue());
 
-	
-
 	return UPDATE_CONTINUE;
 }
 
 update_status ModuleScene::PostUpdate(float dt) {
 
+	if (axis) {
+		PlanePrimitive p(0, 1, 0, 0);
+		p.axis = true;
+		p.Render();
+	}
 
 	return UPDATE_CONTINUE;
 }
