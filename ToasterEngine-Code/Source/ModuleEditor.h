@@ -1,7 +1,7 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
-#include "ImGui/imgui.h"
+#include "../External/ImGui/imgui.h"
 
 class ModuleEditor : public Module 
 {

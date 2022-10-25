@@ -1,7 +1,7 @@
 #pragma once
 
-#include "MathGeoLib/include/MathGeoLib.h"
-#include "SDL/include/SDL.h"
+#include "../External/MathGeoLib/include/MathGeoLib.h"
+#include "../External/SDL/include/SDL.h"
 
 class Application;
 struct PhysBody3D;

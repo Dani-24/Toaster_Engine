@@ -75,8 +75,8 @@
 #include <C:\Users\danieltr1\Desktop\Github\Toaster_Engine\ToasterEngine-Code/SDL\include\SDL.h>
 #include <C:\Users\danieltr1\Desktop\Github\Toaster_Engine\ToasterEngine-Code/SDL\include\SDL_syswm.h>
 #else
-#include <../../SDL/include/SDL.h>
-#include <../../SDL/include/SDL_syswm.h>
+#include <../../External/SDL/include/SDL.h>
+#include <../../External/SDL/include/SDL_syswm.h>
 #endif // _TOASTER
 
 #if defined(__APPLE__)
@@ -907,7 +907,7 @@ static void ImGui_ImplSDL2_SwapBuffers(ImGuiViewport* viewport, void*)
 #ifdef _TOASTER
 #include <C:\Users\danieltr1\Desktop\Github\Toaster_Engine\ToasterEngine-Code/SDL\include\SDL_vulkan.h>
 #else
-#include <../../SDL/include/SDL_vulkan.h>
+#include <../../External/SDL/include/SDL_vulkan.h>
 #endif
 
 static int ImGui_ImplSDL2_CreateVkSurface(ImGuiViewport* viewport, ImU64 vk_instance, const void* vk_allocator, ImU64* out_vk_surface)

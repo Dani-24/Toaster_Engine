@@ -3,7 +3,7 @@
 #include "ModuleScene.h"
 #include "Primitive.h"
 
-#include "MathGeoLib/include/MathGeoLib.h"
+#include "../External/MathGeoLib/include/MathGeoLib.h"
 
 #include "OpenGL.h"
 
