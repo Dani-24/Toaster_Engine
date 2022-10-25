@@ -145,6 +145,7 @@
   <ItemGroup>
     <ClInclude Include="Application.h" />
     <ClInclude Include="Color.h" />
+    <ClInclude Include="ModuleConfig.h" />
     <ClInclude Include="glmath.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="ImGui\backends\imgui_impl_opengl3.h" />
@@ -233,6 +234,7 @@
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Color.cpp" />
+    <ClCompile Include="ModuleConfig.cpp" />
     <ClCompile Include="glmath.cpp" />
     <ClCompile Include="ImGui\backends\imgui_impl_opengl3.cpp" />
     <ClCompile Include="ImGui\backends\imgui_impl_sdl.cpp" />

@@ -9,11 +9,14 @@ Application::Application()
 	renderer3D = new ModuleRenderer3D(this);
 	camera = new ModuleCamera3D(this);
 	editor = new ModuleEditor(this);
+	config = new ModuleConfig(this);
 
 	// Main Modules
 	AddModule(window);
 	AddModule(camera);
 	AddModule(input);
+
+	AddModule(config);
 	
 	// Scenes
 	AddModule(scene);

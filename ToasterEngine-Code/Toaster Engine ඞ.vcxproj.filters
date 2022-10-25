@@ -163,6 +163,9 @@
     <ClCompile Include="parson\parson.c">
       <Filter>Sources\Parson</Filter>
     </ClCompile>
+    <ClCompile Include="ModuleConfig.cpp">
+      <Filter>Sources\Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -422,6 +425,9 @@
     </ClInclude>
     <ClInclude Include="OpenGL.h">
       <Filter>Sources\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleConfig.h">
+      <Filter>Sources\Engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
