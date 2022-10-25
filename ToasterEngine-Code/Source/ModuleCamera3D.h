@@ -30,6 +30,8 @@ public:
 	bool finish;
 	bool firstPerson;
 
+	float camSpeed = 25.0f;
+
 private:
 
 	mat4x4 ViewMatrix, ViewMatrixInverse;

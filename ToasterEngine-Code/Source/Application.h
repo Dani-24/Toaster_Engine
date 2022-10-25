@@ -20,7 +20,7 @@ public:
 	ModuleRenderer3D* renderer3D;
 	ModuleCamera3D* camera;
 	ModuleEditor* editor;
-	//ModuleConfig* config;
+	ModuleConfig* config;
 
 private:
 

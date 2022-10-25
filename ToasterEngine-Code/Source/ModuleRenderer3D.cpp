@@ -19,7 +19,6 @@ ModuleRenderer3D::ModuleRenderer3D(Application* app, bool start_enabled) : Modul
 {
 }
 
-// Destructor
 ModuleRenderer3D::~ModuleRenderer3D()
 {}
 
@@ -217,66 +216,3 @@ void ModuleRenderer3D::SetBGColor(int R, int G, int B)
 {
 	glClearColor(R, G, B, 1.0f);
 }
-
-//void ModuleRenderer3D::DrawCube(float4x4 cube) {
-//	glBegin(GL_TRIANGLES);  // draw a cube with 12 triangles
-//
-//	// front face =================
-//	glVertex3fv(&cube.At(0, 0));    // v0-v1-v2
-//	glVertex3fv(&cube.At(1, 0));
-//	glVertex3fv(&cube.At(2, 0));
-//
-//	glVertex3fv(&cube.At(2, 0));    // v2-v3-v0
-//	glVertex3fv(&cube.At(0, 1));
-//	glVertex3fv(v0);
-//
-//	// right face =================
-//	glVertex3fv(v0);    // v0-v3-v4
-//	glVertex3fv(v3);
-//	glVertex3fv(v4);
-//
-//	glVertex3fv(v4);    // v4-v5-v0
-//	glVertex3fv(v5);
-//	glVertex3fv(v0);
-//
-//	// top face ===================
-//	glVertex3fv(v0);    // v0-v5-v6
-//	glVertex3fv(v5);
-//	glVertex3fv(v6);
-//
-//	glVertex3fv(v6);    // v6-v1-v0
-//	glVertex3fv(v1);
-//	glVertex3fv(v0);
-//
-//	// back
-//
-//	glVertex3fv(v5);
-//	glVertex3fv(v6);
-//	glVertex3fv(v7);
-//
-//	glVertex3fv(v7);
-//	glVertex3fv(v4);
-//	glVertex3fv(v5);
-//
-//	// left
-//
-//	glVertex3fv(v1);
-//	glVertex3fv(v2);
-//	glVertex3fv(v7);
-//
-//	glVertex3fv(v7);
-//	glVertex3fv(v6);
-//	glVertex3fv(v1);
-//
-//	// down
-//
-//	glVertex3fv(v3);
-//	glVertex3fv(v4);
-//	glVertex3fv(v7);
-//
-//	glVertex3fv(v7);
-//	glVertex3fv(v2);
-//	glVertex3fv(v3);
-//
-//	glEnd();
-//}

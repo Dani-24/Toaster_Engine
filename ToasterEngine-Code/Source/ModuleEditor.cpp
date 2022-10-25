@@ -57,7 +57,7 @@ void ModuleEditor::Draw(){
 
 			}
 
-			if (ImGui::MenuItem("Save and Close", "Ctrl+Alt+F4")) {
+			if (ImGui::MenuItem("Save and Close", "Ctrl+Alt+S")) {
 
 			}
 
