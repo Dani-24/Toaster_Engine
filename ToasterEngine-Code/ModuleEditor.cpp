@@ -80,7 +80,7 @@ void ModuleEditor::Draw(){
 
 void ModuleEditor::AreYouSureAboutThat(bool *open) {
 
-	ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
+	ImGui::SetNextWindowSize(ImVec2(500, 400), 4);
 
 	if (!ImGui::Begin("Closing this toaster in :", open)) {
 		ImGui::End();

@@ -28,7 +28,7 @@
     <ClCompile Include="ModuleInput.cpp">
       <Filter>Sources\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="ModuleSceneIntro.cpp">
+    <ClCompile Include="ModuleScene.cpp">
       <Filter>Sources\Engine</Filter>
     </ClCompile>
     <ClCompile Include="ModuleCamera3D.cpp">
@@ -192,7 +192,7 @@
     <ClInclude Include="ModuleInput.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="ModuleSceneIntro.h">
+    <ClInclude Include="ModuleScene.h">
       <Filter>Sources\Engine</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
