@@ -20,11 +20,11 @@
 #include "ImGui/backends/imgui_impl_opengl3.h"
 #include <stdio.h>
 
-//#ifdef _DEBUG
-//#pragma comment (lib, "MathGeoLib/libx86/MGDebug/MathGeoLib.lib")
-//#else
-//#pragma comment (lib, "MathGeoLib/libx86/MGRelease/MathGeoLib.lib")
-//#endif
+#ifdef _DEBUG
+#pragma comment (lib, "MathGeoLib/libx86/MathDebug/MathGeoLib.lib")
+#else
+#pragma comment (lib, "MathGeoLib/libx86/MathRelease/MathGeoLib.lib")
+#endif
 
 ModuleRenderer3D::ModuleRenderer3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
