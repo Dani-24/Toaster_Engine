@@ -3,6 +3,8 @@
 #include "Globals.h"
 #include "glmath.h"
 
+#include"../External/MathGeoLib/include/Geometry/Frustum.h"
+
 class ModuleCamera3D : public Module
 {
 public:
@@ -13,10 +15,14 @@ public:
 	update_status Update(float dt);
 	bool CleanUp();
 
-	void Look(const vec3 &Position, const vec3 &Reference, bool RotateAroundReference = false);
-	void LookAt(const vec3 &Spot);
-	void Move(const vec3 &Movement);
-	float* GetViewMatrix();
+	void Look(Frustum& position, const float3&Reference, bool RotateAroundReference = false);
+	void LookAt(const float3 &Spot);
+
+	void FocusCam(float3 center, float offset);
+
+	void Move(const float3 &Movement);
+	float4x4 GetViewMatrix();
+	vec3 GetPos();
 
 private:
 
@@ -24,7 +30,9 @@ private:
 
 public:
 	
-	vec3 X, Y, Z, Position, Reference;
+	Frustum camFrustum;
+
+	//vec3 X, Y, Z, Position, Reference;
 
 	bool freeCamera;
 	bool finish;
@@ -34,5 +42,5 @@ public:
 
 private:
 
-	mat4x4 ViewMatrix, ViewMatrixInverse;
+	//mat4x4 ViewMatrix, ViewMatrixInverse;
 };

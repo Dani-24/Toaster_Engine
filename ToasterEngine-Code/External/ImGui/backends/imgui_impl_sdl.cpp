@@ -72,8 +72,8 @@
 // (the multi-viewports feature requires SDL features supported from SDL 2.0.4+. SDL 2.0.5+ is highly recommended)
 
 #ifdef _TOASTER
-#include <C:\Users\danieltr1\Desktop\Github\Toaster_Engine\ToasterEngine-Code/SDL\include\SDL.h>
-#include <C:\Users\danieltr1\Desktop\Github\Toaster_Engine\ToasterEngine-Code/SDL\include\SDL_syswm.h>
+#include <C:\Users\danieltr1\Desktop\Github\Toaster_Engine\ToasterEngine-Code\External\SDL\include\SDL.h>
+#include <C:\Users\danieltr1\Desktop\Github\Toaster_Engine\ToasterEngine-Code\External\SDL\include\SDL_syswm.h>
 #else
 #include <../../External/SDL/include/SDL.h>
 #include <../../External/SDL/include/SDL_syswm.h>
@@ -905,7 +905,7 @@ static void ImGui_ImplSDL2_SwapBuffers(ImGuiViewport* viewport, void*)
 #if SDL_HAS_VULKAN
 
 #ifdef _TOASTER
-#include <C:\Users\danieltr1\Desktop\Github\Toaster_Engine\ToasterEngine-Code/SDL\include\SDL_vulkan.h>
+#include <C:\Users\danieltr1\Desktop\Github\Toaster_Engine\ToasterEngine-Code\External\SDL\include\SDL_vulkan.h>
 #else
 #include <../../External/SDL/include/SDL_vulkan.h>
 #endif
