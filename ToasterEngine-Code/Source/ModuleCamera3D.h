@@ -39,6 +39,8 @@ public:
 
 	float camSpeed = 25.0f;
 
+	bool psychoControls = true;
+
 private:
 
 	//mat4x4 ViewMatrix, ViewMatrixInverse;

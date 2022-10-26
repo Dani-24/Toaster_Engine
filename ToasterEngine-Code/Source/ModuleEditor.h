@@ -23,6 +23,7 @@ private:
 	float cooldown = 100, maxCooldown = 100, minCooldown = 0;
 
 	bool exit = false;
+	bool showingEditor = true;
 
 	void AreYouSureAboutThat(bool *open);
 

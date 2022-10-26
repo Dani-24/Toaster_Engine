@@ -1,6 +1,7 @@
 ﻿#include "Application.h"
 #include "ModuleEditor.h"
 #include "ModuleScene.h"
+#include "ModuleCamera3D.h"
 
 ModuleEditor::ModuleEditor(Application* app, bool start_enabled) : Module(app, start_enabled){}
 
@@ -45,19 +46,19 @@ void ModuleEditor::Draw(){
 
 	if (ImGui::BeginMainMenuBar()) {
 		if (ImGui::BeginMenu("File")) {
-			if (ImGui::MenuItem("New", "Ctrl+N")) {
+			if (ImGui::MenuItem("New", "WIP")) {
 
 			}
 
-			if (ImGui::MenuItem("Open", "Ctrl+O")) {
+			if (ImGui::MenuItem("Open", "WIP")) {
 
 			}
 
-			if (ImGui::MenuItem("Save", "Ctrl+S")) {
+			if (ImGui::MenuItem("Save", "WIP")) {
 
 			}
 
-			if (ImGui::MenuItem("Save and Close", "Ctrl+Alt+S")) {
+			if (ImGui::MenuItem("Save and Close", "WIP")) {
 
 			}
 
@@ -73,17 +74,44 @@ void ModuleEditor::Draw(){
 		}
 
 		if (ImGui::BeginMenu("Camera")) {
-			if (ImGui::MenuItem("Enable/Disable Phycopath Camera Controls"))
-			{
-
+			if (app->camera->psychoControls) {
+				if (ImGui::MenuItem("Disable Phycopath Camera Controls"))
+				{
+					app->camera->psychoControls = !app->camera->psychoControls;
+				}
+			}
+			else {
+				if (ImGui::MenuItem("Enable Phycopath Camera Controls"))
+				{
+					app->camera->psychoControls = !app->camera->psychoControls;
+				}
 			}
 			ImGui::EndMenu();
 		}
 
 		if (ImGui::BeginMenu("Window")) {
-			if (ImGui::MenuItem("Show/Hide editor windows"))
+			if (showingEditor)
 			{
-
+				if (ImGui::MenuItem("Hide editor windows"))
+				{
+					showingEditor = !showingEditor;
+				}
+			}
+			else {
+				if (ImGui::MenuItem("Show editor windows"))
+				{
+					showingEditor = !showingEditor;
+				}
+			}
+			if (app->scene->axis) {
+				if (ImGui::MenuItem("Hide Grid")) {
+					app->scene->axis = !app->scene->axis;
+				}
+			}
+			else {
+				if (ImGui::MenuItem("Show Grid")) {
+					app->scene->axis = !app->scene->axis;
+				}
 			}
 			ImGui::EndMenu();
 		}
@@ -93,7 +121,7 @@ void ModuleEditor::Draw(){
 
 			}
 
-			if (ImGui::MenuItem("Debug Log"))
+			if (ImGui::MenuItem("Debug Log", "WIP"))
 			{
 				
 			}
@@ -137,16 +165,13 @@ void ModuleEditor::AreYouSureAboutThat(bool *open) {
 }
 
 void ModuleEditor::ShowEditMenu() {
-	if (ImGui::MenuItem("Undo", "Ctrl+Z")) {
+	if (ImGui::MenuItem("Undo", "WIP")) {
 
 	}
-	if (ImGui::MenuItem("Redo", "Ctrl+Alt+Z")) {
+	if (ImGui::MenuItem("Redo", "WIP")) {
 
 	}
-	if (ImGui::MenuItem("AMOng US?", "Ctrl+SUS")) {
+	if (ImGui::MenuItem("AMOng US?", "WIP")) {
 
-	}
-	if (ImGui::MenuItem("Show Grid", "Or Hide it")) {
-		app->scene->axis = !app->scene->axis;
 	}
 }

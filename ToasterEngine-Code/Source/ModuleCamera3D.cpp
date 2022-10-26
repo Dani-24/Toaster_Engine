@@ -60,7 +60,7 @@ update_status ModuleCamera3D::Update(float dt)
 	}
 
 	// Movement Right Click + WASD
-	if (app->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
+	if (app->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT || !psychoControls)
 	{
 		// Camera up
 		if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) newPos.y += speed;
@@ -75,7 +75,7 @@ update_status ModuleCamera3D::Update(float dt)
 	camFrustum.pos += newPos;
 
 	// Orbit by Left Click + Alt
-	if (app->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && app->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)
+	if (app->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && app->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT || !psychoControls && app->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT)
 	{
 		int dx = -app->input->GetMouseXMotion();
 		int dy = -app->input->GetMouseYMotion();
