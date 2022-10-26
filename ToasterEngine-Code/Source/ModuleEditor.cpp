@@ -41,10 +41,14 @@ void ModuleEditor::Draw(){
 	static bool closeOpenClose = false;
 	static bool showDemoWindow = false;
 	static bool showConsoleMenu = true;
+	static bool showAboutMenu = false;
+	static bool showHierarchy = false;
 
-	if (closeOpenClose) AreYouSureAboutThat(&closeOpenClose);
-	if (showDemoWindow) ImGui::ShowDemoWindow(&showDemoWindow);
-	if (showConsoleMenu) ShowConsoleMenu(&showConsoleMenu);
+	if (closeOpenClose)		AreYouSureAboutThat(&closeOpenClose);
+	if (showDemoWindow)		ImGui::ShowDemoWindow(&showDemoWindow);
+	if (showConsoleMenu)	ShowConsoleMenu(&showConsoleMenu);
+	if (showAboutMenu)		ShowAboutMenu(&showAboutMenu);
+	if (showHierarchy)		ShowHierarchyMenu(&showHierarchy);
 
 	if (ImGui::BeginMainMenuBar()) {
 		if (ImGui::BeginMenu("File")) {
@@ -75,13 +79,13 @@ void ModuleEditor::Draw(){
 			if (app->camera->psychoControls) {
 				if (ImGui::MenuItem("Disable Phycopath Camera Controls", "Disable ALT inputs"))
 				{
-					app->camera->psychoControls = !app->camera->psychoControls;
+					app->camera->psychoControls = false;
 				}
 			}
 			else {
 				if (ImGui::MenuItem("Enable Phycopath Camera Controls", "Enable ALT inputs"))
 				{
-					app->camera->psychoControls = !app->camera->psychoControls;
+					app->camera->psychoControls = true;
 				}
 			}
 			ImGui::EndMenu();
@@ -130,16 +134,22 @@ void ModuleEditor::Draw(){
 				}
 			}
 
+			// HIERARCHY DISPLAY
+			if (ImGui::MenuItem("Hierarchy", NULL, &showHierarchy)) {}
+
 			ImGui::EndMenu();
 		}
 
 		if (ImGui::BeginMenu("Help")) {
+
+			if (ImGui::MenuItem("About", NULL, &showAboutMenu)) {}
 			if (ImGui::MenuItem("Show Demo Window",NULL, &showDemoWindow)) {}
 
 			if (ImGui::MenuItem("Engine Documentation"))
 			{
 				OpenURL("https://github.com/Dani-24/Toaster_Engine");
 			}
+
 			ImGui::EndMenu();
 		}
 
@@ -205,14 +215,46 @@ void ModuleEditor::AddLogMsg(const char* msg) {
 }
 
 void ModuleEditor::ShowConfigMenu(bool* open) {
+	if (!ImGui::Begin("Configuration", open)) {
+		ImGui::End();
+	}
+	else {
 
+		// Do smtg
+		
+		ImGui::End();
+	}
 }
 void ModuleEditor::ShowInspectorMenu(bool* open) {
+	if (!ImGui::Begin("Inspector", open)) {
+		ImGui::End();
+	}
+	else {
 
+		// Do smtg
+
+		ImGui::End();
+	}
 }
 void ModuleEditor::ShowHierarchyMenu(bool* open) {
+	if (!ImGui::Begin("Scene Hierarchy", open)) {
+		ImGui::End();
+	}
+	else {
 
+		// Do smtg
+
+		ImGui::End();
+	}
 }
 void ModuleEditor::ShowAboutMenu(bool* open) {
+	if (!ImGui::Begin("About", open)) {
+		ImGui::End();
+	}
+	else {
 
+		// Do smtg
+
+		ImGui::End();
+	}
 }
