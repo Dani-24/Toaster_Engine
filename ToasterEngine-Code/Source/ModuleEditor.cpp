@@ -40,28 +40,26 @@ void ModuleEditor::Draw(){
 
 	static bool closeOpenClose = false;
 	static bool showDemoWindow = false;
+	static bool showConsoleMenu = false;
 
 	if (closeOpenClose) AreYouSureAboutThat(&closeOpenClose);
 	if (showDemoWindow) ImGui::ShowDemoWindow(&showDemoWindow);
+	if (showConsoleMenu) ShowConsoleMenu(&showConsoleMenu);
 
 	if (ImGui::BeginMainMenuBar()) {
 		if (ImGui::BeginMenu("File")) {
 			if (ImGui::MenuItem("New", "WIP")) {
 
 			}
-
 			if (ImGui::MenuItem("Open", "WIP")) {
 
 			}
-
 			if (ImGui::MenuItem("Save", "WIP")) {
 
 			}
-
 			if (ImGui::MenuItem("Save and Close", "WIP")) {
 
 			}
-
 			if (ImGui::MenuItem("Suicide", "Ctrl+Alt+F4", &closeOpenClose)) {
 
 			}
@@ -123,7 +121,8 @@ void ModuleEditor::Draw(){
 
 			if (ImGui::MenuItem("Debug Log", "WIP"))
 			{
-				
+				// Open Console
+				showConsoleMenu = true;
 			}
 
 			if (ImGui::MenuItem("Engine Documentation"))
@@ -174,4 +173,35 @@ void ModuleEditor::ShowEditMenu() {
 	if (ImGui::MenuItem("AMOng US?", "WIP")) {
 
 	}
+}
+
+void ModuleEditor::ShowConsoleMenu(bool *open) {
+	if (!ImGui::Begin("Console LOG", open)) {
+		ImGui::End();
+	}
+	else {
+
+		for (int i = logs.size() -1; i > 0; i--) {
+			ImGui::TextWrapped(logs[i].c_str());
+		}
+
+		ImGui::End();
+	}
+}
+
+void ModuleEditor::AddLogMsg(const char* msg) {
+	logs.push_back(msg);
+}
+
+void ModuleEditor::ShowConfigMenu(bool* open) {
+
+}
+void ModuleEditor::ShowInspectorMenu(bool* open) {
+
+}
+void ModuleEditor::ShowHierarchyMenu(bool* open) {
+
+}
+void ModuleEditor::ShowAboutMenu(bool* open) {
+
 }

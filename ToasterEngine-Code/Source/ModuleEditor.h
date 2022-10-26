@@ -29,4 +29,14 @@ private:
 
 	void ShowEditMenu();
 
+	void ShowConfigMenu(bool* open);
+	void ShowInspectorMenu(bool* open);
+	void ShowHierarchyMenu(bool* open);
+	void ShowConsoleMenu(bool* open);
+	void ShowAboutMenu(bool* open);
+
+	std::vector<std::string> logs;
+
+public:
+	void AddLogMsg(const char* msg);
 };

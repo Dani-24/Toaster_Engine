@@ -1,7 +1,9 @@
 #include "Application.h"
 
+extern Application* appLog = nullptr;
 Application::Application()
 {
+	appLog = this;
 
 	window = new ModuleWindow(this);
 	input = new ModuleInput(this);
