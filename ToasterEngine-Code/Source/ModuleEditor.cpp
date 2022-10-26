@@ -42,13 +42,15 @@ void ModuleEditor::Draw(){
 	static bool showDemoWindow = false;
 	static bool showConsoleMenu = true;
 	static bool showAboutMenu = false;
-	static bool showHierarchy = false;
+	static bool showHierarchy = true;
+	static bool showInspector = true;
 
 	if (closeOpenClose)		AreYouSureAboutThat(&closeOpenClose);
 	if (showDemoWindow)		ImGui::ShowDemoWindow(&showDemoWindow);
 	if (showConsoleMenu)	ShowConsoleMenu(&showConsoleMenu);
 	if (showAboutMenu)		ShowAboutMenu(&showAboutMenu);
 	if (showHierarchy)		ShowHierarchyMenu(&showHierarchy);
+	if (showInspector)		ShowInspectorMenu(&showInspector);
 
 	if (ImGui::BeginMainMenuBar()) {
 		if (ImGui::BeginMenu("File")) {
@@ -137,6 +139,9 @@ void ModuleEditor::Draw(){
 			// HIERARCHY DISPLAY
 			if (ImGui::MenuItem("Hierarchy", NULL, &showHierarchy)) {}
 
+			// INSPECTOR DISPLAY
+			if (ImGui::MenuItem("Inspector", NULL, &showInspector)) {}
+
 			ImGui::EndMenu();
 		}
 
@@ -219,9 +224,9 @@ void ModuleEditor::ShowConfigMenu(bool* open) {
 		ImGui::End();
 	}
 	else {
-
 		// Do smtg
-		
+		ImGui::TextWrapped("WIP");
+
 		ImGui::End();
 	}
 }
@@ -232,6 +237,7 @@ void ModuleEditor::ShowInspectorMenu(bool* open) {
 	else {
 
 		// Do smtg
+		ImGui::TextWrapped("WIP");
 
 		ImGui::End();
 	}
@@ -241,8 +247,8 @@ void ModuleEditor::ShowHierarchyMenu(bool* open) {
 		ImGui::End();
 	}
 	else {
-
 		// Do smtg
+		ImGui::TextWrapped("WIP");
 
 		ImGui::End();
 	}
@@ -252,8 +258,8 @@ void ModuleEditor::ShowAboutMenu(bool* open) {
 		ImGui::End();
 	}
 	else {
-
 		// Do smtg
+		ImGui::TextWrapped("WIP");
 
 		ImGui::End();
 	}
