@@ -43,6 +43,8 @@ update_status ModuleCamera3D::Update(float dt)
 	// Implement a debug camera with keys and mouse
 	// Now we can make this movememnt frame rate independant!
 
+	// if(mouseOnCamera){ //Only move camera out of the UI } 
+
 	float3 newPos(0, 0, 0);
 	float speed = camSpeed * dt;
 	if (app->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT) {

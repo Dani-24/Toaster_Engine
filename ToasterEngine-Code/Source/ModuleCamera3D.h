@@ -40,6 +40,7 @@ public:
 	float camSpeed = 25.0f;
 
 	bool psychoControls = true;
+	bool mouseOnCamera = true;
 
 private:
 
