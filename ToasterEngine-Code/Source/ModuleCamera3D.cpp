@@ -90,10 +90,10 @@ update_status ModuleCamera3D::Update(float dt)
 		{
 			float DeltaX = (float)dx * Sensitivity;
 
-			Quat Y = Quat::identity;
-			Y.SetFromAxisAngle(float3(0, 1, 0), DeltaX * DEGTORAD);
+			Quat X = Quat::identity;
+			X.SetFromAxisAngle(float3(0, 1, 0), DeltaX * DEGTORAD);
 
-			dir = dir * Y;
+			dir = dir * X;
 		}
 
 		if (dy != 0)
@@ -110,6 +110,8 @@ update_status ModuleCamera3D::Update(float dt)
 		mat.SetRotatePart(dir.Normalized());
 		camFrustum.SetWorldMatrix(mat.Float3x4Part());
 
+		camFrustum.pos = float3(0, 0, 0) + camFrustum.front * -camFrustum.pos.Distance(float3(0, 0, 0));
+		LookAt(float3(0, 0, 0));
 	}
 
 	// Recalculate matrix -------------
