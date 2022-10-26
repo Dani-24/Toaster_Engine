@@ -108,6 +108,7 @@ update_status Application::Update()
 bool Application::CleanUp()
 {
 	bool ret = true;
+	stopLogging = true;
 
 	for (uint i = list_modules.size() - 1; i > -1 && ret == true; i--) {
 		ret = list_modules[i]->CleanUp();

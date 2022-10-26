@@ -37,6 +37,8 @@ public:
 	update_status Update();
 	bool CleanUp();
 
+	bool stopLogging = false;
+
 private:
 
 	void AddModule(Module* mod);

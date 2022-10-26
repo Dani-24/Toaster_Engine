@@ -32,6 +32,11 @@ update_status ModuleEditor::PostUpdate(float dt) {
 }
 
 bool ModuleEditor::CleanUp() {
+	for (int i = 0; i < logs.size(); i++) {
+		delete logs[i].data();
+		logs[i] = nullptr;
+	}
+	logs.clear();
 
 	return true;
 }
