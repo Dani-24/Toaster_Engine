@@ -72,6 +72,22 @@ void ModuleEditor::Draw(){
 			ImGui::EndMenu();
 		}
 
+		if (ImGui::BeginMenu("Camera")) {
+			if (ImGui::MenuItem("Enable/Disable Phycopath Camera Controls"))
+			{
+
+			}
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::BeginMenu("Window")) {
+			if (ImGui::MenuItem("Show/Hide editor windows"))
+			{
+
+			}
+			ImGui::EndMenu();
+		}
+
 		if (ImGui::BeginMenu("Help")) {
 			if (ImGui::MenuItem("Show Demo Window",NULL, &showDemoWindow)) {
 

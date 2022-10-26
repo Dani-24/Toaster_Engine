@@ -23,7 +23,6 @@ public:
 	void Move(const float3 &Movement);
 	float4x4 GetViewMatrix();
 	vec3 GetPos();
-
 private:
 
 	void CalculateViewMatrix();

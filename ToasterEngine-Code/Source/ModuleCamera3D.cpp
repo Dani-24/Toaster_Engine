@@ -13,7 +13,7 @@ ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(ap
 	/*Position = vec3(0.0f, 0.0f, 5.0f);
 	Reference = vec3(0.0f, 0.0f, 0.0f);*/
 
-	camFrustum.pos = float3(3.0f, 1.5f, 0.5f);
+	camFrustum.pos = float3(6.0f, 3.5f, 1.5f);
 	LookAt(float3(0, 0, 0));
 }
 
@@ -50,7 +50,7 @@ update_status ModuleCamera3D::Update(float dt)
 	}
 
 	if (app->input->GetKey(SDL_SCANCODE_F) == KEY_REPEAT) {
-		FocusCam(float3(0, 0, 0), 3);
+		FocusCam(float3(0, 0, 0), 6);
 	}
 
 	// Zoom with mouse wheel
@@ -110,8 +110,10 @@ update_status ModuleCamera3D::Update(float dt)
 		mat.SetRotatePart(dir.Normalized());
 		camFrustum.SetWorldMatrix(mat.Float3x4Part());
 
-		camFrustum.pos = float3(0, 0, 0) + camFrustum.front * -camFrustum.pos.Distance(float3(0, 0, 0));
-		LookAt(float3(0, 0, 0));
+		float3 orbitPoint = float3(0,0,0);
+
+		camFrustum.pos = orbitPoint + camFrustum.front * -camFrustum.pos.Distance(orbitPoint);
+		LookAt(orbitPoint);
 	}
 
 	// Recalculate matrix -------------
