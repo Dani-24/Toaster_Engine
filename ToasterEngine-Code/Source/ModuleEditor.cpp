@@ -40,7 +40,7 @@ void ModuleEditor::Draw(){
 
 	static bool closeOpenClose = false;
 	static bool showDemoWindow = false;
-	static bool showConsoleMenu = false;
+	static bool showConsoleMenu = true;
 
 	if (closeOpenClose) AreYouSureAboutThat(&closeOpenClose);
 	if (showDemoWindow) ImGui::ShowDemoWindow(&showDemoWindow);
@@ -73,13 +73,13 @@ void ModuleEditor::Draw(){
 
 		if (ImGui::BeginMenu("Camera")) {
 			if (app->camera->psychoControls) {
-				if (ImGui::MenuItem("Disable Phycopath Camera Controls"))
+				if (ImGui::MenuItem("Disable Phycopath Camera Controls", "Disable ALT inputs"))
 				{
 					app->camera->psychoControls = !app->camera->psychoControls;
 				}
 			}
 			else {
-				if (ImGui::MenuItem("Enable Phycopath Camera Controls"))
+				if (ImGui::MenuItem("Enable Phycopath Camera Controls", "Enable ALT inputs"))
 				{
 					app->camera->psychoControls = !app->camera->psychoControls;
 				}
@@ -88,19 +88,23 @@ void ModuleEditor::Draw(){
 		}
 
 		if (ImGui::BeginMenu("Window")) {
+
+			// SHOW EDITOR
 			if (showingEditor)
 			{
-				if (ImGui::MenuItem("Hide editor windows"))
+				if (ImGui::MenuItem("Hide editor windows", "WIP"))
 				{
 					showingEditor = !showingEditor;
 				}
 			}
 			else {
-				if (ImGui::MenuItem("Show editor windows"))
+				if (ImGui::MenuItem("Show editor windows", "WIP"))
 				{
 					showingEditor = !showingEditor;
 				}
 			}
+
+			// GRID AXIS
 			if (app->scene->axis) {
 				if (ImGui::MenuItem("Hide Grid")) {
 					app->scene->axis = !app->scene->axis;
@@ -111,19 +115,26 @@ void ModuleEditor::Draw(){
 					app->scene->axis = !app->scene->axis;
 				}
 			}
+
+			// DEBUG CONSOLE
+			if (!showConsoleMenu) {
+				if (ImGui::MenuItem("Show Debug Log"))
+				{
+					showConsoleMenu = true;
+				}
+			}
+			else {
+				if (ImGui::MenuItem("Hide Debug Log"))
+				{
+					showConsoleMenu = false;
+				}
+			}
+
 			ImGui::EndMenu();
 		}
 
 		if (ImGui::BeginMenu("Help")) {
-			if (ImGui::MenuItem("Show Demo Window",NULL, &showDemoWindow)) {
-
-			}
-
-			if (ImGui::MenuItem("Debug Log", "WIP"))
-			{
-				// Open Console
-				showConsoleMenu = true;
-			}
+			if (ImGui::MenuItem("Show Demo Window",NULL, &showDemoWindow)) {}
 
 			if (ImGui::MenuItem("Engine Documentation"))
 			{
