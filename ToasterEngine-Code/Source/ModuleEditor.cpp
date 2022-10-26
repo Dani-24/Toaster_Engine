@@ -235,6 +235,7 @@ void ModuleEditor::ShowConfigMenu(bool* open) {
 		ImGui::End();
 	}
 }
+
 void ModuleEditor::ShowInspectorMenu(bool* open) {
 	if (!ImGui::Begin("Inspector", open)) {
 		ImGui::End();
@@ -247,6 +248,7 @@ void ModuleEditor::ShowInspectorMenu(bool* open) {
 		ImGui::End();
 	}
 }
+
 void ModuleEditor::ShowHierarchyMenu(bool* open) {
 	if (!ImGui::Begin("Scene Hierarchy", open)) {
 		ImGui::End();
@@ -258,6 +260,7 @@ void ModuleEditor::ShowHierarchyMenu(bool* open) {
 		ImGui::End();
 	}
 }
+
 void ModuleEditor::ShowAboutMenu(bool* open) {
 	if (!ImGui::Begin("About", open)) {
 		ImGui::End();
