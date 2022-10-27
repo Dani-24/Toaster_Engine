@@ -86,10 +86,11 @@ void ModuleEditor::Draw(){
 	static bool showConsoleMenu = true;
 	static bool showHierarchy = true;
 	static bool showInspector = true;
-	static bool showGameEditorWindow = true;
+	static bool showGameEditorWindow = false;
 	static bool showConfiguration = false;
 	static bool toasterMode = false;
 	static bool showAssetManager = true;
+	static bool showAssetExplorer = true;
 	
 	if (toasterMode)			{ app->maxFps = 10; } else { app->maxFps = 60; }
 	if (closeOpenClose)			AreYouSureAboutThat(&closeOpenClose);
@@ -101,6 +102,7 @@ void ModuleEditor::Draw(){
 	if (showGameEditorWindow)	ShowGameEditorWindow(&showGameEditorWindow);
 	if (showConfiguration)		ShowConfiguration(&showConfiguration);
 	if (showAssetManager)		ShowAssetManager(&showAssetManager);
+	if (showAssetExplorer)		ShowAssetExplorer(&showAssetExplorer);
 
 	// File/Edit/window main engine bar
 	if (ImGui::BeginMainMenuBar()) {
@@ -194,6 +196,9 @@ void ModuleEditor::Draw(){
 
 			// ASSET MANAGER
 			if (ImGui::MenuItem("Asset Manager", NULL, &showAssetManager)) {};
+
+			// ASSET EXPLORER
+			if (ImGui::MenuItem("Asset Explorer", NULL, &showAssetExplorer)) {};
 
 			// DEBUG CONSOLE
 			if (ImGui::MenuItem("Debug Console", NULL, &showConsoleMenu)) {};
@@ -297,6 +302,18 @@ void ModuleEditor::ShowAssetManager(bool* open) {
 	}
 }
 
+void ModuleEditor::ShowAssetExplorer(bool* open) {
+	if (!ImGui::Begin("Asset Explorer", open)) {
+		ImGui::End();
+	}
+	else {
+
+		ImGui::TextWrapped("WIP");
+
+		ImGui::End();
+	}
+}
+
 void ModuleEditor::AddLogMsg(const char* msg) {
 
 	if (logs.size() <= MAX_LOGS_SIZE) {
@@ -363,7 +380,11 @@ void ModuleEditor::ShowAboutMenu(bool* open) {
 		ImGui::TextWrapped("OpenGL Version: %s", glGetString(GL_VERSION)); ImGui::NewLine();
 		ImGui::TextWrapped("Glew Version: %s", glewGetString(GLEW_VERSION)); ImGui::NewLine();
 		ImGui::TextWrapped("MathGeoLib Version: 1.5"); ImGui::NewLine();
-		ImGui::TextWrapped("ImGui Version: 1.89");
+		ImGui::TextWrapped("ImGui Version: 1.89"); ImGui::NewLine();
+		ImGui::TextWrapped("Mmgr: Fluid Studios"); ImGui::NewLine();
+		ImGui::TextWrapped("GPUDetector : Intel Corporation"); ImGui::NewLine();
+		ImGui::TextWrapped("Parson: 1.1.0"); ImGui::NewLine();
+		ImGui::TextWrapped("Assimp: ?");
 
 		Space();
 

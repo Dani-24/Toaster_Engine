@@ -35,6 +35,7 @@ private:
 	void ShowGameEditorWindow(bool* open);
 	void ShowConfiguration(bool* open);
 	void ShowAssetManager(bool* open);
+	void ShowAssetExplorer(bool* open);
 
 	// Logs
 	std::vector<std::string> logs;

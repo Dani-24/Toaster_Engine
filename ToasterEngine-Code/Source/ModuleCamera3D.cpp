@@ -31,7 +31,7 @@ bool ModuleCamera3D::CleanUp()
 // -----------------------------------------------------------------
 update_status ModuleCamera3D::Update(float dt)
 {
-	// if(mouseOnCamera){ //Only move camera out of the UI } 
+	// if(mouseOnCamera){ //Only move camera out of the UI , WIP } 
 
 	float3 newPos(0, 0, 0);
 	float speed = camSpeed * dt;
@@ -40,7 +40,9 @@ update_status ModuleCamera3D::Update(float dt)
 	}
 
 	if (app->input->GetKey(SDL_SCANCODE_F) == KEY_REPEAT) {
-		FocusCam(float3(0, 0, 0), 6);
+		FocusCam(float3(0,0,0), 6);
+
+		// This should focus 0,0,0 if there is no GameObject or the GameObject if it exists
 	}
 
 	// Zoom with mouse wheel
@@ -60,9 +62,11 @@ update_status ModuleCamera3D::Update(float dt)
 		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) newPos -= camFrustum.WorldRight() * speed;
 		// move horizontal right
 		if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) newPos += camFrustum.WorldRight() * speed;
+
 	}
 
 	camFrustum.pos += newPos;
+	camFocusPos += newPos;
 
 	// Orbit by Left Click + Alt
 	if (app->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && app->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT || !psychoControls && app->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT)
@@ -100,7 +104,7 @@ update_status ModuleCamera3D::Update(float dt)
 		mat.SetRotatePart(dir.Normalized());
 		camFrustum.SetWorldMatrix(mat.Float3x4Part());
 
-		float3 orbitPoint = float3(0,0,0);
+		float3 orbitPoint = camFocusPos;
 
 		camFrustum.pos = orbitPoint + camFrustum.front * -camFrustum.pos.Distance(orbitPoint);
 		LookAt(orbitPoint);

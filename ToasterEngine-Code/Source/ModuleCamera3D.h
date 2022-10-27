@@ -42,6 +42,8 @@ public:
 	bool psychoControls = true;
 	bool mouseOnCamera = true;
 
+	float3 camFocusPos = float3(0,0,0);
+
 private:
 
 	//mat4x4 ViewMatrix, ViewMatrixInverse;
