@@ -37,9 +37,6 @@
     <ClInclude Include="Source\ModuleEditor.h">
       <Filter>Sources\Engine</Filter>
     </ClInclude>
-    <ClInclude Include="Source\ModuleConfig.h">
-      <Filter>Sources\Engine</Filter>
-    </ClInclude>
     <ClInclude Include="Source\ModuleScene.h">
       <Filter>Sources\Engine</Filter>
     </ClInclude>
@@ -634,9 +631,6 @@
       <Filter>Sources\Modules</Filter>
     </ClCompile>
     <ClCompile Include="Source\ModuleEditor.cpp">
-      <Filter>Sources\Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ModuleConfig.cpp">
       <Filter>Sources\Engine</Filter>
     </ClCompile>
     <ClCompile Include="Source\ModuleScene.cpp">

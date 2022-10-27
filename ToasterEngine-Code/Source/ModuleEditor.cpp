@@ -50,14 +50,16 @@ void ModuleEditor::Draw(){
 	static bool showHierarchy = true;
 	static bool showInspector = true;
 	static bool showGameEditorWindow = true;
+	static bool showConfiguration = false;
 
-	if (closeOpenClose)		AreYouSureAboutThat(&closeOpenClose);
-	if (showDemoWindow)		ImGui::ShowDemoWindow(&showDemoWindow);
-	if (showConsoleMenu)	ShowConsoleMenu(&showConsoleMenu);
-	if (showAboutMenu)		ShowAboutMenu(&showAboutMenu);
-	if (showHierarchy)		ShowHierarchyMenu(&showHierarchy);
-	if (showInspector)		ShowInspectorMenu(&showInspector);
-	if (showGameEditorWindow)ShowGameEditorWindow(&showGameEditorWindow);
+	if (closeOpenClose)			AreYouSureAboutThat(&closeOpenClose);
+	if (showDemoWindow)			ImGui::ShowDemoWindow(&showDemoWindow);
+	if (showConsoleMenu)		ShowConsoleMenu(&showConsoleMenu);
+	if (showAboutMenu)			ShowAboutMenu(&showAboutMenu);
+	if (showHierarchy)			ShowHierarchyMenu(&showHierarchy);
+	if (showInspector)			ShowInspectorMenu(&showInspector);
+	if (showGameEditorWindow)	ShowGameEditorWindow(&showGameEditorWindow);
+	if (showConfiguration)		ShowConfiguration(&showConfiguration);
 
 	if (ImGui::BeginMainMenuBar()) {
 
@@ -168,15 +170,6 @@ void ModuleEditor::Draw(){
 
 		ImGui::EndMainMenuBar();
 	}
-
-	// EDITOR WINDOW
-	int fixY = 18;
-	ImGui::SetNextWindowSize(ImVec2(SCREEN_WIDTH, SCREEN_HEIGHT - fixY));
-	ImGui::SetNextWindowPos(ImVec2(0, fixY));
-
-	ImGui::Begin("Editor");
-	ImGui::End();
-
 }
 
 void ModuleEditor::ShowGameEditorWindow(bool* open) {

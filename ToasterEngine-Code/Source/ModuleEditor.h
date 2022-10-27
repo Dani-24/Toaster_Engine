@@ -33,6 +33,7 @@ private:
 	void ShowConsoleMenu(bool* open);
 	void ShowAboutMenu(bool* open);
 	void ShowGameEditorWindow(bool* open);
+	void ShowConfiguration(bool* open);
 
 	std::vector<std::string> logs;
 
