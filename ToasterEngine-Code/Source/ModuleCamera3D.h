@@ -31,8 +31,6 @@ public:
 	
 	Frustum camFrustum;
 
-	//vec3 X, Y, Z, Position, Reference;
-
 	bool freeCamera;
 	bool finish;
 	bool firstPerson;
@@ -43,8 +41,5 @@ public:
 	bool mouseOnCamera = true;
 
 	float3 camFocusPos = float3(0,0,0);
-
-private:
-
-	//mat4x4 ViewMatrix, ViewMatrixInverse;
+	float focusDist = 6;
 };

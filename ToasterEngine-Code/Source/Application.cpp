@@ -11,6 +11,7 @@ Application::Application()
 	renderer3D = new ModuleRenderer3D(this);
 	camera = new ModuleCamera3D(this);
 	editor = new ModuleEditor(this);
+	mesh3d = new ModuleMesh3D(this);
 
 	// Main Modules
 	AddModule(window);
@@ -19,6 +20,8 @@ Application::Application()
 	
 	// Scenes
 	AddModule(scene);
+
+	AddModule(mesh3d);
 
 	AddModule(editor);
 

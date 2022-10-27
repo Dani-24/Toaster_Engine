@@ -16,9 +16,6 @@
     <ClInclude Include="Source\Light.h">
       <Filter>Sources\Tools</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Primitive.h">
-      <Filter>Sources\Tools</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Module.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
@@ -655,6 +652,12 @@
     <ClInclude Include="External\Assimp\include\port\AndroidJNI\AndroidJNIIOSystem.h">
       <Filter>External Toasts\Assimp\PortAndroid</Filter>
     </ClInclude>
+    <ClInclude Include="Source\ModuleMesh3D.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Primitive.h">
+      <Filter>Sources\Tools</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Sources">
@@ -751,9 +754,6 @@
       <Filter>Sources\Tools</Filter>
     </ClCompile>
     <ClCompile Include="Source\log.cpp">
-      <Filter>Sources\Tools</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Primitive.cpp">
       <Filter>Sources\Tools</Filter>
     </ClCompile>
     <ClCompile Include="Source\ModuleCamera3D.cpp">
@@ -905,6 +905,12 @@
     </ClCompile>
     <ClCompile Include="External\GPUDetector\DeviceId.cpp">
       <Filter>External Toasts\GPUDetector</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ModuleMesh3D.cpp">
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Primitive.cpp">
+      <Filter>Sources\Tools</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

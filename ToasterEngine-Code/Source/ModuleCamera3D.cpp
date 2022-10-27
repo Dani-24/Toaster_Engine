@@ -40,7 +40,7 @@ update_status ModuleCamera3D::Update(float dt)
 	}
 
 	if (app->input->GetKey(SDL_SCANCODE_F) == KEY_REPEAT) {
-		FocusCam(float3(0,0,0), 6);
+		FocusCam(float3(0,0,0), focusDist);
 
 		// This should focus 0,0,0 if there is no GameObject or the GameObject if it exists
 	}
@@ -49,6 +49,7 @@ update_status ModuleCamera3D::Update(float dt)
 	if (app->input->GetMouseZ() != 0)
 	{
 		newPos += camFrustum.front * app->input->GetMouseZ() * speed;
+		focusDist -= app->input->GetMouseZ();
 	}
 
 	// Movement Right Click + WASD

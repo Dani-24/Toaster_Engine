@@ -1,9 +1,9 @@
-
 #pragma once
 #include "glmath.h"
 #include "Color.h"
 
 class btQuaternion;
+class Mesh;
 
 enum PrimitiveTypes
 {
@@ -29,6 +29,11 @@ public:
 	void			SetRotationEuler(btQuaternion q);
 	void			Scale(float x, float y, float z);
 	PrimitiveTypes	GetType() const;
+
+	static Mesh* CreateCube();
+	static Mesh* CreateSphere();
+	static Mesh* CreateCylinder();
+	static Mesh* CreatePlane();
 
 public:
 	

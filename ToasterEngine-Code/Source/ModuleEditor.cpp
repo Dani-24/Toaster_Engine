@@ -10,6 +10,8 @@
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
 
+#include "Primitive.h"
+
 ModuleEditor::ModuleEditor(Application* app, bool start_enabled) : Module(app, start_enabled){
 	logs.reserve(MAX_LOGS_SIZE);
 	fpslog.reserve(MAX_LOGS_SIZE);
@@ -138,6 +140,23 @@ void ModuleEditor::Draw(){
 				OpenURL("https://static.wikia.nocookie.net/shitpost/images/2/2a/Amogus.png/revision/latest?cb=20210717210340&path-prefix=es");
 			}
 			if (ImGui::MenuItem("Toaster Mode", "Just work at toaster speed", &toasterMode)) {}
+
+			if (ImGui::BeginMenu("Create 3D Mesh")) {
+				if(ImGui::MenuItem("Cube")) {
+					app->mesh3d->LoadMesh(Primitive::CreateCube());
+				}
+				if (ImGui::MenuItem("Sphere")) {
+					app->mesh3d->LoadMesh(Primitive::CreateSphere());
+				}
+				if (ImGui::MenuItem("Cylinder")) {
+					app->mesh3d->LoadMesh(Primitive::CreateCylinder());
+				}
+				if (ImGui::MenuItem("Plane")) {
+					app->mesh3d->LoadMesh(Primitive::CreatePlane());
+				}
+				ImGui::EndMenu();
+			}
+
 			ImGui::EndMenu();
 		}
 
