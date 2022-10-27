@@ -2,6 +2,8 @@
 #include "Module.h"
 #include "Globals.h"
 
+#include "../External/ImGui/imgui.h"
+
 #define MAX_MOUSE_BUTTONS 5
 
 enum KEY_STATE
@@ -22,6 +24,8 @@ public:
 	bool Init();
 	update_status PreUpdate(float dt);
 	bool CleanUp();
+
+	void GUIinfo();
 
 	KEY_STATE GetKey(int id) const
 	{
@@ -67,4 +71,8 @@ private:
 	int mouse_x_motion;
 	int mouse_y_motion;
 	//int mouse_z_motion;
+
+	// Input Log
+	ImGuiTextBuffer inputLog;
+	void LogInput(uint key, uint state);
 };

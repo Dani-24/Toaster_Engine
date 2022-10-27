@@ -45,15 +45,22 @@ update_status ModuleInput::PreUpdate(float dt)
 	{
 		if(keys[i] == 1)
 		{
-			if(keyboard[i] == KEY_IDLE)
+			if (keyboard[i] == KEY_IDLE) {
 				keyboard[i] = KEY_DOWN;
+				LogInput(i, KEY_DOWN);
+			}
 			else
+			{
 				keyboard[i] = KEY_REPEAT;
+				LogInput(i, KEY_REPEAT);
+			}
 		}
 		else
 		{
-			if(keyboard[i] == KEY_REPEAT || keyboard[i] == KEY_DOWN)
+			if (keyboard[i] == KEY_REPEAT || keyboard[i] == KEY_DOWN) {
 				keyboard[i] = KEY_UP;
+				LogInput(i, KEY_UP);
+			}
 			else
 				keyboard[i] = KEY_IDLE;
 		}
@@ -69,17 +76,25 @@ update_status ModuleInput::PreUpdate(float dt)
 	{
 		if(buttons & SDL_BUTTON(i))
 		{
-			if(mouse_buttons[i] == KEY_IDLE)
+			if (mouse_buttons[i] == KEY_IDLE)
+			{
 				mouse_buttons[i] = KEY_DOWN;
-			else
+				LogInput(i + 1000, KEY_DOWN);
+			}
+			else {
 				mouse_buttons[i] = KEY_REPEAT;
+			}
 		}
 		else
 		{
-			if(mouse_buttons[i] == KEY_REPEAT || mouse_buttons[i] == KEY_DOWN)
+			if (mouse_buttons[i] == KEY_REPEAT || mouse_buttons[i] == KEY_DOWN) {
 				mouse_buttons[i] = KEY_UP;
+				LogInput(i + 1000, KEY_UP);
+			}
 			else
+			{
 				mouse_buttons[i] = KEY_IDLE;
+			}
 		}
 	}
 
@@ -126,4 +141,29 @@ bool ModuleInput::CleanUp()
 	LOG("Quitting SDL input event subsystem");
 	SDL_QuitSubSystem(SDL_INIT_EVENTS);
 	return true;
+}
+
+void ModuleInput::GUIinfo() {
+	ImGui::TextWrapped("Mouse Pos: X %x Y %d", mouse_x, mouse_y);
+	ImGui::TextWrapped("Mouse Motion: X %x Y %d", mouse_x_motion, mouse_y_motion);
+	ImGui::TextWrapped("Mouse Wheel: %d", mouse_z);
+
+	ImGui::BeginChild("Log :");
+	ImGui::TextUnformatted(inputLog.begin());
+
+	ImGui::EndChild();
+}
+
+void ModuleInput::LogInput(uint key, uint state) {
+	static char entry[512];
+	static const char* states[] = { "IDLE", "DOWN", "REPEAT", "UP" };
+
+	if (key < 1000) {
+		sprintf_s(entry, 512, "KeyBoard: %d - %s\n", key, states[state]);
+	}
+	else {
+		sprintf_s(entry, 512, "Mouse: %d - %s\n", key - 1000, states[state]);
+	}
+
+	inputLog.appendf(entry);
 }

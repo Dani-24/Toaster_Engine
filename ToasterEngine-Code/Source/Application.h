@@ -27,6 +27,9 @@ private:
 	std::vector<Module*> list_modules;
 
 public:
+	int maxFps = 60;
+
+public:
 
 	Application();
 	~Application();

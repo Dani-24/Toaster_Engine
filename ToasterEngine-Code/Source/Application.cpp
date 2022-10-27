@@ -60,15 +60,15 @@ bool Application::Init()
 void Application::PrepareUpdate()
 {
 	dt = (float)ms_timer.Read() / 1000.0f;
-	float desiredDt = 0.016;
+	float maxdt = 1.f / maxFps;
 
-	if (dt < desiredDt)
+	if (dt < maxdt)
 	{
 		
-		float difDt = (desiredDt - dt)*1000;
+		float difDt = (maxdt - dt)*1000;
 		SDL_Delay(difDt);
 		
-		dt = desiredDt;
+		dt = maxdt;
 	}
 	ms_timer.Start();
 }

@@ -6,6 +6,24 @@
 
 #define MAX_LIGHTS 8
 
+class Hardware {
+public:
+	std::string caps;
+	char SDLVersion[25] = "";
+
+	uint CPUCount;
+	uint CPUCache;
+	float systemRAM;
+
+	uint GPUVendor = 0;
+	uint GPUDevice = 0;
+	char GPUBrand[250] = "";
+	float VRAMBudget = 0.f;
+	float VRAMUsage = 0.f;
+	float VRAMAvailable = 0.f;
+	float VRAMReserved = 0.f;
+};
+
 class ModuleRenderer3D : public Module
 {
 public:
@@ -22,12 +40,17 @@ public:
 	// Instantly Color Change
 	void SetBGColor(int R, int G, int B);
 
+	void GUIglInfo();
+	void GUIhardwareInfo();
+
 public:
 
 	Light lights[MAX_LIGHTS];
 	SDL_GLContext context;
 	mat3x3 NormalMatrix;
 	mat4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
+
+	bool wireframe = false;
 
 private:
 	// Color
@@ -36,4 +59,14 @@ private:
 	float colorChangeSpeed = 0.005f;
 
 	float lightIntensity = 0.9f;
+
+	// GL Debug
+	bool depthTest = true;
+	bool cullFace = true;
+	bool lighting = true;
+	bool colorMaterial = true;
+	bool texture2D = true;
+
+	// Hardware
+	Hardware hardware;
 };

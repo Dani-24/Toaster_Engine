@@ -11,8 +11,6 @@ class ModuleWindow : public Module
 public:
 
 	ModuleWindow(Application* app, bool start_enabled = true);
-
-	// Destructor
 	virtual ~ModuleWindow();
 
 	bool Init();
@@ -20,12 +18,45 @@ public:
 
 	void SetTitle(const char* title);
 
+	void GUIinfo();
+
 public:
 	//The window we'll be rendering to
 	SDL_Window* window;
 
 	//The surface contained by the window
 	SDL_Surface* screen_surface;
+
+private:
+
+	int width, height;
+
+	float brightness = 1;
+
+	bool borderless = false;
+	bool resizable = false;
+	bool fullScreen = false;
+	bool fullScreenDesktop = false;
+
+	void SetSize(int w, int h);
+	void GetSize(int& w, int& h);
+
+	void WhyDoYouWantToSetBrightnessWTF(float b);
+
+	void SetBorderless(bool border);
+	bool IsBorderless() { return borderless; }
+
+	void SetResizable(bool resi);
+	bool IsResizable() { return resizable; }
+	void OnResize(int w, int h);
+
+	void SetFullScreen(bool full);
+	bool IsFullScreen() { return fullScreen; }
+
+	void SetFullScreenDesktop(bool fullD);
+	bool IsFullScreenDesktop() { return fullScreenDesktop; }
+
+	SDL_DisplayMode cum;
 };
 
 #endif // __ModuleWindow_H__

@@ -532,6 +532,18 @@
     <ClInclude Include="External\Glew\include\wglew.h">
       <Filter>External Toasts\Glew</Filter>
     </ClInclude>
+    <ClInclude Include="External\Mmgr\mmgr.h">
+      <Filter>External Toasts\Mmgr</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Mmgr\nommgr.h">
+      <Filter>External Toasts\Mmgr</Filter>
+    </ClInclude>
+    <ClInclude Include="External\GPUDetector\DeviceId.h">
+      <Filter>External Toasts\GPUDetector</Filter>
+    </ClInclude>
+    <ClInclude Include="External\GPUDetector\dxgi1_4.h">
+      <Filter>External Toasts\GPUDetector</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Sources">
@@ -587,6 +599,12 @@
     </Filter>
     <Filter Include="External Toasts\Glew">
       <UniqueIdentifier>{3a49f478-cfdc-48ab-bf67-f3fa72d075cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="External Toasts\Mmgr">
+      <UniqueIdentifier>{9d1686e4-377f-43f9-8748-7c4ecac06d9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="External Toasts\GPUDetector">
+      <UniqueIdentifier>{d8c2f078-8a89-4c9e-b894-a46f202b2fa0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -761,6 +779,12 @@
     </ClCompile>
     <ClCompile Include="External\ImGui\imgui_widgets.cpp">
       <Filter>External Toasts\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="External\Mmgr\mmgr.cpp">
+      <Filter>External Toasts\Mmgr</Filter>
+    </ClCompile>
+    <ClCompile Include="External\GPUDetector\DeviceId.cpp">
+      <Filter>External Toasts\GPUDetector</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
