@@ -45,10 +45,11 @@ void ModuleEditor::Draw(){
 
 	static bool closeOpenClose = false;
 	static bool showDemoWindow = false;
-	static bool showConsoleMenu = true;
 	static bool showAboutMenu = false;
+	static bool showConsoleMenu = true;
 	static bool showHierarchy = true;
 	static bool showInspector = true;
+	static bool showGameEditorWindow = true;
 
 	if (closeOpenClose)		AreYouSureAboutThat(&closeOpenClose);
 	if (showDemoWindow)		ImGui::ShowDemoWindow(&showDemoWindow);
@@ -56,8 +57,10 @@ void ModuleEditor::Draw(){
 	if (showAboutMenu)		ShowAboutMenu(&showAboutMenu);
 	if (showHierarchy)		ShowHierarchyMenu(&showHierarchy);
 	if (showInspector)		ShowInspectorMenu(&showInspector);
+	if (showGameEditorWindow)ShowGameEditorWindow(&showGameEditorWindow);
 
 	if (ImGui::BeginMainMenuBar()) {
+
 		if (ImGui::BeginMenu("File")) {
 			if (ImGui::MenuItem("New", "WIP")) {
 
@@ -78,7 +81,15 @@ void ModuleEditor::Draw(){
 		}
 
 		if (ImGui::BeginMenu("Edit")) {
-			ShowEditMenu();
+			if (ImGui::MenuItem("Undo", "WIP")) {
+
+			}
+			if (ImGui::MenuItem("Redo", "WIP")) {
+
+			}
+			if (ImGui::MenuItem("AMOng US?", "WIP")) {
+
+			}
 			ImGui::EndMenu();
 		}
 
@@ -127,19 +138,11 @@ void ModuleEditor::Draw(){
 				}
 			}
 
+			// GAME EDITOR WINDOW
+			if (ImGui::MenuItem("Game Editor Window", NULL, &showGameEditorWindow)) {};
+
 			// DEBUG CONSOLE
-			if (!showConsoleMenu) {
-				if (ImGui::MenuItem("Show Debug Log"))
-				{
-					showConsoleMenu = true;
-				}
-			}
-			else {
-				if (ImGui::MenuItem("Hide Debug Log"))
-				{
-					showConsoleMenu = false;
-				}
-			}
+			if (ImGui::MenuItem("Debug Console", NULL, &showConsoleMenu)) {};
 
 			// HIERARCHY DISPLAY
 			if (ImGui::MenuItem("Hierarchy", NULL, &showHierarchy)) {}
@@ -166,11 +169,35 @@ void ModuleEditor::Draw(){
 		ImGui::EndMainMenuBar();
 	}
 
+	// EDITOR WINDOW
+	int fixY = 18;
+	ImGui::SetNextWindowSize(ImVec2(SCREEN_WIDTH, SCREEN_HEIGHT - fixY));
+	ImGui::SetNextWindowPos(ImVec2(0, fixY));
+
+	ImGui::Begin("Editor");
+	ImGui::End();
+
+}
+
+void ModuleEditor::ShowGameEditorWindow(bool* open) {
+	if (!ImGui::Begin("Game Editor", open)) {
+		ImGui::End();
+	}
+	else {
+
+		// RENDER CAMERA HERE
+		//ImGui::Image();
+
+		ImGui::End();
+	}
 }
 
 void ModuleEditor::AreYouSureAboutThat(bool *open) {
 
-	ImGui::SetNextWindowSize(ImVec2(500, 400), 4);
+	int sizeX = 300;
+	int sizeY = 60;
+	ImGui::SetNextWindowSize(ImVec2(sizeX, sizeY));
+	ImGui::SetNextWindowPos(ImVec2(SCREEN_WIDTH / 2 - sizeX / 2, SCREEN_HEIGHT / 2 - sizeY / 2));
 
 	if (!ImGui::Begin("Closing this toaster in :", open)) {
 		ImGui::End();
@@ -194,19 +221,8 @@ void ModuleEditor::AreYouSureAboutThat(bool *open) {
 
 }
 
-void ModuleEditor::ShowEditMenu() {
-	if (ImGui::MenuItem("Undo", "WIP")) {
-
-	}
-	if (ImGui::MenuItem("Redo", "WIP")) {
-
-	}
-	if (ImGui::MenuItem("AMOng US?", "WIP")) {
-
-	}
-}
-
 void ModuleEditor::ShowConsoleMenu(bool *open) {
+
 	if (!ImGui::Begin("Console LOG", open)) {
 		ImGui::End();
 	}

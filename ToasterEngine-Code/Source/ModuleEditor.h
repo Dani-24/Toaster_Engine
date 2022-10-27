@@ -27,13 +27,12 @@ private:
 
 	void AreYouSureAboutThat(bool *open);
 
-	void ShowEditMenu();
-
 	void ShowConfigMenu(bool* open);
 	void ShowInspectorMenu(bool* open);
 	void ShowHierarchyMenu(bool* open);
 	void ShowConsoleMenu(bool* open);
 	void ShowAboutMenu(bool* open);
+	void ShowGameEditorWindow(bool* open);
 
 	std::vector<std::string> logs;
 

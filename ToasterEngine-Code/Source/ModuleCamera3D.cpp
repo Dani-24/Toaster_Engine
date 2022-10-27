@@ -4,15 +4,6 @@
 
 ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
-	//CalculateViewMatrix();
-
-	//X = vec3(1.0f, 0.0f, 0.0f);
-	//Y = vec3(0.0f, 1.0f, 0.0f);
-	//Z = vec3(0.0f, 0.0f, 1.0f);
-
-	/*Position = vec3(0.0f, 0.0f, 5.0f);
-	Reference = vec3(0.0f, 0.0f, 0.0f);*/
-
 	camFrustum.pos = float3(6.0f, 3.5f, 1.5f);
 	LookAt(float3(0, 0, 0));
 }
@@ -40,9 +31,6 @@ bool ModuleCamera3D::CleanUp()
 // -----------------------------------------------------------------
 update_status ModuleCamera3D::Update(float dt)
 {
-	// Implement a debug camera with keys and mouse
-	// Now we can make this movememnt frame rate independant!
-
 	// if(mouseOnCamera){ //Only move camera out of the UI } 
 
 	float3 newPos(0, 0, 0);
@@ -118,30 +106,12 @@ update_status ModuleCamera3D::Update(float dt)
 		LookAt(orbitPoint);
 	}
 
-	// Recalculate matrix -------------
-	//CalculateViewMatrix();
-
 	return UPDATE_CONTINUE;
 }
 
 // -----------------------------------------------------------------
 void ModuleCamera3D::Look(Frustum& Position, const float3& Reference, bool RotateAroundReference)
 {
-	/*this->Position = Position;
-	this->Reference = Reference;
-
-	Z = normalize(Position - Reference);
-	X = normalize(cross(vec3(0.0f, 1.0f, 0.0f), Z));
-	Y = cross(Z, X);
-
-	if (!RotateAroundReference)
-	{
-		this->Reference = this->Position;
-		this->Position += Z * 0.05f;
-	}
-
-	CalculateViewMatrix();*/
-
 	Position.front = (Reference - Position.pos).Normalized();
 	float3 X = float3(0, 1, 0).Cross(Position.front).Normalized();
 	Position.up = Position.front.Cross(X);
@@ -150,14 +120,6 @@ void ModuleCamera3D::Look(Frustum& Position, const float3& Reference, bool Rotat
 // -----------------------------------------------------------------
 void ModuleCamera3D::LookAt(const float3& Spot)
 {
-	/*Reference = Spot;
-
-	Z = normalize(Position - Reference);
-	X = normalize(cross(vec3(0.0f, 1.0f, 0.0f), Z));
-	Y = cross(Z, X);
-
-	CalculateViewMatrix();*/
-
 	camFrustum.front = (Spot - camFrustum.pos).Normalized();
 	float3 X = float3(0, 1, 0).Cross(camFrustum.front).Normalized();
 	camFrustum.up = camFrustum.front.Cross(X);
@@ -167,19 +129,12 @@ void ModuleCamera3D::LookAt(const float3& Spot)
 // -----------------------------------------------------------------
 void ModuleCamera3D::Move(const float3& Movement)
 {
-	/*Position += Movement;
-	Reference += Movement;
-
-	CalculateViewMatrix();*/
-
 	camFrustum.pos += Movement;
 }
 
 // -----------------------------------------------------------------
 float4x4 ModuleCamera3D::GetViewMatrix()
 {
-	//return &ViewMatrix;
-
 	math::float4x4 matrix;
 
 	matrix = camFrustum.ViewMatrix();
