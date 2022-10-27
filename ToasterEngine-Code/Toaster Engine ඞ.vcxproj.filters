@@ -544,6 +544,117 @@
     <ClInclude Include="External\GPUDetector\dxgi1_4.h">
       <Filter>External Toasts\GPUDetector</Filter>
     </ClInclude>
+    <ClInclude Include="External\Assimp\include\ai_assert.h">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\anim.h">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\camera.h">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\cexport.h">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\cfileio.h">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\cimport.h">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\color4.h">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\config.h">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\DefaultLogger.hpp">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\defs.h">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\Exporter.hpp">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\Importer.hpp">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\importerdesc.h">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\IOStream.hpp">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\IOSystem.hpp">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\light.h">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\Logger.hpp">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\LogStream.hpp">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\material.h">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\matrix3x3.h">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\matrix4x4.h">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\mesh.h">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\metadata.h">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\NullLogger.hpp">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\postprocess.h">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\ProgressHandler.hpp">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\quaternion.h">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\scene.h">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\texture.h">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\types.h">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\vector2.h">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\vector3.h">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\version.h">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\Compiler\poppack1.h">
+      <Filter>External Toasts\Assimp\Compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\Compiler\pstdint.h">
+      <Filter>External Toasts\Assimp\Compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\Compiler\pushpack1.h">
+      <Filter>External Toasts\Assimp\Compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\port\AndroidJNI\AndroidJNIIOSystem.h">
+      <Filter>External Toasts\Assimp\PortAndroid</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Sources">
@@ -605,6 +716,15 @@
     </Filter>
     <Filter Include="External Toasts\GPUDetector">
       <UniqueIdentifier>{d8c2f078-8a89-4c9e-b894-a46f202b2fa0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="External Toasts\Assimp">
+      <UniqueIdentifier>{d6f6d98c-8dd2-4d3f-b5fc-93643a9f2541}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="External Toasts\Assimp\Compiler">
+      <UniqueIdentifier>{dc136df5-5eff-421f-9b8b-f0939ef175aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="External Toasts\Assimp\PortAndroid">
+      <UniqueIdentifier>{8aba36a5-33d1-4764-a538-2b78c7cccd6a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -814,6 +934,27 @@
     </None>
     <None Include="External\MathGeoLib\include\Math\Matrix.inl">
       <Filter>External Toasts\MathGeoLib\Math</Filter>
+    </None>
+    <None Include="External\Assimp\include\color4.inl">
+      <Filter>External Toasts\Assimp</Filter>
+    </None>
+    <None Include="External\Assimp\include\material.inl">
+      <Filter>External Toasts\Assimp</Filter>
+    </None>
+    <None Include="External\Assimp\include\matrix3x3.inl">
+      <Filter>External Toasts\Assimp</Filter>
+    </None>
+    <None Include="External\Assimp\include\matrix4x4.inl">
+      <Filter>External Toasts\Assimp</Filter>
+    </None>
+    <None Include="External\Assimp\include\quaternion.inl">
+      <Filter>External Toasts\Assimp</Filter>
+    </None>
+    <None Include="External\Assimp\include\vector2.inl">
+      <Filter>External Toasts\Assimp</Filter>
+    </None>
+    <None Include="External\Assimp\include\vector3.inl">
+      <Filter>External Toasts\Assimp</Filter>
     </None>
   </ItemGroup>
 </Project>
