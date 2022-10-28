@@ -11,11 +11,11 @@
 #include <string.h>
 
 #define lua_c
+ 
+#include "lua-5.4.4/lua.h"
 
-#include "lua.h"
-
-#include "lauxlib.h"
-#include "lualib.h"
+#include "lua-5.4.4/lauxlib.h"
+#include "lua-5.4.4/lualib.h"
 
 
 
@@ -390,4 +390,3 @@ int main (int argc, char **argv) {
   lua_close(L);
   return (status || s.status) ? EXIT_FAILURE : EXIT_SUCCESS;
 }
-

@@ -658,6 +658,9 @@
     <ClInclude Include="Source\Primitive.h">
       <Filter>Sources\Tools</Filter>
     </ClInclude>
+    <ClInclude Include="External\PhysFS\include\physfs.h">
+      <Filter>External Toasts\PhysFS</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Sources">
@@ -728,6 +731,9 @@
     </Filter>
     <Filter Include="External Toasts\Assimp\PortAndroid">
       <UniqueIdentifier>{8aba36a5-33d1-4764-a538-2b78c7cccd6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="External Toasts\PhysFS">
+      <UniqueIdentifier>{4aa05b2b-a495-438f-8701-9a9ccde02618}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

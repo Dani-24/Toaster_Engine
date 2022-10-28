@@ -266,6 +266,7 @@
     <ClInclude Include="External\Mmgr\mmgr.h" />
     <ClInclude Include="External\Mmgr\nommgr.h" />
     <ClInclude Include="External\parson\parson.h" />
+    <ClInclude Include="External\PhysFS\include\physfs.h" />
     <ClInclude Include="External\SDL\include\begin_code.h" />
     <ClInclude Include="External\SDL\include\close_code.h" />
     <ClInclude Include="External\SDL\include\SDL.h" />
