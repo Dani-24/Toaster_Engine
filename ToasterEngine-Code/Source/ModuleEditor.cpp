@@ -159,6 +159,7 @@ void ModuleEditor::Draw(){
 				}
 				if (ImGui::MenuItem("Demo: Baker House")) {
 					app->mesh3d->LoadFile("Assets/BakerHouse.fbx");
+					//app->mesh3d->LoadTexture("Assets/BakerHouse.png");
 				}
 
 				ImGui::EndMenu();

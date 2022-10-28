@@ -7,6 +7,7 @@
 #include "../External/Assimp/include/postprocess.h"
 
 #include <string>
+
 using namespace std;
 
 #define VERTEX_ARG 5
@@ -39,6 +40,8 @@ public:
 
 	void LoadFile(string file_path);
 	void LoadMesh(Mesh* mesh);
+
+	uint LoadTexture(string file_path);
 
 private:
 

@@ -6,6 +6,14 @@
 
 #include "OpenGL.h"
 
+#pragma comment( lib, "External/DevIL/libx86/DevIL.lib" )
+#pragma comment( lib, "External/DevIL/libx86/ILU.lib" )
+#pragma comment( lib, "External/DevIL/libx86/ILUT.lib" )
+
+#include "../External/DevIL/include/ilu.h"
+#include "../External/DevIL/include/ilut.h"
+#include "../External/DevIL/include/il.h"
+
 ModuleMesh3D::ModuleMesh3D(Application* app, bool start_enabled) : Module(app, start_enabled){}
 ModuleMesh3D::~ModuleMesh3D(){}
 
@@ -18,6 +26,10 @@ bool ModuleMesh3D::Start()
 	struct aiLogStream stream;
 	stream = aiGetPredefinedLogStream(aiDefaultLogStream_DEBUGGER, nullptr);
 	aiAttachLogStream(&stream);
+
+	ilInit();
+	iluInit();
+	ilutInit();
 
 	return ret;
 }
@@ -159,7 +171,7 @@ void Mesh::Render()
 	glEnable(GL_TEXTURE_COORD_ARRAY);
 	glEnable(GL_TEXTURE_2D);
 	glEnableClientState(GL_VERTEX_ARRAY);
-	//glBindTexture(GL_TEXTURE_2D, DevIL_Logic::textureID);
+	//glBindTexture(GL_TEXTURE_2D, /*textIDs*/);
 
 	glBindBuffer(GL_ARRAY_BUFFER, id_vertices);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_indices);
@@ -178,4 +190,54 @@ void Mesh::Render()
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_TEXTURE_COORD_ARRAY);
+}
+
+uint ModuleMesh3D::LoadTexture(string path) {
+
+	ILubyte* Lump;
+	ILuint Size;
+	FILE* File;
+
+	File = fopen(path.c_str(), "rb");
+	fseek(File, 0, SEEK_END);
+	Size = ftell(File);
+
+	Lump = (ILubyte*)malloc(Size);
+	fseek(File, 0, SEEK_SET);
+	fread(Lump, 1, Size, File);
+
+	LOG("SIZE: %i", Size);
+
+	if (ilLoadImage(path.c_str()) == true) {
+
+		LOG("FOUND");
+		GLuint texID;
+		GLuint texture;
+
+
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		texID = ilutGLBindTexImage();
+
+		glBindTexture(GL_TEXTURE_2D, texID);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, CHECKERS_WIDTH, CHECKERS_HEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, texImage);
+		glGenerateMipmap(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		ilDeleteImages(1, &texID);
+
+		glBindTexture(GL_TEXTURE_2D, 0);
+		fclose(File);
+		free(Lump);
+
+		return texID;
+	}
+
+	fclose(File);
+
+
+	LOG("NOT FOUND");
 }

@@ -661,6 +661,33 @@
     <ClInclude Include="External\PhysFS\include\physfs.h">
       <Filter>External Toasts\PhysFS</Filter>
     </ClInclude>
+    <ClInclude Include="Source\GameObject.h">
+      <Filter>Sources\Engine\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="External\DevIL\include\devil_cpp_wrapper.hpp">
+      <Filter>External Toasts\DevIL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\DevIL\include\devil_internal_exports.h">
+      <Filter>External Toasts\DevIL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\DevIL\include\il.h">
+      <Filter>External Toasts\DevIL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\DevIL\include\il_wrap.h">
+      <Filter>External Toasts\DevIL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\DevIL\include\ilu.h">
+      <Filter>External Toasts\DevIL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\DevIL\include\ilu_region.h">
+      <Filter>External Toasts\DevIL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\DevIL\include\ilut.h">
+      <Filter>External Toasts\DevIL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\DevIL\include\ilut_config.h">
+      <Filter>External Toasts\DevIL</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Sources">
@@ -734,6 +761,12 @@
     </Filter>
     <Filter Include="External Toasts\PhysFS">
       <UniqueIdentifier>{4aa05b2b-a495-438f-8701-9a9ccde02618}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Engine\GameObject">
+      <UniqueIdentifier>{eeee20d0-bc10-4e06-8b03-90449b8645d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="External Toasts\DevIL">
+      <UniqueIdentifier>{a612b636-3f07-4622-8945-89ccaea2f0aa}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -918,6 +951,12 @@
     <ClCompile Include="Source\Primitive.cpp">
       <Filter>Sources\Tools</Filter>
     </ClCompile>
+    <ClCompile Include="Source\GameObject.cpp">
+      <Filter>Sources\Engine\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="External\DevIL\include\luadevil.c">
+      <Filter>External Toasts\DevIL</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="External\SDL\include\SDL_config.h.cmake">
@@ -967,6 +1006,9 @@
     </None>
     <None Include="External\Assimp\include\vector3.inl">
       <Filter>External Toasts\Assimp</Filter>
+    </None>
+    <None Include="External\DevIL\include\DevIL.i">
+      <Filter>External Toasts\DevIL</Filter>
     </None>
   </ItemGroup>
 </Project>
