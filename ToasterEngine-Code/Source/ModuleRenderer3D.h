@@ -58,7 +58,7 @@ private:
 	bool colorChanged, redChanged, greenChanged, blueChanged;
 	float colorChangeSpeed = 0.005f;
 
-	float lightIntensity = 0.9f;
+	float lightIntensity = 255.0f;
 
 	// GL Debug
 	bool depthTest = true;

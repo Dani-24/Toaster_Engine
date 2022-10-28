@@ -143,17 +143,24 @@ void ModuleEditor::Draw(){
 
 			if (ImGui::BeginMenu("Create 3D Mesh")) {
 				if(ImGui::MenuItem("Cube")) {
-					app->mesh3d->LoadMesh(Primitive::CreateCube());
+					app->mesh3d->LoadFile("Assets/default_Meshes/cube.fbx");
 				}
 				if (ImGui::MenuItem("Sphere")) {
-					app->mesh3d->LoadMesh(Primitive::CreateSphere());
+					app->mesh3d->LoadFile("Assets/default_Meshes/sphere.fbx");
 				}
 				if (ImGui::MenuItem("Cylinder")) {
-					app->mesh3d->LoadMesh(Primitive::CreateCylinder());
+					app->mesh3d->LoadFile("Assets/default_Meshes/cylinder.fbx");
+				}
+				if (ImGui::MenuItem("Cone")) {
+					app->mesh3d->LoadFile("Assets/default_Meshes/cone.fbx");
 				}
 				if (ImGui::MenuItem("Plane")) {
-					app->mesh3d->LoadMesh(Primitive::CreatePlane());
+					app->mesh3d->LoadFile("Assets/default_Meshes/plane.fbx");
 				}
+				if (ImGui::MenuItem("Demo: Baker House")) {
+					app->mesh3d->LoadFile("Assets/BakerHouse.fbx");
+				}
+
 				ImGui::EndMenu();
 			}
 

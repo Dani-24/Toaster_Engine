@@ -84,7 +84,7 @@ void ModuleMesh3D::LoadFile(string file_path)
 				mesh->vertices[v * VERTEX_ARG + 4] = scene->mMeshes[i]->mTextureCoords[0][v].y;
 			}
 
-			LOG("Loading 3d mesh with %d vertices", mesh->num_vertices);
+			LOG("Loading 3d mesh %s with %d vertices", file_path.c_str(), mesh->num_vertices);
 
 			//Load Faces
 			if (scene->mMeshes[i]->HasFaces())
@@ -109,14 +109,14 @@ void ModuleMesh3D::LoadFile(string file_path)
 				LoadMesh(mesh);
 			}
 			else {
-				LOG("This toast has no faces: %s", file_path);
+				LOG("This toast has no faces: %s", file_path.c_str());
 				delete mesh;
 			}
 		}
 		aiReleaseImport(scene);
 	}
 	else {
-		LOG("Error loading this shit %s", file_path);
+		LOG("Error loading this shit %s", file_path.c_str());
 	}
 }
 
