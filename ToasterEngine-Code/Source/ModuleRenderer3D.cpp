@@ -109,7 +109,7 @@ bool ModuleRenderer3D::Init()
 		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 		glClearDepth(1.0f);
 
-		//Initialize clear color
+		//Initialize color
 		glClearColor(Cyan.r, Cyan.g, Cyan.b, 1.f);
 
 		//Check for error
@@ -173,6 +173,31 @@ bool ModuleRenderer3D::Init()
 	ImGui_ImplSDL2_InitForOpenGL(app->window->window, context);
 	ImGui_ImplOpenGL3_Init("#version 130");
 
+	{
+		/*glGenFramebuffers(1, &frameBuff);
+		glBindFramebuffer(GL_FRAMEBUFFER, frameBuff);
+
+		glGenTextures(1, &camBuff);
+		glBindTexture(GL_TEXTURE_2D, camBuff);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, SCREEN_WIDTH, SCREEN_HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, camBuff, 0);
+
+		glGenRenderbuffers(1, &renderBuff);
+		glBindRenderbuffer(GL_RENDERBUFFER, renderBuff);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, SCREEN_WIDTH, SCREEN_HEIGHT);
+		glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, renderBuff);
+
+		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+			LOG("Framebuffer is not complete");
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);*/
+	}
+
 	return ret;
 }
 
@@ -192,9 +217,11 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	// light 0 on cam pos
 	lights[0].SetPos(app->camera->GetPos().x, app->camera->GetPos().y, app->camera->GetPos().z);
 
-	for (uint i = 0; i < MAX_LIGHTS; ++i) {
+	for (uint i = 0; i < MAX_LIGHTS; i++) {
 		lights[i].Render();
 	}
+
+	//glBindFramebuffer(GL_FRAMEBUFFER, camBuff);
 
 	return UPDATE_CONTINUE;
 }
@@ -256,6 +283,8 @@ bool ModuleRenderer3D::CleanUp()
 	ImGui::DestroyContext();
 
 	SDL_GL_DeleteContext(context);
+
+	//glDeleteFramebuffers(1, &frameBuff);
 
 	return true;
 }

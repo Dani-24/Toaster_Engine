@@ -69,4 +69,7 @@ private:
 
 	// Hardware
 	Hardware hardware;
+
+public:
+	//uint camBuff, frameBuff, renderBuff;
 };

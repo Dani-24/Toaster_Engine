@@ -193,7 +193,7 @@ void ModuleEditor::Draw(){
 				{
 					showingEditor = !showingEditor;
 
-					showConsoleMenu = showHierarchy = showInspector = showGameEditorWindow = showAssetManager = false;
+					showConsoleMenu = showHierarchy = showInspector = showGameEditorWindow = showAssetManager = showAssetExplorer = false;
 				}
 			}
 			else {
@@ -201,7 +201,7 @@ void ModuleEditor::Draw(){
 				{
 					showingEditor = !showingEditor;
 
-					showConsoleMenu = showHierarchy = showInspector = showGameEditorWindow = showAssetManager = true;
+					showConsoleMenu = showHierarchy = showInspector = showGameEditorWindow = showAssetManager = showAssetExplorer = true;
 
 				}
 			}
@@ -266,8 +266,15 @@ void ModuleEditor::ShowGameEditorWindow(bool* open) {
 	else {
 
 		// RENDER CAMERA HERE
-		//ImGui::Image();
-		ImGui::TextWrapped("WIP Window");
+
+		//with out the size, rescalet okey but crash
+		//ImGui::BeginChild("", ImVec2(SCREEN_WIDTH, SCREEN_HEIGHT));
+
+		//ImVec2 sizeWindScn = ImGui::GetWindowSize();
+
+		////ImGui::Image((ImTextureID)app->renderer3D->camBuff, sizeWindScn, ImVec2(0, 1), ImVec2(1, 0));
+
+		//ImGui::EndChild();		
 
 		ImGui::End();
 	}
