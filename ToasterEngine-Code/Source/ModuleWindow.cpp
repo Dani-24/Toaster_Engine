@@ -16,7 +16,10 @@ ModuleWindow::~ModuleWindow()
 // Called before render is available
 bool ModuleWindow::Init()
 {
+#ifdef _DEBUG
 	LOG("Init SDL window & surface");
+#endif // _DEBUG
+
 	bool ret = true;
 
 	if(SDL_Init(SDL_INIT_VIDEO) < 0)

@@ -22,7 +22,7 @@ ModuleEditor::ModuleEditor(Application* app, bool start_enabled) : Module(app, s
 ModuleEditor::~ModuleEditor() {}
 
 bool ModuleEditor::Start() {
-	LOG("Starting Editor");
+	LOG("TOASTER: Loading Editor");
 	return true;
 }
 
@@ -159,7 +159,7 @@ void ModuleEditor::Draw(){
 				}
 				if (ImGui::MenuItem("Demo: Baker House")) {
 					app->mesh3d->LoadFile("Assets/BakerHouse.fbx");
-					//app->mesh3d->LoadTexture("Assets/BakerHouse.png");
+					app->textures->ImportTexture("Assets/BakerHouse.png");
 				}
 
 				ImGui::EndMenu();

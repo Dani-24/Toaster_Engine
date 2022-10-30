@@ -7,6 +7,9 @@
 
 #include "OpenGL.h"
 
+#include "ModuleMesh3D.h"
+#include "ModuleTexture.h"
+
 ModuleScene::ModuleScene(Application* app, bool start_enabled) : Module(app, start_enabled)
 {}
 
@@ -16,8 +19,12 @@ ModuleScene::~ModuleScene()
 // Load assets
 bool ModuleScene::Start()
 {
-	LOG("Loading Scene assets");
+	LOG("TOASTER: Preparing Default Scene");
 	bool ret = true;
+
+	/*app->mesh3d->LoadFile("Assets/BakerHouse.fbx");
+	
+	app->textures->ImportTexture("Assets/BakerHouse.png");*/
 
 	return ret;
 }

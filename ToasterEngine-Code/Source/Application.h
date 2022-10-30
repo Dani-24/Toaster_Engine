@@ -10,6 +10,8 @@
 #include "ModuleCamera3D.h"
 #include "ModuleEditor.h"
 #include "ModuleMesh3D.h"
+#include "ModuleImporter.h"
+#include "ModuleTexture.h"
 
 class Application
 {
@@ -21,6 +23,8 @@ public:
 	ModuleCamera3D* camera;
 	ModuleEditor* editor;
 	ModuleMesh3D* mesh3d;
+	ModuleImporter* importer;
+	ModuleTexture* textures;
 
 private:
 

@@ -64,7 +64,7 @@ ModuleRenderer3D::~ModuleRenderer3D()
 // Called before render is available
 bool ModuleRenderer3D::Init()
 {
-	LOG("Creating 3D Renderer context");
+	LOG("TOASTER: Creating 3D Renderer context");
 	bool ret = true;
 
 	//Create context
@@ -276,7 +276,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 //Called before quitting
 bool ModuleRenderer3D::CleanUp()
 {
-	LOG("Destroying 3D Renderer");
+	LOG("TOASTER: Destroying 3D Renderer");
 
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplSDL2_Shutdown();

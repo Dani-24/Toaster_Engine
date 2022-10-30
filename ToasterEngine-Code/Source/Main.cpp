@@ -45,7 +45,7 @@ int main(int argc, char ** argv)
 			else
 			{
 				state = MAIN_UPDATE;
-				LOG("-------------- Toaster Update --------------");
+				LOG("-- Toaster Ready : Enter your Toast --");
 			}
 
 			break;

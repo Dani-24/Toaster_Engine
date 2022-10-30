@@ -12,16 +12,21 @@ Application::Application()
 	camera = new ModuleCamera3D(this);
 	editor = new ModuleEditor(this);
 	mesh3d = new ModuleMesh3D(this);
+	importer = new ModuleImporter(this);
+	textures = new ModuleTexture(this);
 
 	// Main Modules
 	AddModule(window);
 	AddModule(camera);
 	AddModule(input);
+
+	AddModule(importer);
 	
 	// Scenes
 	AddModule(scene);
 
 	AddModule(mesh3d);
+	AddModule(textures);
 
 	AddModule(editor);
 

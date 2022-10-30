@@ -688,6 +688,12 @@
     <ClInclude Include="External\DevIL\include\ilut_config.h">
       <Filter>External Toasts\DevIL</Filter>
     </ClInclude>
+    <ClInclude Include="Source\ModuleTexture.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ModuleImporter.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Sources">
@@ -956,6 +962,12 @@
     </ClCompile>
     <ClCompile Include="External\DevIL\include\luadevil.c">
       <Filter>External Toasts\DevIL</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ModuleTexture.cpp">
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ModuleImporter.cpp">
+      <Filter>Sources\Modules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

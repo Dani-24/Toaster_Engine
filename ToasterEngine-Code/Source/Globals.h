@@ -10,6 +10,7 @@
 #include <list>
 #include <iostream>
 #include <vector>
+#include <map>
 
 #define LOG(format, ...) log(__FILE__, __LINE__, format, __VA_ARGS__);
 
@@ -38,4 +39,23 @@ enum update_status
 #define WIN_BORDERLESS false
 #define WIN_FULLSCREEN_DESKTOP false
 #define VSYNC true
-#define TITLE "Toaster Engine v0.0.1"
+#define TITLE "Toaster Engine v0.1.0"
+
+#define RELEASE( x ) \
+    {                        \
+    if( x != nullptr )        \
+        {                      \
+      delete x;            \
+      x = nullptr;              \
+        }                      \
+    }
+
+// Deletes an array of buffers
+#define RELEASE_ARRAY( x ) \
+	{							  \
+	if( x != nullptr )			  \
+		{							\
+	  delete[] x;				\
+	  x = nullptr;					\
+		}							\
+	}

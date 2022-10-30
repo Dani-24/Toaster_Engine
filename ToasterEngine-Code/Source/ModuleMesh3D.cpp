@@ -20,7 +20,7 @@ ModuleMesh3D::~ModuleMesh3D(){}
 // -----------------------------------------------------------------
 bool ModuleMesh3D::Start()
 {
-	LOG("Setting up mesh loader");
+	LOG("TOASTER: Setting up mesh loader");
 	bool ret = true;
 
 	struct aiLogStream stream;
@@ -37,7 +37,7 @@ bool ModuleMesh3D::Start()
 // -----------------------------------------------------------------
 bool ModuleMesh3D::CleanUp()
 {
-	LOG("Cleaning meshes");
+	LOG("TOASTER: Cleaning meshes");
 
 	for (int i = 0; i < meshes.size(); i++) {
 		delete meshes[i];
