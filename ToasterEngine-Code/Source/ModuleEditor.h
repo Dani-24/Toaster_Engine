@@ -83,6 +83,10 @@ public:
 	int ddCooldown = 0;
 	std::string message = "";
 
+	uint texture = NULL;
+	uint actualTexture;
+	uint checkers_texture;
+
 public:
 	void AddLogMsg(const char* msg);
 };

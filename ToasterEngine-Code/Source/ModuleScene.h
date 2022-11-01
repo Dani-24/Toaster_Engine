@@ -19,5 +19,4 @@ private:
 
 public:
 	bool axis = true;
-
 };

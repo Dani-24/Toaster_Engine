@@ -65,7 +65,12 @@ update_status ModuleMesh3D::PostUpdate(float dt)
 	// DRAW
 	for (int i = 0; i < meshes.size(); i++) {
 		if (meshes[i]->shouldRender) {
-			meshes[i]->Render();
+			if (app->editor->selectedGameObj != nullptr && meshes[i] == app->editor->selectedGameObj->GO_mesh) {
+				meshes[i]->Render(true);
+			}
+			else {
+				meshes[i]->Render();
+			}
 		}
 	}  
 
@@ -173,12 +178,14 @@ Mesh::~Mesh() {
 	id_indices = 0;
 }
 
-void Mesh::Render()
+void Mesh::Render(bool trans)
 {
 	glEnable(GL_TEXTURE_COORD_ARRAY);
 	glEnable(GL_TEXTURE_2D);
 	glEnableClientState(GL_VERTEX_ARRAY);
-	//glBindTexture(GL_TEXTURE_2D, /*textIDs*/);
+	if (app->editor->selectedGameObj != nullptr && app->editor->selectedGameObj->renderText) {
+		glBindTexture(GL_TEXTURE_2D, app->editor->selectedGameObj->GO_texture);
+	}
 
 	glBindBuffer(GL_ARRAY_BUFFER, id_vertices);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_indices);
@@ -189,6 +196,11 @@ void Mesh::Render()
 
 	// Draw
 	glPushMatrix(); 
+
+	if (trans) {
+		glMultMatrixf(&(app->editor->selectedGameObj->lTransform));
+	}
+
 	glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, NULL);
 	glPopMatrix();
 

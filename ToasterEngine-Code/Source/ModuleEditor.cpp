@@ -33,6 +33,8 @@ bool ModuleEditor::Start() {
 	allFiles.clear();
 	allFiles = ModuleImporter::GetAllFiles("Assets");
 
+	checkers_texture = app->textures->ImportTexture("Assets/checkers_texture.png");
+
 	return true;
 }
 
@@ -289,6 +291,7 @@ void ModuleEditor::Draw(){
 
 		ImGui::EndMainMenuBar();
 	}
+
 }
 
 void ModuleEditor::ShowGameEditorWindow(bool* open) {
@@ -455,23 +458,25 @@ void ModuleEditor::ShowInspectorMenu(bool* open) {
 			ImGui::SameLine();
 
 			float3 pos = float3(selectedGameObj->position.x, selectedGameObj->position.y, selectedGameObj->position.z);
-			if (ImGui::DragFloat3("U", &pos[0], 0.1f)) {
+			if (ImGui::DragFloat3("pos", &pos[0], 0.1f)) {
 				selectedGameObj->SetPos(vec3(pos.x, pos.y, pos.z));
 			}
 
 			ImGui::TextWrapped("Rotation : ");
 			ImGui::SameLine();
 			float3 rot = float3(selectedGameObj->rotation.x, selectedGameObj->rotation.y, selectedGameObj->rotation.z);
-			if (ImGui::DragFloat3("W", &rot[0], 0.1f)) {
-				selectedGameObj->SetPos(vec3(rot.x, rot.y, rot.z));
+			if (ImGui::DragFloat3("rot", &rot[0], 0.1f)) {
+				selectedGameObj->SetRot(vec3(rot.x, rot.y, rot.z));
 			}
 
 			ImGui::TextWrapped("Scale :    ");
 			ImGui::SameLine();
 			float3 scale = float3(selectedGameObj->scale.x, selectedGameObj->scale.y, selectedGameObj->scale.z);
-			if (ImGui::DragFloat3("U", &scale[0], 0.1f)) {
-				selectedGameObj->SetPos(vec3(scale.x, scale.y, scale.z));
+			if (ImGui::DragFloat3("scl", &scale[0], 0.1f)) {
+				selectedGameObj->SetScale(vec3(scale.x, scale.y, scale.z));
 			}
+
+			selectedGameObj->SetTransformMatrix(vec3(pos.x, pos.y, pos.z), vec3(rot.x, rot.y, rot.z), vec3(scale.x, scale.y, scale.z));
 
 			// MESH COMPONENT
 			if (selectedGameObj->GO_mesh != nullptr) {
@@ -507,20 +512,33 @@ void ModuleEditor::ShowInspectorMenu(bool* open) {
 				Space();
 				ImGui::TextWrapped("Component : TEXTURES");
 				
+				if (texture == NULL) {
+					texture = actualTexture = selectedGameObj->GO_texture;
+				}
+
+				if (ImGui::BeginCombo("Texture", "Select", ImGuiComboFlags_HeightSmall))
+				{
+					bool is_selected = (actualTexture == texture);
+					if (ImGui::Selectable("Default", is_selected))
+					{
+						selectedGameObj->GO_texture = texture;
+					}
+					is_selected = (actualTexture == checkers_texture);
+					if (ImGui::Selectable("Checkers", is_selected))
+					{
+						selectedGameObj->GO_texture = checkers_texture;
+					}
+					ImGui::EndCombo();
+				}
 				ImGui::TextWrapped("Show Texture: ");
 				ImGui::SameLine();
-				for (int i = 0; i < app->textures->loadedTextures.size(); i++) {
-					if (app->textures->loadedTextures[i].OpenGLID == selectedGameObj->GetID()) {
-						ImGui::Selectable("Visible : ", &app->textures->loadedTextures[i].bind);
-						ImGui::SameLine();
-						if (app->textures->loadedTextures[i].bind) {
-							ImGui::TextColored(ImVec4(0.5f, 1.0f, 0.0f, 1.0f), "True");
-						}
-						else {
-							ImGui::TextColored(ImVec4(1.f, 0.0f, 0.0f, 1.0f), "False");
-						}
-						break;
-					}
+				ImGui::Selectable("Visible : ", &selectedGameObj->renderText);
+				ImGui::SameLine();
+				if (selectedGameObj->renderText) {
+					ImGui::TextColored(ImVec4(0.5f, 1.0f, 0.0f, 1.0f), "True");
+				}
+				else {
+					ImGui::TextColored(ImVec4(1.f, 0.0f, 0.0f, 1.0f), "False");
 				}
 
 				// Delete Texture
@@ -554,7 +572,7 @@ void ModuleEditor::ShowHierarchyMenu(bool* open) {
 		ImGui::End();
 	}
 	else {
-		PrepareDrawGameObject(gameObjects[0], false);
+		PrepareDrawGameObject(gameObjects[0], true);
 
 		ImGui::End();
 	}
@@ -577,6 +595,8 @@ void ModuleEditor::ShowAboutMenu(bool* open) {
 			ShellExecute(0, 0, "https://github.com/Dani-24", 0, 0, SW_SHOW);
 		}
 
+		ImGui::TextWrapped("Help me pls");
+
 		Space();
 
 		// SOFTWARE VERSIONS
@@ -594,7 +614,9 @@ void ModuleEditor::ShowAboutMenu(bool* open) {
 		ImGui::TextWrapped("Mmgr: Fluid Studios"); ImGui::NewLine();
 		ImGui::TextWrapped("GPUDetector : Intel Corporation"); ImGui::NewLine();
 		ImGui::TextWrapped("Parson: 1.1.0"); ImGui::NewLine();
-		ImGui::TextWrapped("Assimp: ?");
+		ImGui::TextWrapped("Assimp: 5.2.5"); ImGui::NewLine();
+		ImGui::TextWrapped("DevIL: 1.8.0"); ImGui::NewLine();
+		ImGui::TextWrapped("PhysFS: 3.0.2");
 
 		Space();
 

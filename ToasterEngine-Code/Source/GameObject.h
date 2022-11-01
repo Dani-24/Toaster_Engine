@@ -51,4 +51,9 @@ public:
 	uint GO_texture = NULL;
 
 	bool pendindToDelete = false;
+
+	void SetTransformMatrix(vec3 _position, vec3 _rotation, vec3 _scale);
+	mat4x4 lTransform;
+
+	bool renderText;
 };

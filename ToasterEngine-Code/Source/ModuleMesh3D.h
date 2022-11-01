@@ -28,7 +28,7 @@ struct Mesh {
 	string path;
 	bool shouldRender = true;
 
-	void Render();
+	void Render(bool trans = false);
 };
 
 class ModuleMesh3D : public Module
