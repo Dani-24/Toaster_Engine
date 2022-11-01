@@ -26,12 +26,14 @@ Application::Application()
 	AddModule(importer);
 	
 	// Scenes
+
+	AddModule(editor);
+
 	AddModule(scene);
 
 	AddModule(mesh3d);
 	AddModule(textures);
 
-	AddModule(editor);
 
 	// Renderer last!
 	AddModule(renderer3D);

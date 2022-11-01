@@ -381,7 +381,7 @@ void ModuleEditor::ShowInspectorMenu(bool* open) {
 	else {
 
 		if (selectedGameObj != nullptr) {
-			ImGui::TextWrapped("%s : ID %d", selectedGameObj->GetName().c_str(), selectedGameObj->GetID());
+			ImGui::TextWrapped("Components from %s : ID %d", selectedGameObj->GetName().c_str(), selectedGameObj->GetID());
 
 			Space();
 
