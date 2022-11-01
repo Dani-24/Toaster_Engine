@@ -5,9 +5,12 @@
 
 #include "GameObject.h"
 
+#include "FileTree.cpp"
+
 #define MAX_LOGS_SIZE 100
 
 class GameObject;
+class FileTree;
 
 class ModuleEditor : public Module 
 {
@@ -60,10 +63,21 @@ public:
 
 	GameObject* root;
 
+	GameObject* draggingGO = nullptr;
+
 	uint AddGameObject(GameObject* GameObj);
 	void SetSelectedGameObject(GameObject* GameObj);
 	GameObject* GetSelectedGameObject() { return selectedGameObj; }
 
+	void PrepareDrawGameObject(GameObject* gameObj, bool hasCh);
+	void DrawGameObject(GameObject* gameObj, int iteration);
+
+	// Assets
+	void AssetTree(FileTree* node);
+
+	FileTree* fileTree;
+	FileTree* currentNode = nullptr;
+	std::vector<std::string> allFiles;
 
 public:
 	void AddLogMsg(const char* msg);

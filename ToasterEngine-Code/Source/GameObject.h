@@ -29,7 +29,6 @@ public:
 	GameObject* GetParent() { return parent; }
 
 	void AddChild(GameObject* child);
-
 	void DeleteChild(GameObject* child);
 
 	std::string GetName() { return name; }
@@ -38,8 +37,11 @@ private:
 	uint ID;
 	std::string name;
 	GameObject* parent;
+
+public:
 	std::vector<GameObject*> childs;
 
+public:
 	vec3 position = vec3(0, 0, 0), 
 		rotation = vec3(0, 0, 0), 
 		scale = vec3(1, 1, 1);

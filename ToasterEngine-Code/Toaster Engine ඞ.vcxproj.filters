@@ -969,6 +969,9 @@
     <ClCompile Include="Source\ModuleImporter.cpp">
       <Filter>Sources\Modules</Filter>
     </ClCompile>
+    <ClCompile Include="Source\FileTree.cpp">
+      <Filter>Sources\Tools</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="External\SDL\include\SDL_config.h.cmake">

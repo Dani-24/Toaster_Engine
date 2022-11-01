@@ -3,6 +3,7 @@
 
 #include <algorithm>
 
+#pragma comment (lib, "External/PhysFS/libx86/physfs.lib")
 
 ModuleImporter::ModuleImporter(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -12,6 +13,12 @@ ModuleImporter::ModuleImporter(Application* app, bool start_enabled) : Module(ap
 	if (PHYSFS_setWriteDir(".") == 0) LOG("File System error while creating write dir: %s\n", PHYSFS_getLastError());
 
 	CreateFileDirectory(".");
+	CreateFileDirectory("C:/");
+	CreateFileDirectory("D:/");
+
+	AddPathToFileSystem(".");
+	AddPathToFileSystem("C:/");
+	AddPathToFileSystem("D:/");
 }
 
 ModuleImporter::~ModuleImporter()
@@ -31,12 +38,21 @@ bool ModuleImporter::CreateFileDirectory(const std::string dir)
 		PHYSFS_mkdir(dir.c_str());
 		return true;
 	}
+
 	return false;
 }
 
 std::string ModuleImporter::NormalizePath(const std::string path)
 {
 	std::string ret = path;
+
+	int pos = ret.find("C:\\");
+
+	if (pos != std::string::npos) ret.erase(pos, 3);
+
+	pos = ret.find("D:\\");
+
+	if (pos != std::string::npos) ret.erase(pos, 3);
 
 	for (int i = 0; i < ret.size(); i++)
 	{
@@ -255,4 +271,51 @@ ResourceType ModuleImporter::GetResourceType(const std::string& filename)
 	if (fileExtension == "tga" || fileExtension == "png" || fileExtension == "jpg" || fileExtension == "dds") return ResourceType::TEXTURE;
 
 	return ResourceType::SUSSYFILE;
+}
+
+FileTree* ModuleImporter::GetFileTree(std::string path, FileTree* parent)
+{
+	FileTree* ret = new FileTree(path + "/", GetFileName(path), parent);
+
+	char** list = PHYSFS_enumerateFiles(path.c_str());
+
+	for (int i = 0; list[i] != nullptr; i++)
+	{
+		std::string dirCheck = path + "/" + list[i];
+
+		if (PHYSFS_isDirectory(dirCheck.c_str()) != 0)
+		{
+			ret->directories.emplace_back(GetFileTree(dirCheck, ret));
+		}
+		else
+		{
+			ret->files.emplace_back(list[i]);
+		}
+	}
+
+	return ret;
+}
+
+std::vector<std::string> ModuleImporter::GetAllFiles(std::string path)
+{
+	std::vector<std::string> ret;
+
+	char** list = PHYSFS_enumerateFiles(path.c_str());
+
+	for (int i = 0; list[i] != nullptr; i++)
+	{
+		std::string dirCheck = path + "/" + list[i];
+
+		if (PHYSFS_isDirectory(dirCheck.c_str()) != 0)
+		{
+			std::vector<std::string> temp = GetAllFiles(dirCheck);
+			ret.insert(ret.end(), temp.begin(), temp.end());
+		}
+		else
+		{
+			ret.push_back(list[i]);
+		}
+	}
+
+	return ret;
 }

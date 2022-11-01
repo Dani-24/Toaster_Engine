@@ -67,7 +67,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <TargetName>$(SolutionName)\Engine_Output</TargetName>
+    <TargetName>$(ProjectName)</TargetName>
     <OutDir>$(SolutionDir)\Builds\$(Configuration)\</OutDir>
     <IntDir>Builds\$(Configuration)\</IntDir>
   </PropertyGroup>
@@ -435,6 +435,7 @@
     <ClCompile Include="External\parson\parson.c" />
     <ClCompile Include="Source\Application.cpp" />
     <ClCompile Include="Source\Color.cpp" />
+    <ClCompile Include="Source\FileTree.cpp" />
     <ClCompile Include="Source\GameObject.cpp" />
     <ClCompile Include="Source\glmath.cpp" />
     <ClCompile Include="Source\Light.cpp" />

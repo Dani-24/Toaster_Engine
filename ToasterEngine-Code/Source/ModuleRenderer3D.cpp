@@ -17,9 +17,6 @@
 #pragma comment (lib, "External/MathGeoLib/libx86/MathRelease/MathGeoLib.lib")
 #endif
 
-#include "../External/PhysFS/include/physfs.h"
-#pragma comment (lib, "External/PhysFS/libx86/physfs.lib")
-
 ModuleRenderer3D::ModuleRenderer3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	hardware.caps += (SDL_HasRDTSC()) ? "RDTSC," : "";

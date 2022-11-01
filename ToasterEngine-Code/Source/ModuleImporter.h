@@ -3,6 +3,8 @@
 #include "Globals.h"
 #include "Module.h"
 
+#include "FileTree.cpp"
+
 enum class ResourceType
 {
 	SUSSYFILE,
@@ -33,7 +35,11 @@ public:
 
 	static bool Copy(const std::string src, const std::string des, bool replace = true);
 
+	static FileTree* GetFileTree(std::string path, FileTree* parent = nullptr);
+
 	static std::string GetFileName(const std::string file, bool getExtension = true);
 
 	static ResourceType GetResourceType(const std::string& filename);
+
+	static std::vector<std::string> GetAllFiles(std::string path);
 };

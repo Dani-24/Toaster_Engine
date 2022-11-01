@@ -19,12 +19,17 @@ ModuleEditor::ModuleEditor(Application* app, bool start_enabled) : Module(app, s
 	memlog.reserve(MAX_LOGS_SIZE);
 }
 
-ModuleEditor::~ModuleEditor() {}
+ModuleEditor::~ModuleEditor() {
+}
 
 bool ModuleEditor::Start() {
 	LOG("TOASTER: Loading Editor");
 
 	root = new GameObject("Scene", nullptr);
+
+	fileTree = currentNode = ModuleImporter::GetFileTree("Assets");
+	allFiles.clear();
+	allFiles = ModuleImporter::GetAllFiles("Assets");
 
 	return true;
 }
@@ -79,6 +84,8 @@ bool ModuleEditor::CleanUp() {
 	fpslog.clear();
 	mslog.clear();
 	memlog.clear();
+
+	RELEASE(fileTree);
 
 	return true;
 }
@@ -357,7 +364,9 @@ void ModuleEditor::ShowAssetExplorer(bool* open) {
 	}
 	else {
 
-		ImGui::TextWrapped("WIP");
+		ImGui::SetNextItemOpen(true, ImGuiCond_FirstUseEver);
+		
+		AssetTree(fileTree);
 
 		ImGui::End();
 	}
@@ -386,6 +395,8 @@ void ModuleEditor::ShowInspectorMenu(bool* open) {
 			Space();
 
 			ImGui::TextWrapped("Position : X %d Y %d Z %d", selectedGameObj->GetPos().x, selectedGameObj->GetPos().y, selectedGameObj->GetPos().z);
+
+			ImGui::SliderFloat("Position X", &selectedGameObj->position.x, -100, 100);
 
 			ImGui::TextWrapped("Rotation : X %d Y %d Z %d", selectedGameObj->GetRot().x, selectedGameObj->GetRot().y, selectedGameObj->GetRot().z);
 			
@@ -421,7 +432,10 @@ void ModuleEditor::ShowHierarchyMenu(bool* open) {
 		for (size_t i = 0; i < gameObjects.size(); i++)
 		{
 
-			ImGui::TextWrapped("GO with ID %d : %s", gameObjects[i]->GetID(), gameObjects[i]->GetName().c_str());
+			if (!gameObjects[i]->childs.empty()) {
+				PrepareDrawGameObject(gameObjects[i], true);
+				break;
+			}
 
 		}
 
@@ -572,4 +586,99 @@ uint ModuleEditor::AddGameObject(GameObject* GameObj) {
 
 void ModuleEditor::SetSelectedGameObject(GameObject* GameObj) {
 	selectedGameObj = GameObj;
+}
+
+void ModuleEditor::PrepareDrawGameObject(GameObject* gameObj, bool hasCh) {
+	if (!hasCh) {
+		DrawGameObject(gameObj , 0);
+	}
+	else {
+		for (size_t i = 0; i < gameObj->childs.size(); i++)
+		{
+			DrawGameObject(gameObj->childs[i], i);
+		}
+	}
+}
+
+void ModuleEditor::DrawGameObject(GameObject* gameObj, int iteration) {
+
+	ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
+
+	if (gameObj == GetSelectedGameObject()) {
+		node_flags |= ImGuiTreeNodeFlags_Selected;
+	}
+
+	bool node_open;
+
+	if (gameObj->childs.empty())
+	{
+		ImGui::AlignTextToFramePadding();
+		node_flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen | ImGuiTreeNodeFlags_AllowItemOverlap;
+
+		ImGui::TreeNodeEx((void*)(intptr_t)iteration, node_flags, gameObj->GetName().c_str(), iteration); 
+		//ImGui::SameLine(ImGui::GetWindowWidth() - 28);
+		
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenOverlapped))
+		{
+			if (ImGui::IsMouseDown(ImGuiMouseButton_::ImGuiMouseButton_Left)) SetSelectedGameObject(gameObj);
+			/*if (ImGui::IsMouseDown(ImGuiMouseButton_::ImGuiMouseButton_Right)) rightClickedGameObject = gameObject;*/
+		}
+		node_open = false;
+	}
+	else
+	{
+		ImGui::AlignTextToFramePadding();
+		node_flags |= ImGuiTreeNodeFlags_AllowItemOverlap;
+		node_open = ImGui::TreeNodeEx((void*)(intptr_t)iteration, node_flags, gameObj->GetName().c_str(), iteration); 
+		//ImGui::SameLine(ImGui::GetWindowWidth() - 28);
+
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenOverlapped))
+		{
+			if (ImGui::IsMouseDown(ImGuiMouseButton_::ImGuiMouseButton_Left)) SetSelectedGameObject(gameObj);
+			/*if (ImGui::IsMouseDown(ImGuiMouseButton_::ImGuiMouseButton_Right)) rightClickedGameObject = gameObject;*/
+		}
+	}
+
+	if (ImGui::BeginDragDropSource())
+	{
+		ImGui::SetDragDropPayload("GameObject", gameObj, sizeof(GameObject*));
+
+		draggingGO = gameObj;
+
+		ImGui::Text("Sus movement?");
+		ImGui::EndDragDropSource();
+	}
+
+	if (ImGui::BeginDragDropTarget())
+	{
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GameObject"))
+		{
+			draggingGO->SetParent(gameObj);
+			draggingGO = nullptr;
+		}
+		ImGui::EndDragDropTarget();
+	}
+
+	if (node_open)
+	{
+		if (!gameObj->childs.empty()) PrepareDrawGameObject(gameObj, true);
+		ImGui::TreePop();
+	}
+}
+
+void ModuleEditor::AssetTree(FileTree* node) {
+	bool opened = ImGui::TreeNodeEx(node->name.c_str(), ImGuiTreeNodeFlags_OpenOnArrow);
+	if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left)) currentNode = node;
+	if (opened)
+	{
+		for (size_t i = 0; i < node->directories.size(); i++)
+		{
+			AssetTree(node->directories[i]);
+		}
+		for (size_t i = 0; i < node->files.size(); i++)
+		{
+			ImGui::Text(node->files[i].c_str());
+		}
+		ImGui::TreePop();
+	}
 }
