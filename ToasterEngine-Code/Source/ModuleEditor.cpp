@@ -390,16 +390,18 @@ void ModuleEditor::ShowInspectorMenu(bool* open) {
 			ImGui::TextWrapped("Rotation : X %d Y %d Z %d", selectedGameObj->GetRot().x, selectedGameObj->GetRot().y, selectedGameObj->GetRot().z);
 			
 			ImGui::TextWrapped("Scale : X %d Y %d Z %d", selectedGameObj->GetScale().x, selectedGameObj->GetScale().y, selectedGameObj->GetScale().z);
-
-			Space();
 			
 			if (selectedGameObj->GO_mesh != nullptr) {
+				Space();
 				ImGui::TextWrapped("This GameObject has a Mesh loaded");
 			}
 
 			if (selectedGameObj->GO_texture != NULL) {
+				Space();
 				ImGui::TextWrapped("This GameObject has a Texture loaded");
 			}
+
+			Space();
 		}
 		else {
 
