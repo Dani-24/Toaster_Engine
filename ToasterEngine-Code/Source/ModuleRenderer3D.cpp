@@ -17,7 +17,6 @@
 #pragma comment (lib, "External/MathGeoLib/libx86/MathRelease/MathGeoLib.lib")
 #endif
 
-// JUST TESTING
 #include "../External/PhysFS/include/physfs.h"
 #pragma comment (lib, "External/PhysFS/libx86/physfs.lib")
 
