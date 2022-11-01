@@ -144,7 +144,7 @@ void ModuleEditor::Draw(){
 			if (ImGui::MenuItem("Save and Close the fridge", "WIP")) {
 
 			}
-			if (ImGui::MenuItem("Suicide Butter", "Ctrl+Alt+F4", &closeOpenClose)) {
+			if (ImGui::MenuItem("Close Butter", "Ctrl+Alt+F4", &closeOpenClose)) {
 
 			}
 			ImGui::EndMenu();
