@@ -48,4 +48,6 @@ private:
 
 public:
 	void AddLogMsg(const char* msg);
+
+	uint bakerT = NULL;
 };

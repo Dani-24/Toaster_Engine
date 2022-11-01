@@ -22,6 +22,8 @@ public:
 	ModuleTexture(Application* app, bool start_enabled = true);
 	~ModuleTexture();
 
+	update_status Update(float dt);
+
 	// Image file to DDS
 	static void ImportImage(const std::string& filename, char* buffer, uint size);
 

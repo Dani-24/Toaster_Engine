@@ -1,5 +1,7 @@
 #include "Application.h"
 
+#include "OpenGL.h"
+
 #include "../External/DevIL/include/il.h"
 #include "../External/DevIL/include/ilut.h"
 
@@ -8,6 +10,8 @@
 #pragma comment (lib, "External/DevIL/libx86/ILUT.lib")
 
 #include "ModuleTexture.h"
+
+#include "../External/stb_image/stb_image.cpp"
 
 Texture::Texture()
 {
@@ -45,7 +49,7 @@ void ModuleTexture::ImportImage(const std::string& fileName, char* buffer, uint 
 		data = new ILubyte[imgSize]; // allocate data buffer
 		ilSaveL(IL_DDS, data, imgSize); // Save to buffer with the ilSaveIL function
 
-		//ModuleFiles::S_Save(fileName + ".dds", (char*)data, imgSize, false);
+		ModuleImporter::Save(fileName + ".dds", (char*)data, imgSize, false);
 
 		RELEASE_ARRAY(data);
 	}
@@ -87,7 +91,7 @@ uint ModuleTexture::Load(char* buffer, int size, int* width, int* heigth, std::s
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	//glGenerateMipmap(GL_TEXTURE_2D);
+	glGenerateMipmap(GL_TEXTURE_2D);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, engineTexture.width, engineTexture.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, bytes);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
@@ -144,34 +148,35 @@ uint ModuleTexture::CheckImage()
 
 uint ModuleTexture::ImportTexture(std::string path)
 {
+	LOG("Trying to import %s", path.c_str());
 	//Check if the given texture has been already loaded
-	//if (ModuleTexture::usedPaths.find(ModuleFiles::S_GetFileName(path, false)) != ModuleTexture::usedPaths.end())
-	//{
-	//	return ModuleTexture::usedPaths[ModuleFiles::S_GetFileName(path, false)]; // If this texture path was already loaded, return the loaded texture.
-	//}
+	if (ModuleTexture::usedPaths.find(ModuleImporter::GetFileName(path, false)) != ModuleTexture::usedPaths.end())
+	{
+		return ModuleTexture::usedPaths[ModuleImporter::GetFileName(path, false)]; // If this texture path was already loaded, return the loaded texture.
+	}
 
 	unsigned int m_RendererID;
 	std::string m_FilePath;
 	unsigned char* m_LocalBuffer;
 	int m_Width, m_Height, m_BPP;	// BPP = Bits per pixel
 
-	//stbi_set_flip_vertically_on_load(1);
-	//m_LocalBuffer = stbi_load(path.c_str(), &m_Width, &m_Height, &m_BPP, 4);
+	stbi_set_flip_vertically_on_load(1);
+	m_LocalBuffer = stbi_load(path.c_str(), &m_Width, &m_Height, &m_BPP, 4);
 
 	glGenTextures(1, &m_RendererID);
 	glBindTexture(GL_TEXTURE_2D, m_RendererID);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	/*glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);*/
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_Width, m_Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_LocalBuffer);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	if (m_LocalBuffer)
 	{
-		//stbi_image_free(m_LocalBuffer);
+		stbi_image_free(m_LocalBuffer);
 	}
 
 	Texture engineTexture;
@@ -179,7 +184,7 @@ uint ModuleTexture::ImportTexture(std::string path)
 	engineTexture.name = path;
 
 	ModuleTexture::loadedTextures[m_RendererID] = engineTexture; // Add loaded texture inside TextureManager.
-	//ModuleTexture::usedPaths[ModuleFiles::S_GetFileName(path, false)] = m_RendererID;
+	ModuleTexture::usedPaths[ModuleImporter::GetFileName(path, false)] = m_RendererID;
 
 	return m_RendererID;
 }
@@ -194,10 +199,10 @@ float ModuleTexture::BindTexture(uint texture)
 		}
 	}
 
-	//if (GL_TEXTURE0 + bindedTextures == GL_TEXTURE31) // If we loaded 32 textures already
-	//	return -1;
+	if (GL_TEXTURE0 + bindedTextures == GL_TEXTURE31) // If we loaded 32 textures already
+		return -1;
 
-	//glActiveTexture(GL_TEXTURE0 + bindedTextures);
+	glActiveTexture(GL_TEXTURE0 + bindedTextures);
 	glBindTexture(GL_TEXTURE_2D, texture);
 
 	bindedTexturesInfo.push_back({ texture, bindedTextures });
@@ -211,6 +216,14 @@ void ModuleTexture::UnBindTextures()
 	bindedTexturesInfo.clear();
 	for (int i = 0; i < 32; i++)
 	{
-		//glBindTexture(GL_TEXTURE0 + i, 0); // Unbind every texture
+		glBindTexture(GL_TEXTURE0 + i, 0); // Unbind every texture
 	}
+}
+
+update_status ModuleTexture::Update(float dt) {
+	if (app->editor->bakerT != NULL) {
+		BindTexture(app->editor->bakerT);
+	}
+
+	return UPDATE_CONTINUE;
 }
