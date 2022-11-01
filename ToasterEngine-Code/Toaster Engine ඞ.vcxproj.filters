@@ -1,96 +1,697 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="Application.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Main.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Color.cpp">
-      <Filter>Sources\Tools</Filter>
-    </ClCompile>
-    <ClCompile Include="glmath.cpp">
-      <Filter>Sources\Tools</Filter>
-    </ClCompile>
-    <ClCompile Include="log.cpp">
-      <Filter>Sources\Tools</Filter>
-    </ClCompile>
-    <ClCompile Include="Timer.cpp">
-      <Filter>Sources\Tools\Timer</Filter>
-    </ClCompile>
-    <ClCompile Include="Light.cpp">
-      <Filter>Sources\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Primitive.cpp">
-      <Filter>Sources\Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="ModuleInput.cpp">
-      <Filter>Sources\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="ModuleSceneIntro.cpp">
-      <Filter>Sources\Gameplay</Filter>
-    </ClCompile>
-    <ClCompile Include="ModuleCamera3D.cpp">
-      <Filter>Sources\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="ModuleRenderer3D.cpp">
-      <Filter>Sources\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="ModuleWindow.cpp">
-      <Filter>Sources\Modules</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Application.h">
-      <Filter>Sources</Filter>
-    </ClInclude>
-    <ClInclude Include="Globals.h">
-      <Filter>Sources</Filter>
-    </ClInclude>
-    <ClInclude Include="Color.h">
-      <Filter>Sources\Tools</Filter>
-    </ClInclude>
-    <ClInclude Include="glmath.h">
-      <Filter>Sources\Tools</Filter>
-    </ClInclude>
-    <ClInclude Include="p2DynArray.h">
-      <Filter>Sources\Tools</Filter>
-    </ClInclude>
-    <ClInclude Include="p2List.h">
-      <Filter>Sources\Tools</Filter>
-    </ClInclude>
-    <ClInclude Include="p2Point.h">
-      <Filter>Sources\Tools</Filter>
-    </ClInclude>
-    <ClInclude Include="Timer.h">
-      <Filter>Sources\Tools\Timer</Filter>
-    </ClInclude>
-    <ClInclude Include="Light.h">
-      <Filter>Sources\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Primitive.h">
-      <Filter>Sources\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="Module.h">
-      <Filter>Sources\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="ModuleInput.h">
-      <Filter>Sources\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="ModuleSceneIntro.h">
-      <Filter>Sources\Gameplay</Filter>
-    </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Resources</Filter>
     </ClInclude>
-    <ClInclude Include="ModuleCamera3D.h">
+    <ClInclude Include="Source\Application.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Globals.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Color.h">
+      <Filter>Sources\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Light.h">
+      <Filter>Sources\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Module.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="ModuleRenderer3D.h">
+    <ClInclude Include="Source\ModuleCamera3D.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="ModuleWindow.h">
+    <ClInclude Include="Source\ModuleInput.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ModuleRenderer3D.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ModuleWindow.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ModuleEditor.h">
+      <Filter>Sources\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ModuleScene.h">
+      <Filter>Sources\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Timer.h">
+      <Filter>Sources\Tools\Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\glmath.h">
+      <Filter>Sources\Tools\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\OpenGL.h">
+      <Filter>Sources\Tools\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\begin_code.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\close_code.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_assert.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_atomic.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_audio.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_bits.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_blendmode.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_clipboard.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_config.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_config_android.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_config_iphoneos.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_config_macosx.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_config_minimal.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_config_pandora.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_config_psp.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_config_windows.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_config_winrt.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_config_wiz.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_copying.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_cpuinfo.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_egl.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_endian.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_error.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_events.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_filesystem.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_gamecontroller.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_gesture.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_haptic.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_hidapi.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_hints.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_joystick.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_keyboard.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_keycode.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_loadso.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_locale.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_log.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_main.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_messagebox.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_metal.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_misc.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_mouse.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_mutex.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_name.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_opengl.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_opengl_glext.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_opengles.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_opengles2.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_opengles2_gl2.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_opengles2_gl2ext.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_opengles2_gl2platform.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_opengles2_khrplatform.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_pixels.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_platform.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_power.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_quit.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_rect.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_render.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_revision.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_rwops.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_scancode.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_sensor.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_shape.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_stdinc.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_surface.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_system.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_syswm.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_test.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_test_assert.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_test_common.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_test_compare.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_test_crc32.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_test_font.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_test_fuzzer.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_test_harness.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_test_images.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_test_log.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_test_md5.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_test_memory.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_test_random.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_thread.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_timer.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_touch.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_types.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_version.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_video.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL\include\SDL_vulkan.h">
+      <Filter>External Toasts\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\parson\parson.h">
+      <Filter>External Toasts\Parson</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\MathBuildConfig.h">
+      <Filter>External Toasts\MathGeoLib</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\MathGeoLib.h">
+      <Filter>External Toasts\MathGeoLib</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\MathGeoLibFwd.h">
+      <Filter>External Toasts\MathGeoLib</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Time\Clock.h">
+      <Filter>External Toasts\MathGeoLib\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Algorithm\Random\LCG.h">
+      <Filter>External Toasts\MathGeoLib\Algorithm/Random</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Geometry\AABB.h">
+      <Filter>External Toasts\MathGeoLib\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Geometry\AABB2D.h">
+      <Filter>External Toasts\MathGeoLib\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Geometry\Capsule.h">
+      <Filter>External Toasts\MathGeoLib\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Geometry\Circle.h">
+      <Filter>External Toasts\MathGeoLib\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Geometry\Cone.h">
+      <Filter>External Toasts\MathGeoLib\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Geometry\Cylinder.h">
+      <Filter>External Toasts\MathGeoLib\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Geometry\Frustum.h">
+      <Filter>External Toasts\MathGeoLib\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Geometry\GeometryAll.h">
+      <Filter>External Toasts\MathGeoLib\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Geometry\GeomType.h">
+      <Filter>External Toasts\MathGeoLib\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Geometry\HitInfo.h">
+      <Filter>External Toasts\MathGeoLib\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Geometry\KDTree.h">
+      <Filter>External Toasts\MathGeoLib\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Geometry\Line.h">
+      <Filter>External Toasts\MathGeoLib\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Geometry\LineSegment.h">
+      <Filter>External Toasts\MathGeoLib\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Geometry\OBB.h">
+      <Filter>External Toasts\MathGeoLib\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Geometry\PBVolume.h">
+      <Filter>External Toasts\MathGeoLib\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Geometry\Plane.h">
+      <Filter>External Toasts\MathGeoLib\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Geometry\Polygon.h">
+      <Filter>External Toasts\MathGeoLib\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Geometry\Polyhedron.h">
+      <Filter>External Toasts\MathGeoLib\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Geometry\QuadTree.h">
+      <Filter>External Toasts\MathGeoLib\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Geometry\Ray.h">
+      <Filter>External Toasts\MathGeoLib\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Geometry\Sphere.h">
+      <Filter>External Toasts\MathGeoLib\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Geometry\Triangle.h">
+      <Filter>External Toasts\MathGeoLib\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Geometry\TriangleMesh.h">
+      <Filter>External Toasts\MathGeoLib\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Math\assume.h">
+      <Filter>External Toasts\MathGeoLib\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Math\BitOps.h">
+      <Filter>External Toasts\MathGeoLib\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Math\Complex.h">
+      <Filter>External Toasts\MathGeoLib\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Math\CoordinateAxisConvention.h">
+      <Filter>External Toasts\MathGeoLib\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Math\FixedPoint.h">
+      <Filter>External Toasts\MathGeoLib\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Math\float2.h">
+      <Filter>External Toasts\MathGeoLib\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Math\float3.h">
+      <Filter>External Toasts\MathGeoLib\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Math\float3x3.h">
+      <Filter>External Toasts\MathGeoLib\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Math\float3x4.h">
+      <Filter>External Toasts\MathGeoLib\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Math\float4.h">
+      <Filter>External Toasts\MathGeoLib\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Math\float4_neon.h">
+      <Filter>External Toasts\MathGeoLib\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Math\float4_sse.h">
+      <Filter>External Toasts\MathGeoLib\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Math\float4x4.h">
+      <Filter>External Toasts\MathGeoLib\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Math\float4x4_neon.h">
+      <Filter>External Toasts\MathGeoLib\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Math\float4x4_sse.h">
+      <Filter>External Toasts\MathGeoLib\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Math\FloatCmp.h">
+      <Filter>External Toasts\MathGeoLib\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Math\MathAll.h">
+      <Filter>External Toasts\MathGeoLib\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Math\MathConstants.h">
+      <Filter>External Toasts\MathGeoLib\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Math\MathFunc.h">
+      <Filter>External Toasts\MathGeoLib\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Math\MathLog.h">
+      <Filter>External Toasts\MathGeoLib\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Math\MathNamespace.h">
+      <Filter>External Toasts\MathGeoLib\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Math\MathTypes.h">
+      <Filter>External Toasts\MathGeoLib\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Math\MatrixProxy.h">
+      <Filter>External Toasts\MathGeoLib\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Math\myassert.h">
+      <Filter>External Toasts\MathGeoLib\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Math\Polynomial.h">
+      <Filter>External Toasts\MathGeoLib\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Math\Quat.h">
+      <Filter>External Toasts\MathGeoLib\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Math\quat_simd.h">
+      <Filter>External Toasts\MathGeoLib\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Math\Rect.h">
+      <Filter>External Toasts\MathGeoLib\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Math\Reinterpret.h">
+      <Filter>External Toasts\MathGeoLib\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Math\sse_mathfun.h">
+      <Filter>External Toasts\MathGeoLib\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Math\SSEMath.h">
+      <Filter>External Toasts\MathGeoLib\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="External\MathGeoLib\include\Math\TransformOps.h">
+      <Filter>External Toasts\MathGeoLib\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="External\ImGui\backends\imgui_impl_opengl3.h">
+      <Filter>External Toasts\ImGui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="External\ImGui\backends\imgui_impl_opengl3_loader.h">
+      <Filter>External Toasts\ImGui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="External\ImGui\backends\imgui_impl_sdl.h">
+      <Filter>External Toasts\ImGui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="External\ImGui\imconfig.h">
+      <Filter>External Toasts\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="External\ImGui\imgui.h">
+      <Filter>External Toasts\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="External\ImGui\imgui_internal.h">
+      <Filter>External Toasts\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="External\ImGui\imstb_rectpack.h">
+      <Filter>External Toasts\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="External\ImGui\imstb_textedit.h">
+      <Filter>External Toasts\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="External\ImGui\imstb_truetype.h">
+      <Filter>External Toasts\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Glew\include\eglew.h">
+      <Filter>External Toasts\Glew</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Glew\include\glew.h">
+      <Filter>External Toasts\Glew</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Glew\include\glxew.h">
+      <Filter>External Toasts\Glew</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Glew\include\wglew.h">
+      <Filter>External Toasts\Glew</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Mmgr\mmgr.h">
+      <Filter>External Toasts\Mmgr</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Mmgr\nommgr.h">
+      <Filter>External Toasts\Mmgr</Filter>
+    </ClInclude>
+    <ClInclude Include="External\GPUDetector\DeviceId.h">
+      <Filter>External Toasts\GPUDetector</Filter>
+    </ClInclude>
+    <ClInclude Include="External\GPUDetector\dxgi1_4.h">
+      <Filter>External Toasts\GPUDetector</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\ai_assert.h">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\anim.h">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\camera.h">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\cexport.h">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\cfileio.h">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\cimport.h">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\color4.h">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\config.h">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\DefaultLogger.hpp">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\defs.h">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\Exporter.hpp">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\Importer.hpp">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\importerdesc.h">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\IOStream.hpp">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\IOSystem.hpp">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\light.h">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\Logger.hpp">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\LogStream.hpp">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\material.h">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\matrix3x3.h">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\matrix4x4.h">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\mesh.h">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\metadata.h">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\NullLogger.hpp">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\postprocess.h">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\ProgressHandler.hpp">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\quaternion.h">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\scene.h">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\texture.h">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\types.h">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\vector2.h">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\vector3.h">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\version.h">
+      <Filter>External Toasts\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\Compiler\poppack1.h">
+      <Filter>External Toasts\Assimp\Compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\Compiler\pstdint.h">
+      <Filter>External Toasts\Assimp\Compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\Compiler\pushpack1.h">
+      <Filter>External Toasts\Assimp\Compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\include\port\AndroidJNI\AndroidJNIIOSystem.h">
+      <Filter>External Toasts\Assimp\PortAndroid</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ModuleMesh3D.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Primitive.h">
+      <Filter>Sources\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="External\PhysFS\include\physfs.h">
+      <Filter>External Toasts\PhysFS</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObject.h">
+      <Filter>Sources\Engine\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="External\DevIL\include\devil_cpp_wrapper.hpp">
+      <Filter>External Toasts\DevIL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\DevIL\include\devil_internal_exports.h">
+      <Filter>External Toasts\DevIL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\DevIL\include\il.h">
+      <Filter>External Toasts\DevIL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\DevIL\include\il_wrap.h">
+      <Filter>External Toasts\DevIL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\DevIL\include\ilu.h">
+      <Filter>External Toasts\DevIL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\DevIL\include\ilu_region.h">
+      <Filter>External Toasts\DevIL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\DevIL\include\ilut.h">
+      <Filter>External Toasts\DevIL</Filter>
+    </ClInclude>
+    <ClInclude Include="External\DevIL\include\ilut_config.h">
+      <Filter>External Toasts\DevIL</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ModuleTexture.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ModuleImporter.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
   </ItemGroup>
@@ -98,17 +699,8 @@
     <Filter Include="Sources">
       <UniqueIdentifier>{77c82dfb-0a16-4dcf-aa48-a8d530e6bdfd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\Physics">
-      <UniqueIdentifier>{0fd8c2b6-d1c4-4b01-aa03-1e4b3ba7d713}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Sources\Modules">
       <UniqueIdentifier>{7160a563-0a95-4b10-a05f-9f835a520629}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Sources\Graphics">
-      <UniqueIdentifier>{a82c5027-ded8-4f79-beff-c8e399fa9e98}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Sources\Gameplay">
-      <UniqueIdentifier>{caed3b5a-d947-49f2-a802-7f51244d2cee}</UniqueIdentifier>
     </Filter>
     <Filter Include="Resources">
       <UniqueIdentifier>{d8de4395-6c34-4b90-bb49-04cec04be843}</UniqueIdentifier>
@@ -118,6 +710,69 @@
     </Filter>
     <Filter Include="Sources\Tools\Timer">
       <UniqueIdentifier>{1a653962-d2f9-448e-8b2e-e6ea286a4252}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Engine">
+      <UniqueIdentifier>{caed3b5a-d947-49f2-a802-7f51244d2cee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="External Toasts">
+      <UniqueIdentifier>{dcb0116a-5491-4889-ba30-d722947ed3d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Tools\OpenGL">
+      <UniqueIdentifier>{c63de914-d553-47b8-b0ee-c5b7d2b4da23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="External Toasts\SDL">
+      <UniqueIdentifier>{f77867d3-8e9a-4ee2-8795-91377d680ae5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="External Toasts\Parson">
+      <UniqueIdentifier>{71059039-3076-4787-b788-82adf192d922}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="External Toasts\MathGeoLib">
+      <UniqueIdentifier>{bf4de2a0-ba63-4565-8781-30a5f18ee28a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="External Toasts\MathGeoLib\Time">
+      <UniqueIdentifier>{e299c3b3-3eb0-4195-aeca-5c856dfbc573}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="External Toasts\MathGeoLib\Math">
+      <UniqueIdentifier>{64cd8aec-ba49-4954-816b-3662c212eed8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="External Toasts\MathGeoLib\Geometry">
+      <UniqueIdentifier>{bb9459ec-158b-4866-b5a4-be284062f23a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="External Toasts\MathGeoLib\Algorithm/Random">
+      <UniqueIdentifier>{1637fb48-a713-468c-80b0-287f1612666e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="External Toasts\ImGui">
+      <UniqueIdentifier>{3171d3f7-0a4e-4564-bbdf-90e2bdb8ce4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="External Toasts\ImGui\backends">
+      <UniqueIdentifier>{2dc6059d-ebb8-4769-b84a-0f781c3ecb25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="External Toasts\Glew">
+      <UniqueIdentifier>{3a49f478-cfdc-48ab-bf67-f3fa72d075cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="External Toasts\Mmgr">
+      <UniqueIdentifier>{9d1686e4-377f-43f9-8748-7c4ecac06d9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="External Toasts\GPUDetector">
+      <UniqueIdentifier>{d8c2f078-8a89-4c9e-b894-a46f202b2fa0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="External Toasts\Assimp">
+      <UniqueIdentifier>{d6f6d98c-8dd2-4d3f-b5fc-93643a9f2541}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="External Toasts\Assimp\Compiler">
+      <UniqueIdentifier>{dc136df5-5eff-421f-9b8b-f0939ef175aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="External Toasts\Assimp\PortAndroid">
+      <UniqueIdentifier>{8aba36a5-33d1-4764-a538-2b78c7cccd6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="External Toasts\PhysFS">
+      <UniqueIdentifier>{4aa05b2b-a495-438f-8701-9a9ccde02618}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Engine\GameObject">
+      <UniqueIdentifier>{eeee20d0-bc10-4e06-8b03-90449b8645d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="External Toasts\DevIL">
+      <UniqueIdentifier>{a612b636-3f07-4622-8945-89ccaea2f0aa}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -129,5 +784,246 @@
     <Image Include="icon1.ico">
       <Filter>Resources</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\Application.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Main.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Color.cpp">
+      <Filter>Sources\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Light.cpp">
+      <Filter>Sources\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\log.cpp">
+      <Filter>Sources\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ModuleCamera3D.cpp">
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ModuleInput.cpp">
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ModuleRenderer3D.cpp">
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ModuleWindow.cpp">
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ModuleEditor.cpp">
+      <Filter>Sources\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ModuleScene.cpp">
+      <Filter>Sources\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Timer.cpp">
+      <Filter>Sources\Tools\Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\glmath.cpp">
+      <Filter>Sources\Tools\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="External\parson\parson.c">
+      <Filter>External Toasts\Parson</Filter>
+    </ClCompile>
+    <ClCompile Include="External\MathGeoLib\include\Time\Clock.cpp">
+      <Filter>External Toasts\MathGeoLib\Time</Filter>
+    </ClCompile>
+    <ClCompile Include="External\MathGeoLib\include\Algorithm\Random\LCG.cpp">
+      <Filter>External Toasts\MathGeoLib\Algorithm/Random</Filter>
+    </ClCompile>
+    <ClCompile Include="External\MathGeoLib\include\Geometry\AABB.cpp">
+      <Filter>External Toasts\MathGeoLib\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="External\MathGeoLib\include\Geometry\Capsule.cpp">
+      <Filter>External Toasts\MathGeoLib\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="External\MathGeoLib\include\Geometry\Circle.cpp">
+      <Filter>External Toasts\MathGeoLib\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="External\MathGeoLib\include\Geometry\Cone.cpp">
+      <Filter>External Toasts\MathGeoLib\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="External\MathGeoLib\include\Geometry\Cylinder.cpp">
+      <Filter>External Toasts\MathGeoLib\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="External\MathGeoLib\include\Geometry\Frustum.cpp">
+      <Filter>External Toasts\MathGeoLib\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="External\MathGeoLib\include\Geometry\Line.cpp">
+      <Filter>External Toasts\MathGeoLib\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="External\MathGeoLib\include\Geometry\LineSegment.cpp">
+      <Filter>External Toasts\MathGeoLib\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="External\MathGeoLib\include\Geometry\OBB.cpp">
+      <Filter>External Toasts\MathGeoLib\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="External\MathGeoLib\include\Geometry\Plane.cpp">
+      <Filter>External Toasts\MathGeoLib\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="External\MathGeoLib\include\Geometry\Polygon.cpp">
+      <Filter>External Toasts\MathGeoLib\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="External\MathGeoLib\include\Geometry\Polyhedron.cpp">
+      <Filter>External Toasts\MathGeoLib\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="External\MathGeoLib\include\Geometry\Ray.cpp">
+      <Filter>External Toasts\MathGeoLib\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="External\MathGeoLib\include\Geometry\Sphere.cpp">
+      <Filter>External Toasts\MathGeoLib\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="External\MathGeoLib\include\Geometry\Triangle.cpp">
+      <Filter>External Toasts\MathGeoLib\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="External\MathGeoLib\include\Geometry\TriangleMesh.cpp">
+      <Filter>External Toasts\MathGeoLib\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="External\MathGeoLib\include\Math\BitOps.cpp">
+      <Filter>External Toasts\MathGeoLib\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="External\MathGeoLib\include\Math\float2.cpp">
+      <Filter>External Toasts\MathGeoLib\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="External\MathGeoLib\include\Math\float3.cpp">
+      <Filter>External Toasts\MathGeoLib\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="External\MathGeoLib\include\Math\float3x3.cpp">
+      <Filter>External Toasts\MathGeoLib\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="External\MathGeoLib\include\Math\float3x4.cpp">
+      <Filter>External Toasts\MathGeoLib\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="External\MathGeoLib\include\Math\float4.cpp">
+      <Filter>External Toasts\MathGeoLib\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="External\MathGeoLib\include\Math\float4x4.cpp">
+      <Filter>External Toasts\MathGeoLib\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="External\MathGeoLib\include\Math\MathFunc.cpp">
+      <Filter>External Toasts\MathGeoLib\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="External\MathGeoLib\include\Math\MathLog.cpp">
+      <Filter>External Toasts\MathGeoLib\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="External\MathGeoLib\include\Math\MathOps.cpp">
+      <Filter>External Toasts\MathGeoLib\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="External\MathGeoLib\include\Math\Polynomial.cpp">
+      <Filter>External Toasts\MathGeoLib\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="External\MathGeoLib\include\Math\Quat.cpp">
+      <Filter>External Toasts\MathGeoLib\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="External\MathGeoLib\include\Math\SSEMath.cpp">
+      <Filter>External Toasts\MathGeoLib\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="External\MathGeoLib\include\Math\TransformOps.cpp">
+      <Filter>External Toasts\MathGeoLib\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="External\ImGui\backends\imgui_impl_opengl3.cpp">
+      <Filter>External Toasts\ImGui\backends</Filter>
+    </ClCompile>
+    <ClCompile Include="External\ImGui\backends\imgui_impl_sdl.cpp">
+      <Filter>External Toasts\ImGui\backends</Filter>
+    </ClCompile>
+    <ClCompile Include="External\ImGui\imgui.cpp">
+      <Filter>External Toasts\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="External\ImGui\imgui_demo.cpp">
+      <Filter>External Toasts\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="External\ImGui\imgui_draw.cpp">
+      <Filter>External Toasts\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="External\ImGui\imgui_tables.cpp">
+      <Filter>External Toasts\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="External\ImGui\imgui_widgets.cpp">
+      <Filter>External Toasts\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="External\Mmgr\mmgr.cpp">
+      <Filter>External Toasts\Mmgr</Filter>
+    </ClCompile>
+    <ClCompile Include="External\GPUDetector\DeviceId.cpp">
+      <Filter>External Toasts\GPUDetector</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ModuleMesh3D.cpp">
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Primitive.cpp">
+      <Filter>Sources\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObject.cpp">
+      <Filter>Sources\Engine\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="External\DevIL\include\luadevil.c">
+      <Filter>External Toasts\DevIL</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ModuleTexture.cpp">
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ModuleImporter.cpp">
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\FileTree.cpp">
+      <Filter>Sources\Tools</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="External\SDL\include\SDL_config.h.cmake">
+      <Filter>External Toasts\SDL</Filter>
+    </None>
+    <None Include="External\SDL\include\SDL_config.h.in">
+      <Filter>External Toasts\SDL</Filter>
+    </None>
+    <None Include="External\SDL\include\SDL_config_macosx.h.orig">
+      <Filter>External Toasts\SDL</Filter>
+    </None>
+    <None Include="External\MathGeoLib\include\Geometry\KDTree.inl">
+      <Filter>External Toasts\MathGeoLib\Geometry</Filter>
+    </None>
+    <None Include="External\MathGeoLib\include\Geometry\QuadTree.inl">
+      <Filter>External Toasts\MathGeoLib\Geometry</Filter>
+    </None>
+    <None Include="External\MathGeoLib\include\Geometry\TriangleMesh_IntersectRay_AVX.inl">
+      <Filter>External Toasts\MathGeoLib\Geometry</Filter>
+    </None>
+    <None Include="External\MathGeoLib\include\Geometry\TriangleMesh_IntersectRay_CPP.inl">
+      <Filter>External Toasts\MathGeoLib\Geometry</Filter>
+    </None>
+    <None Include="External\MathGeoLib\include\Geometry\TriangleMesh_IntersectRay_SSE.inl">
+      <Filter>External Toasts\MathGeoLib\Geometry</Filter>
+    </None>
+    <None Include="External\MathGeoLib\include\Math\Matrix.inl">
+      <Filter>External Toasts\MathGeoLib\Math</Filter>
+    </None>
+    <None Include="External\Assimp\include\color4.inl">
+      <Filter>External Toasts\Assimp</Filter>
+    </None>
+    <None Include="External\Assimp\include\material.inl">
+      <Filter>External Toasts\Assimp</Filter>
+    </None>
+    <None Include="External\Assimp\include\matrix3x3.inl">
+      <Filter>External Toasts\Assimp</Filter>
+    </None>
+    <None Include="External\Assimp\include\matrix4x4.inl">
+      <Filter>External Toasts\Assimp</Filter>
+    </None>
+    <None Include="External\Assimp\include\quaternion.inl">
+      <Filter>External Toasts\Assimp</Filter>
+    </None>
+    <None Include="External\Assimp\include\vector2.inl">
+      <Filter>External Toasts\Assimp</Filter>
+    </None>
+    <None Include="External\Assimp\include\vector3.inl">
+      <Filter>External Toasts\Assimp</Filter>
+    </None>
+    <None Include="External\DevIL\include\DevIL.i">
+      <Filter>External Toasts\DevIL</Filter>
+    </None>
   </ItemGroup>
 </Project>
