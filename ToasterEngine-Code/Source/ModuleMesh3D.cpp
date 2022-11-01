@@ -64,7 +64,9 @@ update_status ModuleMesh3D::PostUpdate(float dt)
 
 	// DRAW
 	for (int i = 0; i < meshes.size(); i++) {
-		meshes[i]->Render();
+		if (meshes[i]->shouldRender) {
+			meshes[i]->Render();
+		}
 	}  
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -77,6 +79,8 @@ Mesh* ModuleMesh3D::LoadFile(string file_path)
 	const aiScene* scene = aiImportFile(file_path.c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
 
 	Mesh* mesh = new Mesh();
+	mesh->path = file_path;
+
 	if (scene != nullptr && scene->HasMeshes())
 	{
 		//Iterate scene meshes

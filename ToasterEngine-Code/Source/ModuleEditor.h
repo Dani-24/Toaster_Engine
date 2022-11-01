@@ -79,6 +79,10 @@ public:
 	FileTree* currentNode = nullptr;
 	std::vector<std::string> allFiles;
 
+	std::string dd_file = "";
+	int ddCooldown = 0;
+	std::string message = "";
+
 public:
 	void AddLogMsg(const char* msg);
 };

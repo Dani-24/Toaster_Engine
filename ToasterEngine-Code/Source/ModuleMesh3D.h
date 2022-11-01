@@ -25,6 +25,9 @@ struct Mesh {
 	uint num_vertices = 0;
 	float* vertices = nullptr;
 
+	string path;
+	bool shouldRender = true;
+
 	void Render();
 };
 

@@ -12,6 +12,8 @@
 
 #include "Primitive.h"
 
+//#include "../External/ImGui/imgui_stdlib.h"
+
 ModuleEditor::ModuleEditor(Application* app, bool start_enabled) : Module(app, start_enabled){
 	logs.reserve(MAX_LOGS_SIZE);
 	fpslog.reserve(MAX_LOGS_SIZE);
@@ -67,6 +69,14 @@ update_status ModuleEditor::Update(float dt) {
 }
 
 update_status ModuleEditor::PostUpdate(float dt) {
+
+	for (int i = 0; i < gameObjects.size(); i++) {
+		if (gameObjects[i]->pendindToDelete) {
+			gameObjects[i]->DeleteThisGameObject();
+			gameObjects.erase(gameObjects.begin() + i);
+		}
+	}
+
 	if (!exit) {
 		return UPDATE_CONTINUE;
 	}
@@ -352,10 +362,49 @@ void ModuleEditor::ShowAssetManager(bool* open) {
 	}
 	else {
 		
-		ImGui::TextWrapped("WIP");
+		uint rows = 0;
+		uint dir_size = currentNode->directories.size();
+		for (uint i = 0; i < dir_size; i++)
+		{
+			std::string s;
+			if (currentNode->directories.at(i)->files.empty()) {
+				s = "Open Folder\n";
+			}
+			else {
+				s = "Closed Folder\n";
+			}
+			s += currentNode->directories[i]->name;
+
+			ImGui::SameLine();
+		}
+		for (size_t i = dir_size; i < currentNode->files.size() + dir_size; i++)
+		{
+			std::string s = "File \n";
+			s += currentNode->files[i - dir_size];
+			ImGui::Button(s.c_str(), ImVec2(120, 120));
+
+			if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceNoDisableHover | ImGuiDragDropFlags_SourceNoPreviewTooltip))
+			{
+				std::string file_path = currentNode->path + currentNode->files[i - dir_size];
+				ImGui::SetDragDropPayload(file_path.c_str(), &i, sizeof(std::string));
+				dd_file = file_path;
+				ImGui::EndDragDropSource();
+			}
+
+			ImGui::SameLine();
+		}
 		
 		ImGui::End();
 	}
+
+	if (dd_file != "" && ddCooldown > 100) {
+		GameObject* ddFile = new GameObject("New GameObject", root);
+		ddFile->AddMesh(app->mesh3d->LoadFile(dd_file));
+		ddFile->AddTexture(app->textures->ImportTexture(dd_file));
+		dd_file = "";
+		ddCooldown = 0;
+	}
+	ddCooldown++;
 }
 
 void ModuleEditor::ShowAssetExplorer(bool* open) {
@@ -390,29 +439,106 @@ void ModuleEditor::ShowInspectorMenu(bool* open) {
 	else {
 
 		if (selectedGameObj != nullptr) {
-			ImGui::TextWrapped("Components from %s : ID %d", selectedGameObj->GetName().c_str(), selectedGameObj->GetID());
+			
+			ImGui::InputText(" ", (char*)selectedGameObj->name.c_str(), 50);
+
+			ImGui::SameLine();
+
+			ImGui::TextWrapped("ID: %d", selectedGameObj->GetID());
 
 			Space();
 
-			ImGui::TextWrapped("Position : X %d Y %d Z %d", selectedGameObj->GetPos().x, selectedGameObj->GetPos().y, selectedGameObj->GetPos().z);
+			// Transform Component
+			ImGui::TextWrapped("Component : TRANSFORM"); ImGui::NewLine();
 
-			ImGui::SliderFloat("Position X", &selectedGameObj->position.x, -100, 100);
+			ImGui::TextWrapped("Position : "); 
+			ImGui::SameLine();
 
-			ImGui::TextWrapped("Rotation : X %d Y %d Z %d", selectedGameObj->GetRot().x, selectedGameObj->GetRot().y, selectedGameObj->GetRot().z);
-			
-			ImGui::TextWrapped("Scale : X %d Y %d Z %d", selectedGameObj->GetScale().x, selectedGameObj->GetScale().y, selectedGameObj->GetScale().z);
-			
+			float3 pos = float3(selectedGameObj->position.x, selectedGameObj->position.y, selectedGameObj->position.z);
+			if (ImGui::DragFloat3("U", &pos[0], 0.1f)) {
+				selectedGameObj->SetPos(vec3(pos.x, pos.y, pos.z));
+			}
+
+			ImGui::TextWrapped("Rotation : ");
+			ImGui::SameLine();
+			float3 rot = float3(selectedGameObj->rotation.x, selectedGameObj->rotation.y, selectedGameObj->rotation.z);
+			if (ImGui::DragFloat3("W", &rot[0], 0.1f)) {
+				selectedGameObj->SetPos(vec3(rot.x, rot.y, rot.z));
+			}
+
+			ImGui::TextWrapped("Scale :    ");
+			ImGui::SameLine();
+			float3 scale = float3(selectedGameObj->scale.x, selectedGameObj->scale.y, selectedGameObj->scale.z);
+			if (ImGui::DragFloat3("U", &scale[0], 0.1f)) {
+				selectedGameObj->SetPos(vec3(scale.x, scale.y, scale.z));
+			}
+
+			// MESH COMPONENT
 			if (selectedGameObj->GO_mesh != nullptr) {
 				Space();
-				ImGui::TextWrapped("This GameObject has a Mesh loaded");
+
+				ImGui::TextWrapped("Component : MESH"); ImGui::NewLine();
+				ImGui::TextWrapped("Path : %s", selectedGameObj->GO_mesh->path.c_str());
+				
+				ImGui::TextWrapped("Show Mesh: ");
+				ImGui::SameLine();
+
+				ImGui::Selectable("Visible : ", &selectedGameObj->GO_mesh->shouldRender);
+				ImGui::SameLine();
+				if (selectedGameObj->GO_mesh->shouldRender) {
+					ImGui::TextColored(ImVec4(0.5f, 1.0f, 0.0f, 1.0f), "True");
+				}
+				else { 
+					ImGui::TextColored(ImVec4(1.f, 0.0f, 0.0f, 1.0f), "False"); 
+				}
+
+				// Delete Mesh
+
+				bool deleteMesh = false;
+				ImGui::Selectable("Delete Component", &deleteMesh);
+
+				if (deleteMesh) {
+					selectedGameObj->GO_mesh = nullptr;
+				}
 			}
 
+			// TEXTURE COMPONENT
 			if (selectedGameObj->GO_texture != NULL) {
 				Space();
-				ImGui::TextWrapped("This GameObject has a Texture loaded");
+				ImGui::TextWrapped("Component : TEXTURES");
+				
+				ImGui::TextWrapped("Show Texture: ");
+				ImGui::SameLine();
+				for (int i = 0; i < app->textures->loadedTextures.size(); i++) {
+					if (app->textures->loadedTextures[i].OpenGLID == selectedGameObj->GetID()) {
+						ImGui::Selectable("Visible : ", &app->textures->loadedTextures[i].bind);
+						ImGui::SameLine();
+						if (app->textures->loadedTextures[i].bind) {
+							ImGui::TextColored(ImVec4(0.5f, 1.0f, 0.0f, 1.0f), "True");
+						}
+						else {
+							ImGui::TextColored(ImVec4(1.f, 0.0f, 0.0f, 1.0f), "False");
+						}
+						break;
+					}
+				}
+
+				// Delete Texture
+
+				bool deleteTexture = false;
+				ImGui::Selectable("Delete Component ", &deleteTexture);
+
+				if (deleteTexture) {
+					selectedGameObj->GO_texture = NULL;
+				}
 			}
 
 			Space();
+
+			// Delete Game Object
+			if (selectedGameObj->GetParent() != nullptr) {
+				ImGui::Selectable("Delete this Game Object ", &selectedGameObj->pendindToDelete);
+			}
 		}
 		else {
 
@@ -424,20 +550,11 @@ void ModuleEditor::ShowInspectorMenu(bool* open) {
 }
 
 void ModuleEditor::ShowHierarchyMenu(bool* open) {
-	if (!ImGui::Begin("Scene Hierarchy", open)) {
+	if (!ImGui::Begin("Hierarchy", open)) {
 		ImGui::End();
 	}
 	else {
-		
-		for (size_t i = 0; i < gameObjects.size(); i++)
-		{
-
-			if (!gameObjects[i]->childs.empty()) {
-				PrepareDrawGameObject(gameObjects[i], true);
-				break;
-			}
-
-		}
+		PrepareDrawGameObject(gameObjects[0], false);
 
 		ImGui::End();
 	}
@@ -645,7 +762,7 @@ void ModuleEditor::DrawGameObject(GameObject* gameObj, int iteration) {
 
 		draggingGO = gameObj;
 
-		ImGui::Text("Sus movement?");
+		ImGui::Text("Make Toasty Child?");
 		ImGui::EndDragDropSource();
 	}
 

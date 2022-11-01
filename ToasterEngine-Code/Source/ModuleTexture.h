@@ -13,6 +13,8 @@ public:
 	uint OpenGLID = 0;
 	int width = 0;
 	int height = 0;
+
+	bool bind = true;
 };
 
 class ModuleTexture : public Module
@@ -21,6 +23,8 @@ public:
 
 	ModuleTexture(Application* app, bool start_enabled = true);
 	~ModuleTexture();
+
+	update_status PostUpdate(float dt);
 
 	// Image file to DDS
 	static void ImportImage(const std::string& filename, char* buffer, uint size);

@@ -43,16 +43,15 @@ void GameObject::AddTexture(uint t) {
 }
 
 void GameObject::DeleteThisGameObject() {
+
+	LOG("Deleting Game Object %s", name.c_str());
+
 	app->editor->SetSelectedGameObject(nullptr);
 	parent->DeleteChild(this);
 	for (size_t i = 0; i < childs.size(); i++)
 	{
 		childs[i]->DeleteThisGameObject();
 	}
-
-	// This works?
-	ID = NULL;
-	delete this;
 }
 
 void GameObject::SetParent(GameObject* par) {

@@ -35,10 +35,11 @@ public:
 
 private:
 	uint ID;
-	std::string name;
 	GameObject* parent;
 
 public:
+
+	std::string name;
 	std::vector<GameObject*> childs;
 
 public:
@@ -46,7 +47,8 @@ public:
 		rotation = vec3(0, 0, 0), 
 		scale = vec3(1, 1, 1);
 
-public:
 	Mesh* GO_mesh = nullptr;
 	uint GO_texture = NULL;
+
+	bool pendindToDelete = false;
 };
