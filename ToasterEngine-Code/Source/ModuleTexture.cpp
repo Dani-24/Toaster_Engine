@@ -219,11 +219,3 @@ void ModuleTexture::UnBindTextures()
 		glBindTexture(GL_TEXTURE0 + i, 0); // Unbind every texture
 	}
 }
-
-update_status ModuleTexture::Update(float dt) {
-	if (app->editor->bakerT != NULL) {
-		BindTexture(app->editor->bakerT);
-	}
-
-	return UPDATE_CONTINUE;
-}

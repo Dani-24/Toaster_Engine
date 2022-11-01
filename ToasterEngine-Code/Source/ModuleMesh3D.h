@@ -38,7 +38,7 @@ public:
 	update_status PostUpdate(float dt);
 	bool CleanUp();
 
-	void LoadFile(string file_path);
+	Mesh* LoadFile(string file_path);
 	void LoadMesh(Mesh* mesh);
 
 	uint LoadTexture(string file_path);

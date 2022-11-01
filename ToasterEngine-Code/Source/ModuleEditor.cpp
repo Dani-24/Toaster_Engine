@@ -23,6 +23,9 @@ ModuleEditor::~ModuleEditor() {}
 
 bool ModuleEditor::Start() {
 	LOG("TOASTER: Loading Editor");
+
+	root = new GameObject("Scene", nullptr);
+
 	return true;
 }
 
@@ -143,23 +146,35 @@ void ModuleEditor::Draw(){
 
 			if (ImGui::BeginMenu("Create 3D Mesh")) {
 				if(ImGui::MenuItem("Cube")) {
-					app->mesh3d->LoadFile("Assets/default_Meshes/cube.fbx");
+
+					GameObject* cube = new GameObject("Cube", root);
+					cube->AddMesh(app->mesh3d->LoadFile("Assets/default_Meshes/cube.fbx"));
 				}
 				if (ImGui::MenuItem("Sphere")) {
-					app->mesh3d->LoadFile("Assets/default_Meshes/sphere.fbx");
+
+					GameObject* sphere = new GameObject("Sphere", root);
+					sphere->AddMesh(app->mesh3d->LoadFile("Assets/default_Meshes/sphere.fbx"));
 				}
 				if (ImGui::MenuItem("Cylinder")) {
-					app->mesh3d->LoadFile("Assets/default_Meshes/cylinder.fbx");
+
+					GameObject* cylinder = new GameObject("Cylinder", root);
+					cylinder->AddMesh(app->mesh3d->LoadFile("Assets/default_Meshes/cylinder.fbx"));
 				}
 				if (ImGui::MenuItem("Cone")) {
-					app->mesh3d->LoadFile("Assets/default_Meshes/cone.fbx");
+
+					GameObject* cone = new GameObject("Cone", root);
+					cone->AddMesh(app->mesh3d->LoadFile("Assets/default_Meshes/cone.fbx"));
 				}
 				if (ImGui::MenuItem("Plane")) {
-					app->mesh3d->LoadFile("Assets/default_Meshes/plane.fbx");
+
+					GameObject* plane = new GameObject("Plane", root);
+					plane->AddMesh(app->mesh3d->LoadFile("Assets/default_Meshes/plane.fbx"));
 				}
 				if (ImGui::MenuItem("Demo: Baker House")) {
-					app->mesh3d->LoadFile("Assets/BakerHouse.fbx");
-					bakerT = app->textures->ImportTexture("Assets/Baker_house.png");
+
+					GameObject* house = new GameObject("Baker House", root);
+					house->AddMesh(app->mesh3d->LoadFile("Assets/BakerHouse.fbx"));
+					house->AddTexture(app->textures->ImportTexture("Assets/Baker_house.png"));
 				}
 
 				ImGui::EndMenu();
@@ -365,8 +380,31 @@ void ModuleEditor::ShowInspectorMenu(bool* open) {
 	}
 	else {
 
-		// Do smtg
-		ImGui::TextWrapped("WIP");
+		if (selectedGameObj != nullptr) {
+			ImGui::TextWrapped("%s : ID %d", selectedGameObj->GetName().c_str(), selectedGameObj->GetID());
+
+			Space();
+
+			ImGui::TextWrapped("Position : X %d Y %d Z %d", selectedGameObj->GetPos().x, selectedGameObj->GetPos().y, selectedGameObj->GetPos().z);
+
+			ImGui::TextWrapped("Rotation : X %d Y %d Z %d", selectedGameObj->GetRot().x, selectedGameObj->GetRot().y, selectedGameObj->GetRot().z);
+			
+			ImGui::TextWrapped("Scale : X %d Y %d Z %d", selectedGameObj->GetScale().x, selectedGameObj->GetScale().y, selectedGameObj->GetScale().z);
+
+			Space();
+			
+			if (selectedGameObj->GO_mesh != nullptr) {
+				ImGui::TextWrapped("This GameObject has a Mesh loaded");
+			}
+
+			if (selectedGameObj->GO_texture != NULL) {
+				ImGui::TextWrapped("This GameObject has a Texture loaded");
+			}
+		}
+		else {
+
+			ImGui::TextWrapped("There is no GameObject selected");
+		}
 
 		ImGui::End();
 	}
@@ -377,8 +415,13 @@ void ModuleEditor::ShowHierarchyMenu(bool* open) {
 		ImGui::End();
 	}
 	else {
-		// Do smtg
-		ImGui::TextWrapped("WIP");
+		
+		for (size_t i = 0; i < gameObjects.size(); i++)
+		{
+
+			ImGui::TextWrapped("GO with ID %d : %s", gameObjects[i]->GetID(), gameObjects[i]->GetName().c_str());
+
+		}
 
 		ImGui::End();
 	}
@@ -514,4 +557,17 @@ void ModuleEditor::ShowConfiguration(bool* open) {
 
 void ModuleEditor::Space() {
 	ImGui::NewLine(); ImGui::Separator(); ImGui::NewLine();
+}
+
+uint ModuleEditor::AddGameObject(GameObject* GameObj) {
+
+	gameObjects.push_back(GameObj);
+
+	goID++;
+
+	return goID;
+}
+
+void ModuleEditor::SetSelectedGameObject(GameObject* GameObj) {
+	selectedGameObj = GameObj;
 }

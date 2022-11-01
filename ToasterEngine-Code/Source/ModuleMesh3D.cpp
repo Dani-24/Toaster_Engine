@@ -72,15 +72,16 @@ update_status ModuleMesh3D::PostUpdate(float dt)
 	return UPDATE_CONTINUE;
 }
 
-void ModuleMesh3D::LoadFile(string file_path)
+Mesh* ModuleMesh3D::LoadFile(string file_path)
 {
 	const aiScene* scene = aiImportFile(file_path.c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
 
+	Mesh* mesh = new Mesh();
 	if (scene != nullptr && scene->HasMeshes())
 	{
 		//Iterate scene meshes
 		for (int i = 0; i < scene->mNumMeshes; i++) {
-			Mesh* mesh = new Mesh();
+			
 			//Copy fbx mesh info to Mesh struct
 			mesh->num_vertices = scene->mMeshes[i]->mNumVertices;
 			mesh->vertices = new float[mesh->num_vertices * VERTEX_ARG];
@@ -129,7 +130,9 @@ void ModuleMesh3D::LoadFile(string file_path)
 	}
 	else {
 		LOG("Error loading this shit %s", file_path.c_str());
+		delete mesh;
 	}
+	return mesh;
 }
 
 void ModuleMesh3D::LoadMesh(Mesh* mesh)

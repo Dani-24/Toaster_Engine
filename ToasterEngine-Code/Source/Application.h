@@ -13,6 +13,8 @@
 #include "ModuleImporter.h"
 #include "ModuleTexture.h"
 
+#include "GameObject.h"
+
 class Application
 {
 public:
@@ -54,3 +56,4 @@ private:
 };
 
 extern Application* appLog;
+extern Application* app;

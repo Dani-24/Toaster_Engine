@@ -3,7 +3,11 @@
 #include "Globals.h"
 #include "../External/ImGui/imgui.h"
 
+#include "GameObject.h"
+
 #define MAX_LOGS_SIZE 100
+
+class GameObject;
 
 class ModuleEditor : public Module 
 {
@@ -47,7 +51,20 @@ private:
 	void Space();
 
 public:
-	void AddLogMsg(const char* msg);
+	// Inspector
+	std::vector<GameObject*> gameObjects;
 
-	uint bakerT = NULL;
+	uint goID = 0;
+
+	GameObject* selectedGameObj;
+
+	GameObject* root;
+
+	uint AddGameObject(GameObject* GameObj);
+	void SetSelectedGameObject(GameObject* GameObj);
+	GameObject* GetSelectedGameObject() { return selectedGameObj; }
+
+
+public:
+	void AddLogMsg(const char* msg);
 };

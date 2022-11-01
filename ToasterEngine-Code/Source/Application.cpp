@@ -1,9 +1,12 @@
 #include "Application.h"
 
 extern Application* appLog = nullptr;
+Application* app = NULL;
+
 Application::Application()
 {
 	appLog = this;
+	app = this;
 
 	window = new ModuleWindow(this);
 	input = new ModuleInput(this);
@@ -32,6 +35,8 @@ Application::Application()
 
 	// Renderer last!
 	AddModule(renderer3D);
+
+	
 }
 
 Application::~Application()
