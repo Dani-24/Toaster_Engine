@@ -3,10 +3,10 @@
 #include "GameObject.h"
 
 Comp_Transform::Comp_Transform(GameObject* go) : Component(go, Comp_Type::Transform) {
-	if (this->GetGameObject()->GetParent() != NULL) {
+	/*if (this->GetGameObject()->GetParent() != NULL) {
 		Comp_Transform* parentTrans = dynamic_cast<Comp_Transform*>(go->GetParent()->GetComponent(Component::Comp_Type::Transform));
 		componentParentTrans = parentTrans->GetGlobalTransform();
-	}
+	}*/
 }
 
 void Comp_Transform::SetPos(float3 pos) {

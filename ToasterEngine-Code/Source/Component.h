@@ -15,8 +15,8 @@ public:
 		ToastyAbsolutelyNothing,
 	};
 
-	Component(GameObject* gO, Comp_Type ctype);
-	virtual ~Component() {};
+	Component(GameObject* go, Comp_Type ctype);
+	virtual ~Component();
 
 	Comp_Type GetCompType() { return ctype; }
 

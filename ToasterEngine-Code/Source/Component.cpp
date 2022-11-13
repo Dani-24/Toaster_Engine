@@ -2,4 +2,11 @@
 
 #include "GameObject.h"
 
-Component::Component(GameObject* go, Comp_Type ctype){}
+Component::Component(GameObject* go, Comp_Type ctype) : go(go), ctype(ctype) {
+
+}
+
+Component::~Component()
+{
+
+}

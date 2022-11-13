@@ -18,10 +18,9 @@ public:
 	void OnEditor();
 
 private:
-	uint texture;
+	Texture* texture;
 
 	uint originalTexture;
 
-	bool renderTexture = true;
 	bool deleteTexture = false;
 };

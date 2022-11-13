@@ -49,17 +49,8 @@ public:
 		components.push_back(new_component);
 		return new_component;
 	}
-	Component* GetComponent(Component::Comp_Type ctype)
-	{
-		for (auto component : components)
-		{
-			if (component->GetCompType() == ctype)
-			{
-				return component;
-			}
-		}
-		return NULL;
-	}
+	Component* GetComponent(Component::Comp_Type ctype);
+
 	void RemoveComponent(Component* component)
 	{
 		int pos_in_array = 0;

@@ -66,7 +66,12 @@ void Comp_Mesh::UpdateMatrix(float3 _position, float3 _scale, float3 _rotation) 
 
 void Comp_Mesh::RenderMesh() {
 	if (compMesh->shouldRender) {
-		compMesh->Render(go->GetComponent(Component::Comp_Type::Texture)->GetTexture());
+		if (go->GetComponent(Component::Comp_Type::Texture) != nullptr) {
+			compMesh->Render(go->GetComponent(Component::Comp_Type::Texture)->GetTexture());
+		}
+		else {
+			compMesh->Render(NULL);
+		}
 	}
 }
 

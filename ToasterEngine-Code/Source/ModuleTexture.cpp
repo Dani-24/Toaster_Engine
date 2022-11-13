@@ -22,20 +22,9 @@ Texture::~Texture()
 }
 
 ModuleTexture::ModuleTexture(Application* app, bool start_enabled) : Module(app, start_enabled){
-	checkers_texture = app->textures->ImportTexture("Assets/checkers_texture.png");
+	checkers_texture = ImportTexture("Assets/checkers_texture.png");
 }
 ModuleTexture::~ModuleTexture(){}
-
-update_status ModuleTexture::PostUpdate(float dt) {
-
-	for (int i = 0; i < loadedTextures.size(); i++) {
-		if (loadedTextures[i].bind) {
-			BindTexture(loadedTextures[i].OpenGLID);
-		}
-	}
-
-	return UPDATE_CONTINUE;
-}
 
 std::map<uint, Texture> ModuleTexture::loadedTextures;
 std::map<std::string, uint> ModuleTexture::usedPaths;

@@ -67,3 +67,15 @@ void GameObject::DeleteChild(GameObject* chi) {
 	}
 	chi->parent = nullptr;
 }
+
+Component* GameObject::GetComponent(Component::Comp_Type ctype)
+{
+	for (int i = 0; i < components.size(); i++)
+	{
+		if (components[i]->GetCompType() == ctype)
+		{
+			return components[i];
+		}
+	}
+	return NULL;
+}
