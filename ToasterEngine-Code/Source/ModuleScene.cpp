@@ -23,8 +23,8 @@ bool ModuleScene::Start()
 	bool ret = true;
 
 	GameObject* house = new GameObject("Demo Baker House", app->editor->root);
-	house->AddMesh(app->mesh3d->LoadFile("Assets/BakerHouse.fbx"));
-	house->AddTexture(app->textures->ImportTexture("Assets/Baker_house.png"));
+	house->AddComponent(Component::Comp_Type::Mesh, app->mesh3d->LoadFile("Assets/BakerHouse.fbx"));
+	house->AddComponent(Component::Comp_Type::Texture,nullptr, app->textures->ImportTexture("Assets/Baker_house.png"));
 
 	return ret;
 }
@@ -38,12 +38,18 @@ update_status ModuleScene::PreUpdate(float dt) {
 update_status ModuleScene::Update(float dt)
 {
 
-	//LOG("%d", RandomIntValue());
-
 	return UPDATE_CONTINUE;
 }
 
 update_status ModuleScene::PostUpdate(float dt) {
+
+	// Render All Meshes
+	for (int i = 0; i < app->editor->gameObjects.size(); i++) {
+		if (app->editor->gameObjects[i]->GetComponent(Component::Comp_Type::Mesh) != NULL) {
+			app->editor->gameObjects[i]->components[i]->RenderMesh();
+		}
+
+	}
 
 	if (axis) {
 		PlanePrimitive p(0, 1, 0, 0);

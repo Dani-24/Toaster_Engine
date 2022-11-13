@@ -33,8 +33,6 @@ bool ModuleEditor::Start() {
 	allFiles.clear();
 	allFiles = ModuleImporter::GetAllFiles("Assets");
 
-	checkers_texture = app->textures->ImportTexture("Assets/checkers_texture.png");
-
 	return true;
 }
 
@@ -167,33 +165,33 @@ void ModuleEditor::Draw(){
 				if(ImGui::MenuItem("Cube")) {
 
 					GameObject* cube = new GameObject("Cube", root);
-					cube->AddMesh(app->mesh3d->LoadFile("Assets/default_Meshes/cube.fbx"));
+					cube->AddComponent(Component::Comp_Type::Mesh, app->mesh3d->LoadFile("Assets/default_Meshes/cube.fbx"));
 				}
 				if (ImGui::MenuItem("Sphere")) {
 
 					GameObject* sphere = new GameObject("Sphere", root);
-					sphere->AddMesh(app->mesh3d->LoadFile("Assets/default_Meshes/sphere.fbx"));
+					sphere->AddComponent(Component::Comp_Type::Mesh, app->mesh3d->LoadFile("Assets/default_Meshes/sphere.fbx"));
 				}
 				if (ImGui::MenuItem("Cylinder")) {
 
 					GameObject* cylinder = new GameObject("Cylinder", root);
-					cylinder->AddMesh(app->mesh3d->LoadFile("Assets/default_Meshes/cylinder.fbx"));
+					cylinder->AddComponent(Component::Comp_Type::Mesh, app->mesh3d->LoadFile("Assets/default_Meshes/cylinder.fbx"));
 				}
 				if (ImGui::MenuItem("Cone")) {
 
 					GameObject* cone = new GameObject("Cone", root);
-					cone->AddMesh(app->mesh3d->LoadFile("Assets/default_Meshes/cone.fbx"));
+					cone->AddComponent(Component::Comp_Type::Mesh, app->mesh3d->LoadFile("Assets/default_Meshes/cone.fbx"));
 				}
 				if (ImGui::MenuItem("Plane")) {
 
 					GameObject* plane = new GameObject("Plane", root);
-					plane->AddMesh(app->mesh3d->LoadFile("Assets/default_Meshes/plane.fbx"));
+					plane->AddComponent(Component::Comp_Type::Mesh, app->mesh3d->LoadFile("Assets/default_Meshes/plane.fbx"));
 				}
 				if (ImGui::MenuItem("Demo: Baker House")) {
 
 					GameObject* house = new GameObject("Baker House", root);
-					house->AddMesh(app->mesh3d->LoadFile("Assets/BakerHouse.fbx"));
-					house->AddTexture(app->textures->ImportTexture("Assets/Baker_house.png"));
+					house->AddComponent(Component::Comp_Type::Mesh, app->mesh3d->LoadFile("Assets/BakerHouse.fbx"));
+					house->AddComponent(Component::Comp_Type::Texture, nullptr, app->textures->ImportTexture("Assets/Baker_house.png"));
 				}
 
 				ImGui::EndMenu();
@@ -402,8 +400,8 @@ void ModuleEditor::ShowAssetManager(bool* open) {
 
 	if (dd_file != "" && ddCooldown > 100) {
 		GameObject* ddFile = new GameObject("New GameObject", root);
-		ddFile->AddMesh(app->mesh3d->LoadFile(dd_file));
-		ddFile->AddTexture(app->textures->ImportTexture(dd_file));
+		ddFile->AddComponent(Component::Comp_Type::Mesh, app->mesh3d->LoadFile(dd_file));
+		ddFile->AddComponent(Component::Comp_Type::Texture, nullptr ,app->textures->ImportTexture(dd_file));
 		dd_file = "";
 		ddCooldown = 0;
 	}
@@ -450,108 +448,22 @@ void ModuleEditor::ShowInspectorMenu(bool* open) {
 			ImGui::TextWrapped("ID: %d", selectedGameObj->GetID());
 
 			Space();
-
-			// Transform Component
-			ImGui::TextWrapped("Component : TRANSFORM"); ImGui::NewLine();
-
-			ImGui::TextWrapped("Position : "); 
-			ImGui::SameLine();
-
-			float3 pos = float3(selectedGameObj->position.x, selectedGameObj->position.y, selectedGameObj->position.z);
-			if (ImGui::DragFloat3("pos", &pos[0], 0.1f)) {
-				selectedGameObj->SetPos(vec3(pos.x, pos.y, pos.z));
-			}
-
-			ImGui::TextWrapped("Rotation : ");
-			ImGui::SameLine();
-			float3 rot = float3(selectedGameObj->rotation.x, selectedGameObj->rotation.y, selectedGameObj->rotation.z);
-			if (ImGui::DragFloat3("rot", &rot[0], 0.1f)) {
-				selectedGameObj->SetRot(vec3(rot.x, rot.y, rot.z));
-			}
-
-			ImGui::TextWrapped("Scale :    ");
-			ImGui::SameLine();
-			float3 scale = float3(selectedGameObj->scale.x, selectedGameObj->scale.y, selectedGameObj->scale.z);
-			if (ImGui::DragFloat3("scl", &scale[0], 0.1f)) {
-				selectedGameObj->SetScale(vec3(scale.x, scale.y, scale.z));
-			}
-
-			selectedGameObj->SetTransformMatrix(vec3(pos.x, pos.y, pos.z), vec3(rot.x, rot.y, rot.z), vec3(scale.x, scale.y, scale.z));
-
-			// MESH COMPONENT
-			if (selectedGameObj->GO_mesh != nullptr) {
+			
+			if (selectedGameObj->GetComponent(Component::Comp_Type::Transform) != NULL)
+			{
+				dynamic_cast<Comp_Transform*>(selectedGameObj->GetComponent(Component::Comp_Type::Transform))->OnEditor();
 				Space();
-
-				ImGui::TextWrapped("Component : MESH"); ImGui::NewLine();
-				ImGui::TextWrapped("Path : %s", selectedGameObj->GO_mesh->path.c_str());
-				
-				ImGui::TextWrapped("Show Mesh: ");
-				ImGui::SameLine();
-
-				ImGui::Selectable("Visible : ", &selectedGameObj->GO_mesh->shouldRender);
-				ImGui::SameLine();
-				if (selectedGameObj->GO_mesh->shouldRender) {
-					ImGui::TextColored(ImVec4(0.5f, 1.0f, 0.0f, 1.0f), "True");
-				}
-				else { 
-					ImGui::TextColored(ImVec4(1.f, 0.0f, 0.0f, 1.0f), "False"); 
-				}
-
-				// Delete Mesh
-
-				bool deleteMesh = false;
-				ImGui::Selectable("Delete Component", &deleteMesh);
-
-				if (deleteMesh) {
-					selectedGameObj->GO_mesh = nullptr;
-				}
 			}
-
-			// TEXTURE COMPONENT
-			if (selectedGameObj->GO_texture != NULL) {
+			if (selectedGameObj->GetComponent(Component::Comp_Type::Mesh) != NULL)
+			{
+				dynamic_cast<Comp_Mesh*>(selectedGameObj->GetComponent(Component::Comp_Type::Mesh))->OnEditor();
 				Space();
-				ImGui::TextWrapped("Component : TEXTURES");
-				
-				if (texture == NULL) {
-					texture = actualTexture = selectedGameObj->GO_texture;
-				}
-
-				if (ImGui::BeginCombo("Texture", "Select", ImGuiComboFlags_HeightSmall))
-				{
-					bool is_selected = (actualTexture == texture);
-					if (ImGui::Selectable("Default", is_selected))
-					{
-						selectedGameObj->GO_texture = texture;
-					}
-					is_selected = (actualTexture == checkers_texture);
-					if (ImGui::Selectable("Checkers", is_selected))
-					{
-						selectedGameObj->GO_texture = checkers_texture;
-					}
-					ImGui::EndCombo();
-				}
-				ImGui::TextWrapped("Show Texture: ");
-				ImGui::SameLine();
-				ImGui::Selectable("Visible : ", &selectedGameObj->renderText);
-				ImGui::SameLine();
-				if (selectedGameObj->renderText) {
-					ImGui::TextColored(ImVec4(0.5f, 1.0f, 0.0f, 1.0f), "True");
-				}
-				else {
-					ImGui::TextColored(ImVec4(1.f, 0.0f, 0.0f, 1.0f), "False");
-				}
-
-				// Delete Texture
-
-				bool deleteTexture = false;
-				ImGui::Selectable("Delete Component ", &deleteTexture);
-
-				if (deleteTexture) {
-					selectedGameObj->GO_texture = NULL;
-				}
 			}
-
-			Space();
+			if (selectedGameObj->GetComponent(Component::Comp_Type::Texture) != NULL)
+			{
+				dynamic_cast<Comp_Texture*>(selectedGameObj->GetComponent(Component::Comp_Type::Texture))->OnEditor();
+				Space();
+			}
 
 			// Delete Game Object
 			if (selectedGameObj->GetParent() != nullptr) {

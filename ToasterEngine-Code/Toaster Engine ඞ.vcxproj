@@ -365,6 +365,10 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="Source\Application.h" />
     <ClInclude Include="Source\Color.h" />
+    <ClInclude Include="Source\Component.h" />
+    <ClInclude Include="Source\Comp_Mesh.h" />
+    <ClInclude Include="Source\Comp_Texture.h" />
+    <ClInclude Include="Source\Comp_Transform.h" />
     <ClInclude Include="Source\GameObject.h" />
     <ClInclude Include="Source\glmath.h" />
     <ClInclude Include="Source\Globals.h" />
@@ -435,6 +439,10 @@
     <ClCompile Include="External\parson\parson.c" />
     <ClCompile Include="Source\Application.cpp" />
     <ClCompile Include="Source\Color.cpp" />
+    <ClCompile Include="Source\Component.cpp" />
+    <ClCompile Include="Source\Comp_Mesh.cpp" />
+    <ClCompile Include="Source\Comp_Texture.cpp" />
+    <ClCompile Include="Source\Comp_Transform.cpp" />
     <ClCompile Include="Source\FileTree.cpp" />
     <ClCompile Include="Source\GameObject.cpp" />
     <ClCompile Include="Source\glmath.cpp" />

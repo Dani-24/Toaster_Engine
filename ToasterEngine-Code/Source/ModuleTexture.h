@@ -52,4 +52,6 @@ public:
 	static std::map<std::string, uint> usedPaths;
 	static std::vector<BindedTextureInfo> bindedTexturesInfo;
 
+	uint checkers_texture;
+
 };

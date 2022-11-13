@@ -8,6 +8,8 @@
 
 #include <string>
 
+#include "glmath.h"
+
 using namespace std;
 
 #define VERTEX_ARG 5
@@ -28,7 +30,9 @@ struct Mesh {
 	string path;
 	bool shouldRender = true;
 
-	void Render(bool trans = false);
+	void Render(uint texture = NULL);
+
+	mat4x4 matrix;
 };
 
 class ModuleMesh3D : public Module

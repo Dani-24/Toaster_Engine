@@ -694,6 +694,18 @@
     <ClInclude Include="Source\ModuleImporter.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Component.h">
+      <Filter>Sources\Engine\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Comp_Mesh.h">
+      <Filter>Sources\Engine\GameObject\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Comp_Texture.h">
+      <Filter>Sources\Engine\GameObject\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Comp_Transform.h">
+      <Filter>Sources\Engine\GameObject\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Sources">
@@ -773,6 +785,9 @@
     </Filter>
     <Filter Include="External Toasts\DevIL">
       <UniqueIdentifier>{a612b636-3f07-4622-8945-89ccaea2f0aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Engine\GameObject\Components">
+      <UniqueIdentifier>{2c2e6a3e-1ea7-46cd-8ea8-b00bb638d049}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -971,6 +986,18 @@
     </ClCompile>
     <ClCompile Include="Source\FileTree.cpp">
       <Filter>Sources\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Component.cpp">
+      <Filter>Sources\Engine\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Comp_Mesh.cpp">
+      <Filter>Sources\Engine\GameObject\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Comp_Texture.cpp">
+      <Filter>Sources\Engine\GameObject\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Comp_Transform.cpp">
+      <Filter>Sources\Engine\GameObject\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

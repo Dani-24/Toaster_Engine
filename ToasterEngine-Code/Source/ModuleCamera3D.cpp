@@ -34,7 +34,7 @@ update_status ModuleCamera3D::Update(float dt)
 	// if(mouseOnCamera){ //Only move camera out of the UI , WIP } 
 
 	if (app->editor->selectedGameObj != nullptr) {
-		camFocusPos = float3(app->editor->selectedGameObj->GetPos().x, app->editor->selectedGameObj->GetPos().y, app->editor->selectedGameObj->GetPos().z);
+		//camFocusPos = float3(app->editor->selectedGameObj->GetPos().x, app->editor->selectedGameObj->GetPos().y, app->editor->selectedGameObj->GetPos().z);
 	}
 	else {
 		camFocusPos = float3(0, 0, 0);

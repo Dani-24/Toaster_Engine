@@ -21,7 +21,9 @@ Texture::~Texture()
 {
 }
 
-ModuleTexture::ModuleTexture(Application* app, bool start_enabled) : Module(app, start_enabled){}
+ModuleTexture::ModuleTexture(Application* app, bool start_enabled) : Module(app, start_enabled){
+	checkers_texture = app->textures->ImportTexture("Assets/checkers_texture.png");
+}
 ModuleTexture::~ModuleTexture(){}
 
 update_status ModuleTexture::PostUpdate(float dt) {

@@ -4,22 +4,17 @@
 #include "ModuleMesh3D.h"
 #include "ModuleTexture.h"
 
+#include "Component.h"
+#include "Comp_Mesh.h"
+#include "Comp_Texture.h"
+#include "Comp_Transform.h"
+
 class GameObject
 {
 public:
 
 	GameObject(std::string name, GameObject* parent);
 	~GameObject();
-
-	void SetPos(vec3 pos);
-	void SetRot(vec3 rot);
-	void SetScale(vec3 scale);
-	vec3 GetPos() { return position; }
-	vec3 GetRot() { return rotation; }
-	vec3 GetScale() { return scale; }
-
-	void AddMesh(Mesh* m);
-	void AddTexture(uint texture);
 
 	void DeleteThisGameObject();
 
@@ -33,27 +28,67 @@ public:
 
 	std::string GetName() { return name; }
 
+	Component* AddComponent(Component::Comp_Type ctype, Mesh* m = nullptr, uint t = NULL)
+	{
+		Component* new_component;
+		switch (ctype)
+		{
+		case Component::Comp_Type::Transform:
+			new_component = new Comp_Transform(this);
+			break;
+		case Component::Comp_Type::Mesh:
+			new_component = new Comp_Mesh(this, m);
+			break;
+		case Component::Comp_Type::Texture:
+			new_component = new Comp_Texture(this, t);
+			break;
+		default:
+			LOG("Error adding a new component");
+			break;
+		}
+		components.push_back(new_component);
+		return new_component;
+	}
+	Component* GetComponent(Component::Comp_Type ctype)
+	{
+		for (auto component : components)
+		{
+			if (component->GetCompType() == ctype)
+			{
+				return component;
+			}
+		}
+		return NULL;
+	}
+	void RemoveComponent(Component* component)
+	{
+		int pos_in_array = 0;
+		for (size_t i = 0; i < components.size(); i++)
+		{
+			if (components.at(i) == component)
+			{
+				components.erase(components.begin() + pos_in_array);
+				return;
+			}
+			else
+			{
+				pos_in_array++;
+			}
+		}
+	}
+
 private:
 	uint ID;
 	GameObject* parent;
 
 public:
-
 	std::string name;
 	std::vector<GameObject*> childs;
+	std::vector<Component*> components;
 
 public:
-	vec3 position = vec3(0, 0, 0), 
-		rotation = vec3(0, 0, 0), 
-		scale = vec3(1, 1, 1);
-
-	Mesh* GO_mesh = nullptr;
-	uint GO_texture = NULL;
 
 	bool pendindToDelete = false;
-
-	void SetTransformMatrix(vec3 _position, vec3 _rotation, vec3 _scale);
-	mat4x4 lTransform;
 
 	bool renderText;
 };
