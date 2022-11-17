@@ -40,6 +40,7 @@ enum update_status
 #define WIN_RESIZABLE true
 #define WIN_BORDERLESS false
 #define WIN_FULLSCREEN_DESKTOP false
+#define WIN_MAXIMIZED true
 #define VSYNC true
 #define TITLE "Toaster Engine v0.1.0"
 

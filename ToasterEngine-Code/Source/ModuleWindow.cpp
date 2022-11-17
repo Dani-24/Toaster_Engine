@@ -56,6 +56,10 @@ bool ModuleWindow::Init()
 			}
 		}
 
+		if (WIN_MAXIMIZED == true) {
+			flags |= SDL_WINDOW_MAXIMIZED;
+		}
+
 		if(WIN_FULLSCREEN == true)
 		{
 			flags |= SDL_WINDOW_FULLSCREEN;
