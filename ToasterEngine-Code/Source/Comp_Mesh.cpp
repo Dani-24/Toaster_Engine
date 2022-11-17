@@ -17,7 +17,7 @@ void Comp_Mesh::AddMesh(Mesh* m) {
 }
 
 void Comp_Mesh::ParentPositionUpdate(float3 position) {
-	UpdateMatrix(position, float3(0,0,0), float3(0, 0, 0));
+	UpdateMatrix(position, float3(0 ,0 ,0), float3(0, 0, 0));
 }
 
 void Comp_Mesh::ParentScaleUpdate(float3 scale) {
@@ -73,6 +73,8 @@ void Comp_Mesh::RenderMesh() {
 			compMesh->Render(NULL);
 		}
 	}
+
+	LOG("%d %d %d", compMesh->matrix[3], compMesh->matrix[7], compMesh->matrix[11]);
 }
 
 void Comp_Mesh::ShowMesh(bool show) {

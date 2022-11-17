@@ -24,7 +24,7 @@ uint Comp_Texture::GetTexture() {
 		return texture->OpenGLID;
 	}
 	else {
-		return 0;
+		return NULL;
 	}
 }
 
