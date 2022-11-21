@@ -18,6 +18,10 @@ GameObject::GameObject(std::string name, GameObject* parent)
 	LOG("Created GameObject %s", name.c_str());
 
 	app->editor->SetSelectedGameObject(this);
+
+	/*if (this->ID != app->editor->goID) {
+		DeleteThisGameObject();
+	}*/
 }
 
 GameObject::~GameObject()
@@ -70,27 +74,29 @@ void GameObject::OnEditor() {
 
 	float3 pos = float3(GO_trans.position.x, GO_trans.position.y, GO_trans.position.z);
 	if (ImGui::DragFloat3("pos", &pos[0], 0.1f)) {
-		SetPos(pos);
+		SetPos(vec3(pos.x, pos.y, pos.z));
 	}
 
 	ImGui::TextWrapped("Rotation : ");
 	ImGui::SameLine();
 	float3 rot = float3(GO_trans.rotation.x, GO_trans.rotation.y, GO_trans.rotation.z);
 	if (ImGui::DragFloat3("rot", &rot[0], 0.1f)) {
-		SetRot(rot);
+		SetRot(vec3(rot.x, rot.y, rot.z));
 	}
 
 	ImGui::TextWrapped("Scale :    ");
 	ImGui::SameLine();
 	float3 scale = float3(GO_trans.scale.x, GO_trans.scale.y, GO_trans.scale.z);
 	if (ImGui::DragFloat3("scl", &scale[0], 0.1f)) {
-		SetScale(scale);
+		SetScale(vec3(scale.x, scale.y, scale.z));
 	}
 
-	SetTransformMatrix(pos, rot, scale);
+	SetTransformMatrix(vec3(pos.x, pos.y, pos.z), vec3(rot.x, rot.y, rot.z), vec3(scale.x, scale.y, scale.z));
 
 	// MESH COMPONENT
 	if (GO_mesh != nullptr) {
+
+		app->editor->Space();
 
 		ImGui::TextWrapped("Component : MESH"); ImGui::NewLine();
 		ImGui::TextWrapped("Path : %s", GO_mesh->path.c_str());
@@ -119,20 +125,23 @@ void GameObject::OnEditor() {
 
 	// TEXTURE COMPONENT
 	if (GO_texture != nullptr) {
+
+		app->editor->Space();
+
 		ImGui::TextWrapped("Component : TEXTURES");
 
 		if (ImGui::BeginCombo("Texture", "Select", ImGuiComboFlags_HeightSmall))
 		{
-			/*bool is_selected = (GO_texture->OpenGLID == originalTexture);
+			bool is_selected = (GO_texture->OpenGLID == GO_originalTexture->OpenGLID);
 			if (ImGui::Selectable("Default", is_selected))
 			{
-				GO_texture->OpenGLID = originalTexture;
+				GO_texture->OpenGLID = GO_originalTexture->OpenGLID;
 			}
-			is_selected = (GO_texture->OpenGLID == app->textures->checkers_texture);
+			is_selected = (GO_texture->OpenGLID == app->textures->CheckImage());
 			if (ImGui::Selectable("Checkers", is_selected))
 			{
-				GO_texture->OpenGLID = app->textures->checkers_texture;
-			}*/
+				GO_texture->OpenGLID = app->textures->CheckImage();
+			}
 			ImGui::EndCombo();
 		}
 		ImGui::TextWrapped("Show Texture: ");
@@ -159,46 +168,46 @@ void GameObject::OnEditor() {
 
 // TRANSFORM
 
-void GameObject::SetPos(float3 pos) {
+void GameObject::SetPos(vec3 pos) {
 	this->GO_trans.position = pos;
 	UpdatePosition();
 }
 
-void GameObject::SetRot(float3 rot) {
+void GameObject::SetRot(vec3 rot) {
 	this->GO_trans.rotation = rot;
 	UpdateRotation();
 }
 
-void GameObject::SetScale(float3 scale) {
+void GameObject::SetScale(vec3 scale) {
 	this->GO_trans.scale = scale;
 	UpdateScale();
 }
 
-void GameObject::SetTransform(float3 pos, float3 rot, float3 scale) {
+void GameObject::SetTransform(vec3 pos, vec3 rot, vec3 scale) {
 	this->GO_trans.position = pos;
 	this->GO_trans.rotation = rot;
 	this->GO_trans.scale = scale;
 	UpdateTransform();
 }
 
-void GameObject::Translate(float3 pos) {
+void GameObject::Translate(vec3 pos) {
 	this->GO_trans.position += pos;
 	UpdatePosition();
 }
 
-void GameObject::Rotate(float3 rot) {
+void GameObject::Rotate(vec3 rot) {
 	this->GO_trans.rotation += rot;
 	UpdateRotation();
 }
 
-void GameObject::Scale(float3 scale) {
+void GameObject::Scale(vec3 scale) {
 	this->GO_trans.scale += scale;
 	UpdateScale();
 }
 
 // Apply Transformations
 void GameObject::UpdatePosition() {
-	float3 globalPosition = GO_parentTrans.position + GO_trans.position;
+	vec3 globalPosition = GO_parentTrans.position + GO_trans.position;
 
 	for (size_t i = 0; i < childs.size(); i++)
 	{
@@ -207,7 +216,7 @@ void GameObject::UpdatePosition() {
 }
 
 void GameObject::UpdateRotation() {
-	float3 globalRotation = GO_parentTrans.rotation + GO_trans.rotation;
+	vec3 globalRotation = GO_parentTrans.rotation + GO_trans.rotation;
 
 	for (size_t i = 0; i < childs.size(); i++)
 	{
@@ -216,7 +225,7 @@ void GameObject::UpdateRotation() {
 }
 
 void GameObject::UpdateScale() {
-	float3 globalScale = GO_parentTrans.scale + GO_trans.scale;
+	vec3 globalScale = GO_parentTrans.scale + GO_trans.scale;
 
 	for (size_t i = 0; i < childs.size(); i++)
 	{
@@ -234,45 +243,45 @@ void GameObject::UpdateTransform() {
 }
 
 // Matrix
-void GameObject::SetTransformMatrix(float3 _position, float3 _rotation, float3 _scale)
+void GameObject::SetTransformMatrix(vec3 _position, vec3 _rotation, vec3 _scale)
 {
 	if (transformByQuat) {
-		Transform globalTransform = GetGlobalTransform();
+		/*Transform globalTransform = GetGlobalTransform();
 
 		math::Quat rotation = Quat::FromEulerXYZ(math::DegToRad(globalTransform.rotation.x), math::DegToRad(globalTransform.rotation.y), math::DegToRad(globalTransform.rotation.z));
 
-		GO_matrix = float4x4::FromTRS(globalTransform.position, rotation, float3(1, 1, 1));
+		GO_matrix = float4x4::FromTRS(globalTransform.position, rotation, float3(1, 1, 1));*/
 	}
 	else {
 		float x = _rotation.x * DEGTORAD;
 		float y = _rotation.y * DEGTORAD;
 		float z = _rotation.z * DEGTORAD;
 
-		GO_matrix.At(0, 0) = cos(y) * cos(z);
-		GO_matrix.At(0, 1) = -cos(x) * sin(z) + sin(y) * cos(z) * sin(x);
-		GO_matrix.At(0, 2) = sin(x) * sin(z) + sin(y) * cos(z) * cos(x);
-		GO_matrix.At(0, 3) = _position.x;
+		GO_matrix[0] = cos(y) * cos(z);
+		GO_matrix[1] = -cos(x) * sin(z) + sin(y) * cos(z) * sin(x);
+		GO_matrix[2] = sin(x) * sin(z) + sin(y) * cos(z) * cos(x);
+		GO_matrix[3] = _position.x;
 
-		GO_matrix.At(1, 0) = cos(y) * sin(z);
-		GO_matrix.At(1, 1) = cos(x) * cos(z) + sin(y) * sin(z) * sin(z);
-		GO_matrix.At(1, 2) = -sin(x) * cos(z) + sin(y) * sin(z) * cos(x);
-		GO_matrix.At(1, 3) = _position.y;
+		GO_matrix[4] = cos(y) * sin(z);
+		GO_matrix[5] = cos(x) * cos(z) + sin(y) * sin(z) * sin(z);
+		GO_matrix[6] = -sin(x) * cos(z) + sin(y) * sin(z) * cos(x);
+		GO_matrix[7] = _position.y;
 
-		GO_matrix.At(2, 0) = -sin(y);
-		GO_matrix.At(2, 1) = cos(y) * sin(x);
-		GO_matrix.At(2, 2) = cos(x) * cos(y);
-		GO_matrix.At(2, 3) = _position.z;
+		GO_matrix[8] = -sin(y);
+		GO_matrix[9] = cos(y) * sin(x);
+		GO_matrix[10] = cos(x) * cos(y);
+		GO_matrix[11] = _position.z;
 
-		GO_matrix.At(3, 0) = 0;
-		GO_matrix.At(3, 1) = 0;
-		GO_matrix.At(3, 2) = 0;
-		GO_matrix.At(3, 3) = 1;
+		GO_matrix[12] = 0;
+		GO_matrix[13] = 0;
+		GO_matrix[14] = 0;
+		GO_matrix[15] = 1;
 
-		GO_matrix.At(0, 0) *= _scale.x;
-		GO_matrix.At(1, 1) *= _scale.y;
-		GO_matrix.At(2, 2) *= _scale.z;
+		GO_matrix[0] *= _scale.x;
+		GO_matrix[5] *= _scale.y;
+		GO_matrix[10] *= _scale.z;
 
-		GO_matrix.Transpose();
+		GO_matrix = transpose(GO_matrix);
 	}
 }
 	
@@ -288,22 +297,22 @@ Transform GameObject::GetGlobalTransform() {
 }
 
 // Padre
-void GameObject::ParentPositionUpdate(float3 pos) {
+void GameObject::ParentPositionUpdate(vec3 pos) {
 	GO_trans.position = pos;
 	UpdatePosition();
 }
 
-void GameObject::ParentRotationUpdate(float3 rot) {
+void GameObject::ParentRotationUpdate(vec3 rot) {
 	GO_trans.rotation = rot;
 	UpdateRotation();
 }
 
-void GameObject::ParentScaleUpdate(float3 scale) {
+void GameObject::ParentScaleUpdate(vec3 scale) {
 	GO_trans.scale = scale;
 	UpdateScale();
 }
 
-void GameObject::ParentTransformUpdate(float3 pos, float3 rot, float3 scale) {
+void GameObject::ParentTransformUpdate(vec3 pos, vec3 rot, vec3 scale) {
 	GO_parentTrans.position = pos;
 	GO_parentTrans.rotation = rot;
 	GO_parentTrans.scale = scale;
@@ -321,10 +330,10 @@ void GameObject::RenderMesh() {
 	if (GO_mesh->shouldRender) 
 	{
 		if (renderTexture) {
-			GO_mesh->Render(GetTexture()->OpenGLID);
+			GO_mesh->Render(GetTexture()->OpenGLID, GO_matrix);
 		}
 		else {
-			GO_mesh->Render(NULL);
+			GO_mesh->Render(NULL, GO_matrix);
 		}
 	}
 }
@@ -332,5 +341,6 @@ void GameObject::RenderMesh() {
 // TEXTURE
 
 void GameObject::AddTexture(uint t) {
+	GO_texture = new Texture();
 	GO_texture->OpenGLID = t;
 }

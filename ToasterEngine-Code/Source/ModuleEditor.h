@@ -51,6 +51,7 @@ private:
 	std::vector<float> mslog;
 	std::vector<float> memlog;
 
+public:
 	void Space();
 
 public:
@@ -60,9 +61,7 @@ public:
 	uint goID = 0;
 
 	GameObject* selectedGameObj;
-
 	GameObject* root;
-
 	GameObject* draggingGO = nullptr;
 
 	uint AddGameObject(GameObject* GameObj);
@@ -71,6 +70,8 @@ public:
 
 	void PrepareDrawGameObject(GameObject* gameObj, bool hasCh);
 	void DrawGameObject(GameObject* gameObj, int iteration);
+
+	void DrawGO(GameObject* go);
 
 	// Assets
 	void AssetTree(FileTree* node);

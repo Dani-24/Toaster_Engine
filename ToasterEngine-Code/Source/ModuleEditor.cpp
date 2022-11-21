@@ -451,105 +451,7 @@ void ModuleEditor::ShowInspectorMenu(bool* open) {
 
 			Space();
 
-			// Transform Component
-			ImGui::TextWrapped("Component : TRANSFORM"); ImGui::NewLine();
-
-			ImGui::TextWrapped("Position : "); 
-			ImGui::SameLine();
-
-			float3 pos = float3(selectedGameObj->position.x, selectedGameObj->position.y, selectedGameObj->position.z);
-			if (ImGui::DragFloat3("pos", &pos[0], 0.1f)) {
-				selectedGameObj->SetPos(vec3(pos.x, pos.y, pos.z));
-			}
-
-			ImGui::TextWrapped("Rotation : ");
-			ImGui::SameLine();
-			float3 rot = float3(selectedGameObj->rotation.x, selectedGameObj->rotation.y, selectedGameObj->rotation.z);
-			if (ImGui::DragFloat3("rot", &rot[0], 0.1f)) {
-				selectedGameObj->SetRot(vec3(rot.x, rot.y, rot.z));
-			}
-
-			ImGui::TextWrapped("Scale :    ");
-			ImGui::SameLine();
-			float3 scale = float3(selectedGameObj->scale.x, selectedGameObj->scale.y, selectedGameObj->scale.z);
-			if (ImGui::DragFloat3("scl", &scale[0], 0.1f)) {
-				selectedGameObj->SetScale(vec3(scale.x, scale.y, scale.z));
-			}
-
-			selectedGameObj->SetTransformMatrix(vec3(pos.x, pos.y, pos.z), vec3(rot.x, rot.y, rot.z), vec3(scale.x, scale.y, scale.z));
-
-			// MESH COMPONENT
-			if (selectedGameObj->GO_mesh != nullptr) {
-				Space();
-
-				ImGui::TextWrapped("Component : MESH"); ImGui::NewLine();
-				ImGui::TextWrapped("Path : %s", selectedGameObj->GO_mesh->path.c_str());
-				
-				ImGui::TextWrapped("Show Mesh: ");
-				ImGui::SameLine();
-
-				ImGui::Selectable("Visible : ", &selectedGameObj->GO_mesh->shouldRender);
-				ImGui::SameLine();
-				if (selectedGameObj->GO_mesh->shouldRender) {
-					ImGui::TextColored(ImVec4(0.5f, 1.0f, 0.0f, 1.0f), "True");
-				}
-				else { 
-					ImGui::TextColored(ImVec4(1.f, 0.0f, 0.0f, 1.0f), "False"); 
-				}
-
-				// Delete Mesh
-
-				bool deleteMesh = false;
-				ImGui::Selectable("Delete Component", &deleteMesh);
-
-				if (deleteMesh) {
-					selectedGameObj->GO_mesh = nullptr;
-				}
-			}
-
-			// TEXTURE COMPONENT
-			if (selectedGameObj->GO_texture != NULL) {
-				Space();
-				ImGui::TextWrapped("Component : TEXTURES");
-				
-				if (texture == NULL) {
-					texture = actualTexture = selectedGameObj->GO_texture;
-				}
-
-				if (ImGui::BeginCombo("Texture", "Select", ImGuiComboFlags_HeightSmall))
-				{
-					bool is_selected = (actualTexture == texture);
-					if (ImGui::Selectable("Default", is_selected))
-					{
-						selectedGameObj->GO_texture = texture;
-					}
-					is_selected = (actualTexture == checkers_texture);
-					if (ImGui::Selectable("Checkers", is_selected))
-					{
-						selectedGameObj->GO_texture = checkers_texture;
-					}
-					ImGui::EndCombo();
-				}
-				ImGui::TextWrapped("Show Texture: ");
-				ImGui::SameLine();
-				ImGui::Selectable("Visible : ", &selectedGameObj->renderText);
-				ImGui::SameLine();
-				if (selectedGameObj->renderText) {
-					ImGui::TextColored(ImVec4(0.5f, 1.0f, 0.0f, 1.0f), "True");
-				}
-				else {
-					ImGui::TextColored(ImVec4(1.f, 0.0f, 0.0f, 1.0f), "False");
-				}
-
-				// Delete Texture
-
-				bool deleteTexture = false;
-				ImGui::Selectable("Delete Component ", &deleteTexture);
-
-				if (deleteTexture) {
-					selectedGameObj->GO_texture = NULL;
-				}
-			}
+			selectedGameObj->OnEditor();
 
 			Space();
 
@@ -572,9 +474,124 @@ void ModuleEditor::ShowHierarchyMenu(bool* open) {
 		ImGui::End();
 	}
 	else {
-		PrepareDrawGameObject(gameObjects[0], true);
+		if (!gameObjects.empty()) {
+			//PrepareDrawGameObject(gameObjects[0], true);
+			for (int i = 0; i < gameObjects.size(); i++) {
+				DrawGO(gameObjects.at(i));
+			}
+
+		}
 
 		ImGui::End();
+	}
+}
+
+void ModuleEditor::DrawGO(GameObject* go) {
+
+	// Flags
+	ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
+
+	if (go == GetSelectedGameObject()) {
+		node_flags |= ImGuiTreeNodeFlags_Selected;
+	}
+
+	// Draw
+	if (go->childs.empty()) {
+
+		ImGui::AlignTextToFramePadding();
+		node_flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen | ImGuiTreeNodeFlags_AllowItemOverlap;
+
+		ImGui::TreeNodeEx((void*)(intptr_t)0, node_flags, go->GetName().c_str(), 0);
+		
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenOverlapped))
+		{
+			if (ImGui::IsMouseDown(ImGuiMouseButton_::ImGuiMouseButton_Left)) {
+				SetSelectedGameObject(go);
+			}
+		}
+	}
+	else {
+
+		node_flags |= ImGuiTreeNodeFlags_AllowItemOverlap;
+		ImGui::TreeNodeEx((void*)(intptr_t)0, node_flags, go->GetName().c_str(), 0);
+
+	}
+}
+
+void ModuleEditor::PrepareDrawGameObject(GameObject* gameObj, bool hasCh) {
+	if (!hasCh) {
+		DrawGameObject(gameObj, 0);
+	}
+	else {
+		for (uint i = 0; i < gameObj->childs.size(); i++)
+		{
+			DrawGameObject(gameObj->childs[i], i);
+		}
+	}
+}
+
+void ModuleEditor::DrawGameObject(GameObject* gameObj, int iteration) {
+
+	ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
+
+	if (gameObj == GetSelectedGameObject()) {
+		node_flags |= ImGuiTreeNodeFlags_Selected;
+	}
+
+	bool node_open;
+
+	if (gameObj->childs.empty()) // WITHOUT CHILDS
+	{
+		ImGui::AlignTextToFramePadding();
+		node_flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen | ImGuiTreeNodeFlags_AllowItemOverlap;
+
+		ImGui::TreeNodeEx((void*)(intptr_t)iteration, node_flags, gameObj->GetName().c_str(), iteration);
+		//ImGui::SameLine(ImGui::GetWindowWidth() - 28);
+
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenOverlapped))
+		{
+			if (ImGui::IsMouseDown(ImGuiMouseButton_::ImGuiMouseButton_Left)) SetSelectedGameObject(gameObj);
+		}
+		node_open = false;
+	}
+	else // WITH CHILDS
+	{
+		ImGui::AlignTextToFramePadding();
+		node_flags |= ImGuiTreeNodeFlags_AllowItemOverlap;
+		node_open = ImGui::TreeNodeEx((void*)(intptr_t)iteration, node_flags, gameObj->GetName().c_str(), iteration);
+		//ImGui::SameLine(ImGui::GetWindowWidth() - 28);
+
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenOverlapped))
+		{
+			if (ImGui::IsMouseDown(ImGuiMouseButton_::ImGuiMouseButton_Left)) SetSelectedGameObject(gameObj);
+		}
+	}
+
+	if (ImGui::BeginDragDropSource())
+	{
+		ImGui::SetDragDropPayload("GameObject", gameObj, sizeof(GameObject*));
+
+		draggingGO = gameObj;
+
+		ImGui::Text("Make Toasty Child?");
+		ImGui::EndDragDropSource();
+	}
+	if (ImGui::BeginDragDropTarget())
+	{
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GameObject"))
+		{
+			draggingGO->SetParent(gameObj);
+			draggingGO = nullptr;
+		}
+		ImGui::EndDragDropTarget();
+	}
+
+	if (node_open)
+	{
+		if (!gameObj->childs.empty()) {
+			PrepareDrawGameObject(gameObj, true);
+		}
+		ImGui::TreePop();
 	}
 }
 
@@ -720,89 +737,11 @@ uint ModuleEditor::AddGameObject(GameObject* GameObj) {
 
 	goID++;
 
-	return goID;
+	return goID - 1;
 }
 
 void ModuleEditor::SetSelectedGameObject(GameObject* GameObj) {
 	selectedGameObj = GameObj;
-}
-
-void ModuleEditor::PrepareDrawGameObject(GameObject* gameObj, bool hasCh) {
-	if (!hasCh) {
-		DrawGameObject(gameObj , 0);
-	}
-	else {
-		for (size_t i = 0; i < gameObj->childs.size(); i++)
-		{
-			DrawGameObject(gameObj->childs[i], i);
-		}
-	}
-}
-
-void ModuleEditor::DrawGameObject(GameObject* gameObj, int iteration) {
-
-	ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
-
-	if (gameObj == GetSelectedGameObject()) {
-		node_flags |= ImGuiTreeNodeFlags_Selected;
-	}
-
-	bool node_open;
-
-	if (gameObj->childs.empty())
-	{
-		ImGui::AlignTextToFramePadding();
-		node_flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen | ImGuiTreeNodeFlags_AllowItemOverlap;
-
-		ImGui::TreeNodeEx((void*)(intptr_t)iteration, node_flags, gameObj->GetName().c_str(), iteration); 
-		//ImGui::SameLine(ImGui::GetWindowWidth() - 28);
-		
-		if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenOverlapped))
-		{
-			if (ImGui::IsMouseDown(ImGuiMouseButton_::ImGuiMouseButton_Left)) SetSelectedGameObject(gameObj);
-			/*if (ImGui::IsMouseDown(ImGuiMouseButton_::ImGuiMouseButton_Right)) rightClickedGameObject = gameObject;*/
-		}
-		node_open = false;
-	}
-	else
-	{
-		ImGui::AlignTextToFramePadding();
-		node_flags |= ImGuiTreeNodeFlags_AllowItemOverlap;
-		node_open = ImGui::TreeNodeEx((void*)(intptr_t)iteration, node_flags, gameObj->GetName().c_str(), iteration); 
-		//ImGui::SameLine(ImGui::GetWindowWidth() - 28);
-
-		if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenOverlapped))
-		{
-			if (ImGui::IsMouseDown(ImGuiMouseButton_::ImGuiMouseButton_Left)) SetSelectedGameObject(gameObj);
-			/*if (ImGui::IsMouseDown(ImGuiMouseButton_::ImGuiMouseButton_Right)) rightClickedGameObject = gameObject;*/
-		}
-	}
-
-	if (ImGui::BeginDragDropSource())
-	{
-		ImGui::SetDragDropPayload("GameObject", gameObj, sizeof(GameObject*));
-
-		draggingGO = gameObj;
-
-		ImGui::Text("Make Toasty Child?");
-		ImGui::EndDragDropSource();
-	}
-
-	if (ImGui::BeginDragDropTarget())
-	{
-		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GameObject"))
-		{
-			draggingGO->SetParent(gameObj);
-			draggingGO = nullptr;
-		}
-		ImGui::EndDragDropTarget();
-	}
-
-	if (node_open)
-	{
-		if (!gameObj->childs.empty()) PrepareDrawGameObject(gameObj, true);
-		ImGui::TreePop();
-	}
 }
 
 void ModuleEditor::AssetTree(FileTree* node) {

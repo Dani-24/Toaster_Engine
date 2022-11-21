@@ -5,13 +5,13 @@
 #include "ModuleTexture.h"
 
 #include <math.h>
-#include "../External/MathGeoLib/include/MathGeoLib.h"
+//#include "../External/MathGeoLib/include/MathGeoLib.h"
 #include "../External/ImGui/imgui.h"
 
 struct Transform {
-	float3 position = float3(0.0f, 0.0f, 0.0f),
-		rotation = float3(0.0f, 0.0f, 0.0f),
-		scale = float3(0.0f, 0.0f, 0.0f);
+	vec3 position = vec3(0.0f, 0.0f, 0.0f),
+		rotation = vec3(0.0f, 0.0f, 0.0f),
+		scale = vec3(0.0f, 0.0f, 0.0f);
 };
 
 class GameObject
@@ -41,10 +41,10 @@ private:
 
 	uint ID;
 	GameObject* parent;
-	std::string name;
 
 public:
 
+	std::string name;
 	std::vector<GameObject*> childs;
 
 	bool pendindToDelete = false;
@@ -52,19 +52,19 @@ public:
 	// TRANSFORM
 public:
 
-	void SetPos(float3 pos);
-	void SetRot(float3 rot);
-	void SetScale(float3 scale);
+	void SetPos(vec3 pos);
+	void SetRot(vec3 rot);
+	void SetScale(vec3 scale);
 
-	float3 GetPos() { return GO_trans.position; }
-	float3 GetRot() { return GO_trans.rotation; }
-	float3 GetScale() { return GO_trans.scale; }
+	vec3 GetPos() { return GO_trans.position; }
+	vec3 GetRot() { return GO_trans.rotation; }
+	vec3 GetScale() { return GO_trans.scale; }
 
-	void SetTransform(float3 pos, float3 rot, float3 scale);
+	void SetTransform(vec3 pos, vec3 rot, vec3 scale);
 
-	void Translate(float3 pos);
-	void Rotate(float3 rot);
-	void Scale(float3 scale);
+	void Translate(vec3 pos);
+	void Rotate(vec3 rot);
+	void Scale(vec3 scale);
 
 	// Apply Transformations
 	void UpdatePosition();
@@ -73,19 +73,19 @@ public:
 	void UpdateTransform();
 
 	// Matrix
-	void SetTransformMatrix(float3 _position, float3 _rotation, float3 _scale);
+	void SetTransformMatrix(vec3 _position, vec3 _rotation, vec3 _scale);
 	Transform GetGlobalTransform();
 
 	// Parent
-	void ParentPositionUpdate(float3 pos);
-	void ParentRotationUpdate(float3 rot);
-	void ParentScaleUpdate(float3 scale);
-	void ParentTransformUpdate(float3 pos, float3 rot, float3 scale);
+	void ParentPositionUpdate(vec3 pos);
+	void ParentRotationUpdate(vec3 rot);
+	void ParentScaleUpdate(vec3 scale);
+	void ParentTransformUpdate(vec3 pos, vec3 rot, vec3 scale);
 
 private:
 
-	bool transformByQuat = true;
-	float4x4 GO_matrix;
+	bool transformByQuat = false;
+	mat4x4 GO_matrix;
 	Transform GO_trans;
 	Transform GO_parentTrans;
 
@@ -116,7 +116,7 @@ public:
 private:
 
 	Texture* GO_texture = nullptr;
-	Texture* GO_originalTexture = nullptr;
+	Texture* GO_originalTexture = new Texture();
 
 	bool renderTexture;
 

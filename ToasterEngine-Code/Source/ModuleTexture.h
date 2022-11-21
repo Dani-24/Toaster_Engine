@@ -24,8 +24,6 @@ public:
 	ModuleTexture(Application* app, bool start_enabled = true);
 	~ModuleTexture();
 
-	update_status PostUpdate(float dt);
-
 	// Image file to DDS
 	static void ImportImage(const std::string& filename, char* buffer, uint size);
 
@@ -51,5 +49,4 @@ public:
 	static std::map<uint, Texture> loadedTextures;
 	static std::map<std::string, uint> usedPaths;
 	static std::vector<BindedTextureInfo> bindedTexturesInfo;
-
 };
