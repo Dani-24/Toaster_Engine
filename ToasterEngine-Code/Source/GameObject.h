@@ -4,6 +4,16 @@
 #include "ModuleMesh3D.h"
 #include "ModuleTexture.h"
 
+#include <math.h>
+#include "../External/MathGeoLib/include/MathGeoLib.h"
+#include "../External/ImGui/imgui.h"
+
+struct Transform {
+	float3 position = float3(0.0f, 0.0f, 0.0f),
+		rotation = float3(0.0f, 0.0f, 0.0f),
+		scale = float3(0.0f, 0.0f, 0.0f);
+};
+
 class GameObject
 {
 public:
@@ -11,49 +21,103 @@ public:
 	GameObject(std::string name, GameObject* parent);
 	~GameObject();
 
-	void SetPos(vec3 pos);
-	void SetRot(vec3 rot);
-	void SetScale(vec3 scale);
-	vec3 GetPos() { return position; }
-	vec3 GetRot() { return rotation; }
-	vec3 GetScale() { return scale; }
-
-	void AddMesh(Mesh* m);
-	void AddTexture(uint texture);
-
 	void DeleteThisGameObject();
 
-	uint GetID() { return ID; }
-	
+	// Hierarchy
 	void SetParent(GameObject* parent);
 	GameObject* GetParent() { return parent; }
 
 	void AddChild(GameObject* child);
 	void DeleteChild(GameObject* child);
 
+	// Vars
 	std::string GetName() { return name; }
+	uint GetID() { return ID; }
+
+	// ImGUI
+	void OnEditor();
 
 private:
+
 	uint ID;
 	GameObject* parent;
-
-public:
-
 	std::string name;
-	std::vector<GameObject*> childs;
 
 public:
-	vec3 position = vec3(0, 0, 0), 
-		rotation = vec3(0, 0, 0), 
-		scale = vec3(1, 1, 1);
 
-	Mesh* GO_mesh = nullptr;
-	uint GO_texture = NULL;
+	std::vector<GameObject*> childs;
 
 	bool pendindToDelete = false;
 
-	void SetTransformMatrix(vec3 _position, vec3 _rotation, vec3 _scale);
-	mat4x4 lTransform;
+	// TRANSFORM
+public:
 
-	bool renderText;
+	void SetPos(float3 pos);
+	void SetRot(float3 rot);
+	void SetScale(float3 scale);
+
+	float3 GetPos() { return GO_trans.position; }
+	float3 GetRot() { return GO_trans.rotation; }
+	float3 GetScale() { return GO_trans.scale; }
+
+	void SetTransform(float3 pos, float3 rot, float3 scale);
+
+	void Translate(float3 pos);
+	void Rotate(float3 rot);
+	void Scale(float3 scale);
+
+	// Apply Transformations
+	void UpdatePosition();
+	void UpdateRotation();
+	void UpdateScale();
+	void UpdateTransform();
+
+	// Matrix
+	void SetTransformMatrix(float3 _position, float3 _rotation, float3 _scale);
+	Transform GetGlobalTransform();
+
+	// Parent
+	void ParentPositionUpdate(float3 pos);
+	void ParentRotationUpdate(float3 rot);
+	void ParentScaleUpdate(float3 scale);
+	void ParentTransformUpdate(float3 pos, float3 rot, float3 scale);
+
+private:
+
+	bool transformByQuat = true;
+	float4x4 GO_matrix;
+	Transform GO_trans;
+	Transform GO_parentTrans;
+
+	// MESH
+public:
+
+	void AddMesh(Mesh* m);
+
+	void RenderMesh();
+	void ShowMesh(bool visible) { renderMesh = visible; }
+
+	Mesh* GetMesh() { return GO_mesh; }
+
+private:
+
+	Mesh* GO_mesh = nullptr;
+
+	bool renderMesh;
+
+	// TEXTURE
+public:
+
+	void AddTexture(uint texture);
+	Texture* GetTexture() { return GO_texture; }
+
+	void ShowTexture(bool visible) { renderTexture = visible; }
+
+private:
+
+	Texture* GO_texture = nullptr;
+	Texture* GO_originalTexture = nullptr;
+
+	bool renderTexture;
+
 };
