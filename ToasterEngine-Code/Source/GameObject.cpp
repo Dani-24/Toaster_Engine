@@ -12,7 +12,6 @@ GameObject::GameObject(std::string name, GameObject* parent)
 
 	if (parent != nullptr) {
 		parent->AddChild(this);
-		this->SetParent(parent);
 	}
 
 	LOG("Created GameObject %s", name.c_str());
@@ -33,31 +32,44 @@ void GameObject::DeleteThisGameObject() {
 
 	LOG("Deleting Game Object %s", name.c_str());
 
-	app->editor->SetSelectedGameObject(nullptr);
+	// Deselect if selected
+	if (app->editor->selectedGameObj == this) {
+		app->editor->SetSelectedGameObject(nullptr);
+	}
+
+	// Clean meshes / textures
+	if (GO_mesh != nullptr) {
+		GO_mesh->~Mesh();
+	}
+	GO_texture = NULL;
+
+	// Delete from hierarchy
 	parent->DeleteChild(this);
+
 	for (size_t i = 0; i < childs.size(); i++)
 	{
 		childs[i]->DeleteThisGameObject();
 	}
 }
 
-void GameObject::SetParent(GameObject* par) {
-	parent = par;
-	parent->childs.push_back(this);
-}
-
-void GameObject::AddChild(GameObject* chi) {
-	chi->parent = this;
-	childs.push_back(chi);
-}
-
 void GameObject::DeleteChild(GameObject* chi) {
 
 	for (size_t i = 0; i < childs.size(); i++)
 	{
-		if (chi->ID == childs[i]->ID) childs.erase(childs.begin() + i);
+		if (chi == childs[i]) { 
+			childs.erase(childs.begin() + i); 
+		}
 	}
 	chi->parent = nullptr;
+}
+
+void GameObject::AddChild(GameObject* chi) {
+	chi->SetParent(this);
+	childs.push_back(chi);
+}
+
+void GameObject::SetParent(GameObject* par) {
+	parent = par;
 }
 
 // ImGUI
@@ -86,8 +98,6 @@ void GameObject::OnEditor() {
 	if (ImGui::DragFloat3("scl", &scale[0], 0.1f)) {
 		SetScale(vec3(scale.x, scale.y, scale.z));
 	}
-
-	SetTransformMatrix(vec3(pos.x, pos.y, pos.z), vec3(rot.x, rot.y, rot.z), vec3(scale.x, scale.y, scale.z));
 
 	// MESH COMPONENT
 	if (GO_mesh != nullptr) {
@@ -166,16 +176,25 @@ void GameObject::OnEditor() {
 // TRANSFORM
 void GameObject::SetPos(vec3 pos) {
 	this->GO_trans.position = pos;
+
+	SetTransformMatrix(pos, GO_trans.rotation, GO_trans.scale);
+
 	UpdatePosition();
 }
 
 void GameObject::SetRot(vec3 rot) {
 	this->GO_trans.rotation = rot;
+
+	SetTransformMatrix(GO_trans.position, rot, GO_trans.scale);
+
 	UpdateRotation();
 }
 
 void GameObject::SetScale(vec3 scale) {
 	this->GO_trans.scale = scale;
+
+	SetTransformMatrix(GO_trans.position, GO_trans.rotation, scale);
+
 	UpdateScale();
 }
 
@@ -188,16 +207,25 @@ void GameObject::SetTransform(vec3 pos, vec3 rot, vec3 scale) {
 
 void GameObject::Translate(vec3 pos) {
 	this->GO_trans.position += pos;
+
+	SetTransformMatrix(pos, GO_trans.rotation, GO_trans.scale);
+
 	UpdatePosition();
 }
 
 void GameObject::Rotate(vec3 rot) {
 	this->GO_trans.rotation += rot;
+
+	SetTransformMatrix(GO_trans.position, rot, GO_trans.scale);
+
 	UpdateRotation();
 }
 
 void GameObject::Scale(vec3 scale) {
 	this->GO_trans.scale += scale;
+
+	SetTransformMatrix(GO_trans.position, GO_trans.rotation, scale);
+
 	UpdateScale();
 }
 
@@ -292,7 +320,7 @@ Transform GameObject::GetGlobalTransform() {
 	return global_transform;
 }
 
-// Padre
+// Padre te ordena
 void GameObject::ParentPositionUpdate(vec3 pos) {
 	GO_trans.position = pos;
 	UpdatePosition();

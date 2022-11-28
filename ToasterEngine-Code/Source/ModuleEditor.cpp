@@ -135,8 +135,13 @@ void ModuleEditor::Draw(){
 	if (ImGui::BeginMainMenuBar()) {
 
 		if (ImGui::BeginMenu("File")) {
-			if (ImGui::MenuItem("New Toast", "WIP")) {
+			if (ImGui::MenuItem("New Toast", "Ctrl+N")) {
 
+				for (int i = 0; i < gameObjects.size(); i++) {
+					gameObjects[0]->DeleteThisGameObject();
+				}
+
+				root = new GameObject("New Scene", nullptr);
 			}
 			if (ImGui::MenuItem("Open Toast", "WIP")) {
 
@@ -165,7 +170,6 @@ void ModuleEditor::Draw(){
 				OpenURL("https://static.wikia.nocookie.net/shitpost/images/2/2a/Amogus.png/revision/latest?cb=20210717210340&path-prefix=es");
 			}
 			if (ImGui::MenuItem("Toaster Mode", "Just work at toaster speed", &toasterMode)) {}
-
 			if (ImGui::BeginMenu("Create 3D Mesh")) {
 				if(ImGui::MenuItem("Cube")) {
 
@@ -283,7 +287,6 @@ void ModuleEditor::Draw(){
 
 			if (ImGui::MenuItem("About", NULL, &showAboutMenu)) {}
 			if (ImGui::MenuItem("Show Demo Window",NULL, &showDemoWindow)) {}
-
 			if (ImGui::MenuItem("Engine Documentation"))
 			{
 				OpenURL("https://github.com/Dani-24/Toaster_Engine");
@@ -294,7 +297,6 @@ void ModuleEditor::Draw(){
 
 		ImGui::EndMainMenuBar();
 	}
-
 }
 
 void ModuleEditor::ShowGameEditorWindow(bool* open) {
@@ -387,6 +389,7 @@ void ModuleEditor::ShowAssetManager(bool* open) {
 		{
 			std::string s = "File \n";
 			s += currentNode->files[i - dir_size];
+
 			ImGui::Button(s.c_str(), ImVec2(120, 120));
 
 			if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceNoDisableHover | ImGuiDragDropFlags_SourceNoPreviewTooltip))
@@ -394,6 +397,10 @@ void ModuleEditor::ShowAssetManager(bool* open) {
 				std::string file_path = currentNode->path + currentNode->files[i - dir_size];
 				ImGui::SetDragDropPayload(file_path.c_str(), &i, sizeof(std::string));
 				dd_file = file_path;
+
+				ddname = currentNode->files[i - dir_size];
+				ddname = ddname.substr(0, ddname.find_last_of("."));
+
 				ImGui::EndDragDropSource();
 			}
 
@@ -402,9 +409,8 @@ void ModuleEditor::ShowAssetManager(bool* open) {
 		
 		ImGui::End();
 	}
-
-	if (dd_file != "" && ddCooldown > 100) {
-		GameObject* ddFile = new GameObject("New GameObject", root);
+	if (dd_file != "" && ddCooldown > 200) {
+		GameObject* ddFile = new GameObject(ddname, root);
 		ddFile->AddMesh(app->mesh3d->LoadFile(dd_file));
 		ddFile->AddTexture(app->textures->ImportTexture(dd_file));
 		dd_file = "";
@@ -454,13 +460,16 @@ void ModuleEditor::ShowInspectorMenu(bool* open) {
 
 			Space();
 
-			selectedGameObj->OnEditor();
+			if (selectedGameObj != root) { // Don't allow to delete the root
+				
+				selectedGameObj->OnEditor();
 
-			Space();
+				Space();
 
-			// Delete Game Object
-			if (selectedGameObj->GetParent() != nullptr) {
-				ImGui::Selectable("Delete this Game Object ", &selectedGameObj->pendindToDelete);
+				// Delete Game Object
+				if (selectedGameObj->GetParent() != nullptr) {
+					ImGui::Selectable("Delete this Game Object ", &selectedGameObj->pendindToDelete);
+				}
 			}
 		}
 		else {
@@ -478,9 +487,8 @@ void ModuleEditor::ShowHierarchyMenu(bool* open) {
 	}
 	else {
 		if (!gameObjects.empty()) {
-			PrepareDrawGameObject(gameObjects[0], true);
+			PrepareDrawGameObject(gameObjects[0], false);
 		}
-
 		ImGui::End();
 	}
 }
@@ -499,7 +507,7 @@ void ModuleEditor::PrepareDrawGameObject(GameObject* gameObj, bool hasCh) {
 
 void ModuleEditor::DrawGameObject(GameObject* gameObj, int iteration) {
 
-	ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
+	ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_DefaultOpen;
 
 	if (gameObj == GetSelectedGameObject()) {
 		node_flags |= ImGuiTreeNodeFlags_Selected;
@@ -513,7 +521,6 @@ void ModuleEditor::DrawGameObject(GameObject* gameObj, int iteration) {
 		node_flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen | ImGuiTreeNodeFlags_AllowItemOverlap;
 
 		ImGui::TreeNodeEx((void*)(intptr_t)iteration, node_flags, gameObj->GetName().c_str(), iteration);
-		//ImGui::SameLine(ImGui::GetWindowWidth() - 28);
 
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenOverlapped))
 		{
@@ -526,7 +533,6 @@ void ModuleEditor::DrawGameObject(GameObject* gameObj, int iteration) {
 		ImGui::AlignTextToFramePadding();
 		node_flags |= ImGuiTreeNodeFlags_AllowItemOverlap;
 		node_open = ImGui::TreeNodeEx((void*)(intptr_t)iteration, node_flags, gameObj->GetName().c_str(), iteration);
-		//ImGui::SameLine(ImGui::GetWindowWidth() - 28);
 
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenOverlapped))
 		{
@@ -535,24 +541,27 @@ void ModuleEditor::DrawGameObject(GameObject* gameObj, int iteration) {
 	}
 
 	// Drag Drop
-	/*if (ImGui::BeginDragDropSource())
+	if (ImGui::BeginDragDropSource())
 	{
 		ImGui::SetDragDropPayload("GameObject", gameObj, sizeof(GameObject*));
 
 		draggingGO = gameObj;
-
 		ImGui::Text("Make Toasty Child?");
+
 		ImGui::EndDragDropSource();
 	}
 	if (ImGui::BeginDragDropTarget())
 	{
 		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GameObject"))
 		{
-			draggingGO->SetParent(gameObj);
-			draggingGO = nullptr;
+			if (gameObj->GetParent() != draggingGO) { // Avoid making a parent of a child of a parent of a child of a parent of a child of a parent of a child of a parent
+				draggingGO->GetParent()->DeleteChild(draggingGO);
+				gameObj->AddChild(draggingGO);
+				draggingGO = nullptr;
+			}
 		}
 		ImGui::EndDragDropTarget();
-	}*/
+	}
 
 	if (node_open)
 	{

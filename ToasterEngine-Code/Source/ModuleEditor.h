@@ -71,6 +71,8 @@ public:
 	void PrepareDrawGameObject(GameObject* gameObj, bool hasCh);
 	void DrawGameObject(GameObject* gameObj, int iteration);
 
+	GameObject* printedGameObj = nullptr;
+
 	// Assets
 	void AssetTree(FileTree* node);
 
@@ -79,12 +81,15 @@ public:
 	std::vector<std::string> allFiles;
 
 	std::string dd_file = "";
-	int ddCooldown = 0;
+	int ddCooldown = 200;
 	std::string message = "";
 
 	uint texture = NULL;
 	uint actualTexture;
 	uint checkers_texture;
+
+private:
+	std::string ddname = "New GameObject";
 
 public:
 	void AddLogMsg(const char* msg);

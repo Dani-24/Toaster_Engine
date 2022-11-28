@@ -23,7 +23,10 @@ public:
 	void DeleteThisGameObject();
 
 	// Hierarchy
+private:
 	void SetParent(GameObject* parent);
+
+public:
 	GameObject* GetParent() { return parent; }
 
 	void AddChild(GameObject* child);
