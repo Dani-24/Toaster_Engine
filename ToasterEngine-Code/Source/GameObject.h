@@ -75,8 +75,6 @@ public:
 	void UpdateTransform();
 
 	// Matrix
-
-	void UpdateMatrix();
 	void SetTransformMatrix(vec3 _position, vec3 _rotation, vec3 _scale);
 	Transform GetGlobalTransform();
 
@@ -91,11 +89,10 @@ private:
 	bool transformByQuat = false;
 	mat4x4 GO_matrix;
 	Transform GO_trans;
-	Transform GO_parentTrans;
+	Transform GO_parentTrans, GO_originalParentTrans;
 
-	// MESH
 public:
-
+	// MESH
 	void AddMesh(Mesh* m);
 
 	void RenderMesh();
@@ -111,9 +108,8 @@ private:
 
 	bool renderMesh;
 
-	// TEXTURE
 public:
-
+	// TEXTURE
 	void AddTexture(uint texture);
 	Texture* GetTexture() { return GO_texture; }
 
@@ -125,5 +121,4 @@ private:
 	Texture* GO_originalTexture = new Texture();
 
 	bool renderTexture;
-
 };

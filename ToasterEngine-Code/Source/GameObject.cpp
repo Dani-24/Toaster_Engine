@@ -70,6 +70,7 @@ void GameObject::AddChild(GameObject* chi) {
 
 void GameObject::SetParent(GameObject* par) {
 	parent = par;
+	GO_originalParentTrans = par->GO_trans;
 }
 
 // ImGUI
@@ -98,6 +99,8 @@ void GameObject::OnEditor() {
 	if (ImGui::DragFloat3("scl", &scale[0], 0.1f)) {
 		SetScale(vec3(scale.x, scale.y, scale.z));
 	}
+
+	SetTransformMatrix(vec3(pos.x, pos.y, pos.z), vec3(rot.x, rot.y, rot.z), vec3(scale.x, scale.y, scale.z));
 
 	// MESH COMPONENT
 	if (GO_mesh != nullptr) {
@@ -222,8 +225,6 @@ void GameObject::Scale(vec3 scale) {
 // Apply Transformations
 void GameObject::UpdatePosition() {
 
-	UpdateMatrix();
-
 	vec3 globalPosition = GO_parentTrans.position + GO_trans.position;
 
 	for (size_t i = 0; i < childs.size(); i++)
@@ -233,8 +234,6 @@ void GameObject::UpdatePosition() {
 }
 
 void GameObject::UpdateRotation() {
-
-	UpdateMatrix();
 
 	vec3 globalRotation = GO_parentTrans.rotation + GO_trans.rotation;
 
@@ -246,9 +245,7 @@ void GameObject::UpdateRotation() {
 
 void GameObject::UpdateScale() {
 
-	UpdateMatrix();
-
-	vec3 globalScale = GO_parentTrans.scale + GO_trans.scale;
+	vec3 globalScale = GO_parentTrans.scale * GO_trans.scale;
 
 	for (size_t i = 0; i < childs.size(); i++)
 	{
@@ -257,8 +254,6 @@ void GameObject::UpdateScale() {
 }
 
 void GameObject::UpdateTransform() {
-
-	UpdateMatrix();
 
 	Transform globalTransform = GetGlobalTransform();
 
@@ -269,10 +264,6 @@ void GameObject::UpdateTransform() {
 }
 
 // Matrix
-void GameObject::UpdateMatrix() {
-	SetTransformMatrix(GO_trans.position, GO_trans.rotation, GO_trans.scale);
-}
-
 void GameObject::SetTransformMatrix(vec3 _position, vec3 _rotation, vec3 _scale)
 {
 	if (transformByQuat) {
@@ -312,6 +303,9 @@ void GameObject::SetTransformMatrix(vec3 _position, vec3 _rotation, vec3 _scale)
 		GO_matrix[10] *= _scale.z;
 
 		GO_matrix = transpose(GO_matrix);
+
+		// ?
+		SetTransform(_position, _rotation, _scale);
 	}
 }
 	
@@ -329,19 +323,18 @@ Transform GameObject::GetGlobalTransform() {
 // Padre te ordena
 void GameObject::ParentPositionUpdate(vec3 pos) {
 	GO_parentTrans.position = pos;
+	
+	vec3 translation = GO_originalParentTrans.position - GO_parentTrans.position;
 
-	UpdatePosition();
 }
 
 void GameObject::ParentRotationUpdate(vec3 rot) {
 	GO_parentTrans.rotation = rot;
-
 	UpdateRotation();
 }
 
 void GameObject::ParentScaleUpdate(vec3 scale) {
 	GO_parentTrans.scale = scale;
-
 	UpdateScale();
 }
 
