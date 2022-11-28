@@ -140,11 +140,11 @@ void ModuleEditor::Draw(){
 		if (ImGui::BeginMenu("File")) {
 			if (ImGui::MenuItem("New Toast", "Ctrl+N")) {
 
-				for (int i = 0; i < gameObjects.size(); i++) {
-					gameObjects[0]->DeleteThisGameObject();
+				for (int i = 0; i < root->childs.size(); i++) {
+					root->childs[i]->DeleteThisGameObject();
 				}
 
-				root = new GameObject("New Scene", nullptr);
+				root->name = "New Scene";
 			}
 			if (ImGui::MenuItem("Open Toast", "WIP")) {
 
@@ -395,14 +395,36 @@ void ModuleEditor::ShowAssetManager(bool* open) {
 
 			ImGui::Button(s.c_str(), ImVec2(120, 120));
 
-			if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceNoDisableHover | ImGuiDragDropFlags_SourceNoPreviewTooltip))
+			if (ddCooldown > 30 && ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceNoDisableHover | ImGuiDragDropFlags_SourceNoPreviewTooltip))
 			{
 				std::string file_path = currentNode->path + currentNode->files[i - dir_size];
 				ImGui::SetDragDropPayload(file_path.c_str(), &i, sizeof(std::string));
-				dd_file = file_path;
+				dd_file_name = file_path;
 
 				ddname = currentNode->files[i - dir_size];
 				ddname = ddname.substr(0, ddname.find_last_of("."));
+
+				for (int i = 0; i < Hnaming.size(); i++) {
+					if (Hnaming[i].dd_string == ddname) {
+						char a = '0' + Hnaming[i].dd_counters;
+						ddname.push_back(' '); 
+						ddname.push_back('(');
+						ddname.push_back(' ');
+						ddname.push_back(a);
+						ddname.push_back(' '); 
+						ddname.push_back(')');
+						Hnaming[i].dd_counters++;
+						break;
+					}
+					else {
+						HierarchyNaming d; d.dd_string = ddname;
+						Hnaming.push_back(d);
+					}
+				}
+				if (Hnaming.empty()) {
+					HierarchyNaming d; d.dd_string = ddname;
+					Hnaming.push_back(d);
+				}
 
 				ImGui::EndDragDropSource();
 			}
@@ -412,11 +434,11 @@ void ModuleEditor::ShowAssetManager(bool* open) {
 		
 		ImGui::End();
 	}
-	if (dd_file != "" && ddCooldown > 200) {
+	if (dd_file_name != "") {
 		GameObject* ddFile = new GameObject(ddname, root);
-		ddFile->AddMesh(app->mesh3d->LoadFile(dd_file));
-		ddFile->AddTexture(app->textures->ImportTexture(dd_file));
-		dd_file = "";
+		ddFile->AddMesh(app->mesh3d->LoadFile(dd_file_name));
+		ddFile->AddTexture(app->textures->ImportTexture(dd_file_name));
+		dd_file_name = "";
 		ddCooldown = 0;
 	}
 	ddCooldown++;

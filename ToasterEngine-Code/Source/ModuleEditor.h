@@ -12,6 +12,11 @@
 class GameObject;
 class FileTree;
 
+struct HierarchyNaming {
+	std::string dd_string;
+	int dd_counters = 1;
+};
+
 class ModuleEditor : public Module 
 {
 public:
@@ -80,9 +85,11 @@ public:
 	FileTree* currentNode = nullptr;
 	std::vector<std::string> allFiles;
 
-	std::string dd_file = "";
-	int ddCooldown = 200;
+	std::string dd_file_name = "";
+	int ddCooldown = 9999;
 	std::string message = "";
+
+	std::vector<HierarchyNaming> Hnaming;
 
 	uint texture = NULL;
 	uint actualTexture;
