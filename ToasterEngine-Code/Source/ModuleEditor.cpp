@@ -72,12 +72,15 @@ update_status ModuleEditor::Update(float dt) {
 
 update_status ModuleEditor::PostUpdate(float dt) {
 
+	// Delete GameObjects
 	for (int i = 0; i < gameObjects.size(); i++) {
 		if (gameObjects[i]->pendindToDelete) {
 			gameObjects[i]->DeleteThisGameObject();
 			gameObjects.erase(gameObjects.begin() + i);
 		}
-		
+	}
+
+	for (int i = 0; i < gameObjects.size(); i++) {
 		// Render GO
 		gameObjects[i]->RenderMesh();
 	}

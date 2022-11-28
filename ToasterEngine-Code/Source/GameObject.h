@@ -75,6 +75,8 @@ public:
 	void UpdateTransform();
 
 	// Matrix
+
+	void UpdateMatrix();
 	void SetTransformMatrix(vec3 _position, vec3 _rotation, vec3 _scale);
 	Transform GetGlobalTransform();
 
@@ -100,6 +102,8 @@ public:
 	void ShowMesh(bool visible) { renderMesh = visible; }
 
 	Mesh* GetMesh() { return GO_mesh; }
+
+	void DisplayMesh(bool display);
 
 private:
 

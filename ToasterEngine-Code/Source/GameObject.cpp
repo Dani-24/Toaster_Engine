@@ -40,16 +40,16 @@ void GameObject::DeleteThisGameObject() {
 	// Clean meshes / textures
 	if (GO_mesh != nullptr) {
 		GO_mesh->~Mesh();
+		GO_mesh = nullptr;
 	}
 	GO_texture = NULL;
 
 	// Delete from hierarchy
-	parent->DeleteChild(this);
-
 	for (size_t i = 0; i < childs.size(); i++)
 	{
 		childs[i]->DeleteThisGameObject();
 	}
+	parent->DeleteChild(this);
 }
 
 void GameObject::DeleteChild(GameObject* chi) {
@@ -120,6 +120,8 @@ void GameObject::OnEditor() {
 			ImGui::TextColored(ImVec4(1.f, 0.0f, 0.0f, 1.0f), "False");
 		}
 
+		DisplayMesh(GO_mesh->shouldRender);
+
 		// Delete Mesh
 
 		bool deleteMesh = false;
@@ -177,23 +179,17 @@ void GameObject::OnEditor() {
 void GameObject::SetPos(vec3 pos) {
 	this->GO_trans.position = pos;
 
-	SetTransformMatrix(pos, GO_trans.rotation, GO_trans.scale);
-
 	UpdatePosition();
 }
 
 void GameObject::SetRot(vec3 rot) {
 	this->GO_trans.rotation = rot;
 
-	SetTransformMatrix(GO_trans.position, rot, GO_trans.scale);
-
 	UpdateRotation();
 }
 
 void GameObject::SetScale(vec3 scale) {
 	this->GO_trans.scale = scale;
-
-	SetTransformMatrix(GO_trans.position, GO_trans.rotation, scale);
 
 	UpdateScale();
 }
@@ -208,15 +204,11 @@ void GameObject::SetTransform(vec3 pos, vec3 rot, vec3 scale) {
 void GameObject::Translate(vec3 pos) {
 	this->GO_trans.position += pos;
 
-	SetTransformMatrix(pos, GO_trans.rotation, GO_trans.scale);
-
 	UpdatePosition();
 }
 
 void GameObject::Rotate(vec3 rot) {
 	this->GO_trans.rotation += rot;
-
-	SetTransformMatrix(GO_trans.position, rot, GO_trans.scale);
 
 	UpdateRotation();
 }
@@ -224,13 +216,14 @@ void GameObject::Rotate(vec3 rot) {
 void GameObject::Scale(vec3 scale) {
 	this->GO_trans.scale += scale;
 
-	SetTransformMatrix(GO_trans.position, GO_trans.rotation, scale);
-
 	UpdateScale();
 }
 
 // Apply Transformations
 void GameObject::UpdatePosition() {
+
+	UpdateMatrix();
+
 	vec3 globalPosition = GO_parentTrans.position + GO_trans.position;
 
 	for (size_t i = 0; i < childs.size(); i++)
@@ -240,6 +233,9 @@ void GameObject::UpdatePosition() {
 }
 
 void GameObject::UpdateRotation() {
+
+	UpdateMatrix();
+
 	vec3 globalRotation = GO_parentTrans.rotation + GO_trans.rotation;
 
 	for (size_t i = 0; i < childs.size(); i++)
@@ -249,6 +245,9 @@ void GameObject::UpdateRotation() {
 }
 
 void GameObject::UpdateScale() {
+
+	UpdateMatrix();
+
 	vec3 globalScale = GO_parentTrans.scale + GO_trans.scale;
 
 	for (size_t i = 0; i < childs.size(); i++)
@@ -258,6 +257,9 @@ void GameObject::UpdateScale() {
 }
 
 void GameObject::UpdateTransform() {
+
+	UpdateMatrix();
+
 	Transform globalTransform = GetGlobalTransform();
 
 	for (size_t i = 0; i < childs.size(); i++)
@@ -267,6 +269,10 @@ void GameObject::UpdateTransform() {
 }
 
 // Matrix
+void GameObject::UpdateMatrix() {
+	SetTransformMatrix(GO_trans.position, GO_trans.rotation, GO_trans.scale);
+}
+
 void GameObject::SetTransformMatrix(vec3 _position, vec3 _rotation, vec3 _scale)
 {
 	if (transformByQuat) {
@@ -322,17 +328,20 @@ Transform GameObject::GetGlobalTransform() {
 
 // Padre te ordena
 void GameObject::ParentPositionUpdate(vec3 pos) {
-	GO_trans.position = pos;
+	GO_parentTrans.position = pos;
+
 	UpdatePosition();
 }
 
 void GameObject::ParentRotationUpdate(vec3 rot) {
-	GO_trans.rotation = rot;
+	GO_parentTrans.rotation = rot;
+
 	UpdateRotation();
 }
 
 void GameObject::ParentScaleUpdate(vec3 scale) {
-	GO_trans.scale = scale;
+	GO_parentTrans.scale = scale;
+
 	UpdateScale();
 }
 
@@ -351,12 +360,21 @@ void GameObject::AddMesh(Mesh* m) {
 void GameObject::RenderMesh() {
 	if (GO_mesh != nullptr && GO_mesh->shouldRender) 
 	{
-		if (renderTexture) {
+		if (renderTexture && GetTexture() != nullptr) {
 			GO_mesh->Render(GetTexture()->OpenGLID, GO_matrix);
 		}
 		else {
 			GO_mesh->Render(NULL, GO_matrix);
 		}
+	}
+}
+
+void GameObject::DisplayMesh(bool display) {
+
+	GO_mesh->shouldRender = display;
+
+	for (int i = 0; i < childs.size(); i++) {
+		childs[i]->DisplayMesh(display);
 	}
 }
 
