@@ -5,13 +5,12 @@
 #include "ModuleTexture.h"
 
 #include <math.h>
-//#include "../External/MathGeoLib/include/MathGeoLib.h"
 #include "../External/ImGui/imgui.h"
 
 struct Transform {
 	vec3 position = vec3(0.0f, 0.0f, 0.0f),
 		rotation = vec3(0.0f, 0.0f, 0.0f),
-		scale = vec3(0.0f, 0.0f, 0.0f);
+		scale = vec3(1.0f, 1.0f, 1.0f);
 };
 
 class GameObject

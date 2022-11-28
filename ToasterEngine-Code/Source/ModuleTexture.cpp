@@ -147,7 +147,8 @@ uint ModuleTexture::CheckImage()
 
 uint ModuleTexture::ImportTexture(std::string path)
 {
-	LOG("Trying to import %s", path.c_str());
+	LOG("Trying to import %s texture", path.c_str());
+
 	//Check if the given texture has been already loaded
 	if (ModuleTexture::usedPaths.find(ModuleImporter::GetFileName(path, false)) != ModuleTexture::usedPaths.end())
 	{

@@ -23,9 +23,6 @@ public:
 	void Move(const float3 &Movement);
 	float4x4 GetViewMatrix();
 	vec3 GetPos();
-private:
-
-	void CalculateViewMatrix();
 
 public:
 	
@@ -42,4 +39,6 @@ public:
 
 	float3 camFocusPos = float3(0,0,0);
 	float focusDist = 6;
+
+	float3 camOrbitalPos = float3(0, 0, 0);
 };

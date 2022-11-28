@@ -17,7 +17,6 @@
 ModuleMesh3D::ModuleMesh3D(Application* app, bool start_enabled) : Module(app, start_enabled){}
 ModuleMesh3D::~ModuleMesh3D(){}
 
-// -----------------------------------------------------------------
 bool ModuleMesh3D::Start()
 {
 	LOG("TOASTER: Setting up mesh loader");
@@ -34,7 +33,6 @@ bool ModuleMesh3D::Start()
 	return ret;
 }
 
-// -----------------------------------------------------------------
 bool ModuleMesh3D::CleanUp()
 {
 	LOG("TOASTER: Cleaning meshes");
@@ -51,7 +49,6 @@ bool ModuleMesh3D::CleanUp()
 	return true;
 }
 
-// -----------------------------------------------------------------
 update_status ModuleMesh3D::PostUpdate(float dt)
 {
 	// Check Wireframe options
@@ -61,18 +58,6 @@ update_status ModuleMesh3D::PostUpdate(float dt)
 	else {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
-
-	// DRAW
-	/*for (int i = 0; i < meshes.size(); i++) {
-		if (meshes[i]->shouldRender) {
-			if (app->editor->selectedGameObj != nullptr && meshes[i] == app->editor->selectedGameObj->GO_mesh) {
-				meshes[i]->Render(true);
-			}
-			else {
-				meshes[i]->Render();
-			}
-		}
-	} */ 
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -166,6 +151,52 @@ void ModuleMesh3D::LoadMesh(Mesh* mesh)
 	meshes.push_back(mesh);
 }
 
+uint ModuleMesh3D::LoadTexture(string path) {
+
+	ILubyte* Lump;
+	ILuint Size;
+	FILE* File;
+
+	File = fopen(path.c_str(), "rb");
+	fseek(File, 0, SEEK_END);
+	Size = ftell(File);
+
+	Lump = (ILubyte*)malloc(Size);
+	fseek(File, 0, SEEK_SET);
+	fread(Lump, 1, Size, File);
+
+	LOG("SIZE: %i", Size);
+
+	if (ilLoadImage(path.c_str()) == true) {
+
+		LOG("FOUND");
+		GLuint texID;
+
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		texID = ilutGLBindTexImage();
+
+		glBindTexture(GL_TEXTURE_2D, texID);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1024, 1024, 0, GL_RGBA, GL_UNSIGNED_BYTE, texImage);
+		glGenerateMipmap(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		ilDeleteImages(1, &texID);
+
+		glBindTexture(GL_TEXTURE_2D, 0);
+		fclose(File);
+		free(Lump);
+
+		return texID;
+	}
+
+	fclose(File);
+	LOG("NOT FOUND");
+}
+
 // === MESH === 
 Mesh::~Mesh() {
 	delete[] vertices;
@@ -208,54 +239,4 @@ void Mesh::Render(uint texture, mat4x4 matrix)
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_TEXTURE_COORD_ARRAY);
-}
-
-uint ModuleMesh3D::LoadTexture(string path) {
-
-	ILubyte* Lump;
-	ILuint Size;
-	FILE* File;
-
-	File = fopen(path.c_str(), "rb");
-	fseek(File, 0, SEEK_END);
-	Size = ftell(File);
-
-	Lump = (ILubyte*)malloc(Size);
-	fseek(File, 0, SEEK_SET);
-	fread(Lump, 1, Size, File);
-
-	LOG("SIZE: %i", Size);
-
-	if (ilLoadImage(path.c_str()) == true) {
-
-		LOG("FOUND");
-		GLuint texID;
-		GLuint texture;
-
-
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-		texID = ilutGLBindTexImage();
-
-		glBindTexture(GL_TEXTURE_2D, texID);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, CHECKERS_WIDTH, CHECKERS_HEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, texImage);
-		glGenerateMipmap(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, 0);
-
-		ilDeleteImages(1, &texID);
-
-		glBindTexture(GL_TEXTURE_2D, 0);
-		fclose(File);
-		free(Lump);
-
-		return texID;
-	}
-
-	fclose(File);
-
-
-	LOG("NOT FOUND");
 }

@@ -77,6 +77,9 @@ update_status ModuleEditor::PostUpdate(float dt) {
 			gameObjects[i]->DeleteThisGameObject();
 			gameObjects.erase(gameObjects.begin() + i);
 		}
+		
+		// Render GO
+		gameObjects[i]->RenderMesh();
 	}
 
 	if (!exit) {
@@ -475,46 +478,10 @@ void ModuleEditor::ShowHierarchyMenu(bool* open) {
 	}
 	else {
 		if (!gameObjects.empty()) {
-			//PrepareDrawGameObject(gameObjects[0], true);
-			for (int i = 0; i < gameObjects.size(); i++) {
-				DrawGO(gameObjects.at(i));
-			}
-
+			PrepareDrawGameObject(gameObjects[0], true);
 		}
 
 		ImGui::End();
-	}
-}
-
-void ModuleEditor::DrawGO(GameObject* go) {
-
-	// Flags
-	ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
-
-	if (go == GetSelectedGameObject()) {
-		node_flags |= ImGuiTreeNodeFlags_Selected;
-	}
-
-	// Draw
-	if (go->childs.empty()) {
-
-		ImGui::AlignTextToFramePadding();
-		node_flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen | ImGuiTreeNodeFlags_AllowItemOverlap;
-
-		ImGui::TreeNodeEx((void*)(intptr_t)0, node_flags, go->GetName().c_str(), 0);
-		
-		if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenOverlapped))
-		{
-			if (ImGui::IsMouseDown(ImGuiMouseButton_::ImGuiMouseButton_Left)) {
-				SetSelectedGameObject(go);
-			}
-		}
-	}
-	else {
-
-		node_flags |= ImGuiTreeNodeFlags_AllowItemOverlap;
-		ImGui::TreeNodeEx((void*)(intptr_t)0, node_flags, go->GetName().c_str(), 0);
-
 	}
 }
 
@@ -567,7 +534,8 @@ void ModuleEditor::DrawGameObject(GameObject* gameObj, int iteration) {
 		}
 	}
 
-	if (ImGui::BeginDragDropSource())
+	// Drag Drop
+	/*if (ImGui::BeginDragDropSource())
 	{
 		ImGui::SetDragDropPayload("GameObject", gameObj, sizeof(GameObject*));
 
@@ -584,7 +552,7 @@ void ModuleEditor::DrawGameObject(GameObject* gameObj, int iteration) {
 			draggingGO = nullptr;
 		}
 		ImGui::EndDragDropTarget();
-	}
+	}*/
 
 	if (node_open)
 	{

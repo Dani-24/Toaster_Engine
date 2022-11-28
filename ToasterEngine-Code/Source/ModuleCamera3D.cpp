@@ -47,9 +47,9 @@ update_status ModuleCamera3D::Update(float dt)
 	}
 
 	if (app->input->GetKey(SDL_SCANCODE_F) == KEY_REPEAT) {
-		FocusCam(float3(0,0,0), focusDist);
+		FocusCam(camFocusPos, focusDist);
 
-		// This should focus 0,0,0 if there is no GameObject or the GameObject if it exists
+		camOrbitalPos = camFocusPos;
 	}
 
 	// Zoom with mouse wheel
@@ -75,6 +75,7 @@ update_status ModuleCamera3D::Update(float dt)
 
 	camFrustum.pos += newPos;
 	camFocusPos += newPos;
+	camOrbitalPos += newPos;
 
 	// Orbit by Left Click + Alt
 	if (app->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && app->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT || !psychoControls && app->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT)
@@ -112,7 +113,7 @@ update_status ModuleCamera3D::Update(float dt)
 		mat.SetRotatePart(dir.Normalized());
 		camFrustum.SetWorldMatrix(mat.Float3x4Part());
 
-		float3 orbitPoint = camFocusPos;
+		float3 orbitPoint = camOrbitalPos;
 
 		camFrustum.pos = orbitPoint + camFrustum.front * -camFrustum.pos.Distance(orbitPoint);
 		LookAt(orbitPoint);
@@ -152,13 +153,6 @@ float4x4 ModuleCamera3D::GetViewMatrix()
 	matrix = camFrustum.ViewMatrix();
 
 	return matrix.Transposed();
-}
-
-// -----------------------------------------------------------------
-void ModuleCamera3D::CalculateViewMatrix()
-{
-	/*ViewMatrix = mat4x4(X.x, Y.x, Z.x, 0.0f, X.y, Y.y, Z.y, 0.0f, X.z, Y.z, Z.z, 0.0f, -dot(X, Position), -dot(Y, Position), -dot(Z, Position), 1.0f);
-	ViewMatrixInverse = inverse(ViewMatrix);*/
 }
 
 vec3 ModuleCamera3D::GetPos() 

@@ -71,8 +71,6 @@ public:
 	void PrepareDrawGameObject(GameObject* gameObj, bool hasCh);
 	void DrawGameObject(GameObject* gameObj, int iteration);
 
-	void DrawGO(GameObject* go);
-
 	// Assets
 	void AssetTree(FileTree* node);
 

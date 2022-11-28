@@ -18,10 +18,6 @@ GameObject::GameObject(std::string name, GameObject* parent)
 	LOG("Created GameObject %s", name.c_str());
 
 	app->editor->SetSelectedGameObject(this);
-
-	/*if (this->ID != app->editor->goID) {
-		DeleteThisGameObject();
-	}*/
 }
 
 GameObject::~GameObject()
@@ -106,6 +102,7 @@ void GameObject::OnEditor() {
 
 		ImGui::Selectable("Visible : ", &GO_mesh->shouldRender);
 		ImGui::SameLine();
+
 		if (GO_mesh->shouldRender) {
 			ImGui::TextColored(ImVec4(0.5f, 1.0f, 0.0f, 1.0f), "True");
 		}
@@ -167,7 +164,6 @@ void GameObject::OnEditor() {
 }
 
 // TRANSFORM
-
 void GameObject::SetPos(vec3 pos) {
 	this->GO_trans.position = pos;
 	UpdatePosition();
@@ -316,18 +312,16 @@ void GameObject::ParentTransformUpdate(vec3 pos, vec3 rot, vec3 scale) {
 	GO_parentTrans.position = pos;
 	GO_parentTrans.rotation = rot;
 	GO_parentTrans.scale = scale;
-
 	UpdateTransform();
 }
 
 // MESH
-
 void GameObject::AddMesh(Mesh* m) {
 	GO_mesh = m;
 }
 
 void GameObject::RenderMesh() {
-	if (GO_mesh->shouldRender) 
+	if (GO_mesh != nullptr && GO_mesh->shouldRender) 
 	{
 		if (renderTexture) {
 			GO_mesh->Render(GetTexture()->OpenGLID, GO_matrix);
@@ -339,7 +333,6 @@ void GameObject::RenderMesh() {
 }
 
 // TEXTURE
-
 void GameObject::AddTexture(uint t) {
 	GO_texture = new Texture();
 	GO_texture->OpenGLID = t;
