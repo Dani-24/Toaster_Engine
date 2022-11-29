@@ -147,7 +147,7 @@ uint ModuleTexture::CheckImage()
 
 uint ModuleTexture::ImportTexture(std::string path)
 {
-	LOG("Trying to import %s texture", path.c_str());
+	LOG("Trying to toast %s texture", path.c_str());
 
 	//Check if the given texture has been already loaded
 	if (ModuleTexture::usedPaths.find(ModuleImporter::GetFileName(path, false)) != ModuleTexture::usedPaths.end())
@@ -185,6 +185,8 @@ uint ModuleTexture::ImportTexture(std::string path)
 
 	ModuleTexture::loadedTextures[m_RendererID] = engineTexture; // Add loaded texture inside TextureManager.
 	ModuleTexture::usedPaths[ModuleImporter::GetFileName(path, false)] = m_RendererID;
+
+	LOG("Loaded %s as %d", engineTexture.name.c_str(), m_RendererID);
 
 	return m_RendererID;
 }

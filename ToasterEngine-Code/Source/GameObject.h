@@ -119,6 +119,7 @@ private:
 
 	Texture* GO_texture = nullptr;
 	Texture* GO_originalTexture = new Texture();
+	const char* texture_path;
 
 	bool renderTexture;
 };

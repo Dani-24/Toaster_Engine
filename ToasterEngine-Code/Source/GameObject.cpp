@@ -142,17 +142,19 @@ void GameObject::OnEditor() {
 
 		ImGui::TextWrapped("Component : TEXTURES");
 
-		if (ImGui::BeginCombo("Texture", "Select", ImGuiComboFlags_HeightSmall))
+		if (ImGui::BeginCombo("Texture", texture_path, ImGuiComboFlags_HeightSmall))
 		{
 			bool is_selected = (GO_texture->OpenGLID == GO_originalTexture->OpenGLID);
 			if (ImGui::Selectable("Default", is_selected))
 			{
 				GO_texture->OpenGLID = GO_originalTexture->OpenGLID;
+				texture_path = "Default";
 			}
 			is_selected = (GO_texture->OpenGLID == app->textures->CheckImage());
 			if (ImGui::Selectable("Checkers", is_selected))
 			{
 				GO_texture->OpenGLID = app->textures->CheckImage();
+				texture_path = "Checkers";
 			}
 			ImGui::EndCombo();
 		}
@@ -381,4 +383,6 @@ void GameObject::DisplayMesh(bool display) {
 void GameObject::AddTexture(uint t) {
 	GO_texture = new Texture();
 	GO_texture->OpenGLID = t;
+	GO_originalTexture->OpenGLID = t;
+	texture_path = "Default";
 }
