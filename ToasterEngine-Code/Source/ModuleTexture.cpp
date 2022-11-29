@@ -153,37 +153,36 @@ uint ModuleTexture::ImportTexture(std::string path)
 		return ModuleTexture::usedPaths[ModuleImporter::GetFileName(path, false)]; // If this texture path was already loaded, return the loaded texture.
 	}
 
-	unsigned int m_RendererID;
-	std::string m_FilePath;
-	unsigned char* m_LocalBuffer;
-	int m_Width, m_Height, m_BPP;	// BPP = Bits per pixel
+	unsigned int desired_texture;
+	unsigned char* localBuffer;
+	int w, h, bitsXPixel;
 
 	stbi_set_flip_vertically_on_load(1);
-	m_LocalBuffer = stbi_load(path.c_str(), &m_Width, &m_Height, &m_BPP, 4);
+	localBuffer = stbi_load(path.c_str(), &w, &h, &bitsXPixel, 4);
 
-	glGenTextures(1, &m_RendererID);
-	glBindTexture(GL_TEXTURE_2D, m_RendererID);
+	glGenTextures(1, &desired_texture);
+	glBindTexture(GL_TEXTURE_2D, desired_texture);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_Width, m_Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_LocalBuffer);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, localBuffer);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	if (m_LocalBuffer)
+	if (localBuffer)
 	{
-		stbi_image_free(m_LocalBuffer);
+		stbi_image_free(localBuffer);
 	}
 
 	Texture engineTexture;
-	engineTexture.OpenGLID = m_RendererID;
+	engineTexture.OpenGLID = desired_texture;
 	engineTexture.name = path;
 
-	ModuleTexture::loadedTextures[m_RendererID] = engineTexture; // Add loaded texture inside TextureManager.
-	ModuleTexture::usedPaths[ModuleImporter::GetFileName(path, false)] = m_RendererID;
+	ModuleTexture::loadedTextures[desired_texture] = engineTexture; // Add loaded texture inside TextureManager.
+	ModuleTexture::usedPaths[ModuleImporter::GetFileName(path, false)] = desired_texture;
 
 	int error = glGetError();
 
@@ -215,10 +214,10 @@ uint ModuleTexture::ImportTexture(std::string path)
 		}		
 	}
 	else{
-		LOG("Loaded %s as %d", engineTexture.name.c_str(), m_RendererID);
+		LOG("Loaded %s as %d", engineTexture.name.c_str(), desired_texture);
 	}
 
-	return m_RendererID;
+	return desired_texture;
 }
 
 float ModuleTexture::BindTexture(uint texture)

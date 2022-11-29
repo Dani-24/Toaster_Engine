@@ -40,45 +40,51 @@ update_status ModuleCamera3D::Update(float dt)
 		camFocusPos = float3(0, 0, 0);
 	}
 
-	float3 newPos(0, 0, 0);
-	float speed = camSpeed * dt;
+	float speed;
 	if (app->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT) {
 		speed = camSpeed * 2 * dt;
 	}
+	else {
+		speed = camSpeed * dt;
+	}
 
+	// Camera Focus
 	if (app->input->GetKey(SDL_SCANCODE_F) == KEY_REPEAT) {
+		focusDist = camFrustum.pos.Distance(camFocusPos);
+		
 		FocusCam(camFocusPos, focusDist);
 
 		camOrbitalPos = camFocusPos;
 	}
 
+	float3 newPos(0, 0, 0);
+
 	// Zoom with mouse wheel
 	if (app->input->GetMouseZ() != 0)
 	{
-		newPos += camFrustum.front * app->input->GetMouseZ() * speed;
-		focusDist -= app->input->GetMouseZ();
+		newPos += camFrustum.front * app->input->GetMouseZ() * speed * 4;
 	}
 
 	// Movement Right Click + WASD
-	if (app->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT || !psychoControls)
-	{
-		// Camera up
-		if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) newPos.y += speed;
-		// camera down
-		if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) newPos.y -= speed;
-		// move horizontal left
-		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) newPos -= camFrustum.WorldRight() * speed;
-		// move horizontal right
-		if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) newPos += camFrustum.WorldRight() * speed;
-
-	}
+	// Camera forwards
+	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) newPos += camFrustum.front * speed;
+	// camera backwards
+	if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) newPos -= camFrustum.front * speed;
+	// move horizontal left
+	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) newPos -= camFrustum.WorldRight() * speed;
+	// move horizontal right
+	if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) newPos += camFrustum.WorldRight() * speed;
+	// Camera up
+	if (app->input->GetKey(SDL_SCANCODE_Q) == KEY_REPEAT) newPos.y += speed;
+	// camera down
+	if (app->input->GetKey(SDL_SCANCODE_E) == KEY_REPEAT) newPos.y -= speed;
 
 	camFrustum.pos += newPos;
 	camFocusPos += newPos;
 	camOrbitalPos += newPos;
 
-	// Orbit by Left Click + Alt
-	if (app->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && app->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT || !psychoControls && app->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT)
+	// Orbit by Left Click
+	if (app->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT)
 	{
 		int dx = -app->input->GetMouseXMotion();
 		int dy = -app->input->GetMouseYMotion();

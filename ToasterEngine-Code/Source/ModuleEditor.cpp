@@ -177,10 +177,6 @@ void ModuleEditor::Draw(){
 			if (ImGui::MenuItem("Redo", "WIP")) {
 
 			}
-			if (ImGui::MenuItem("AMOng US?", "SUS")) {
-				OpenURL("https://youtu.be/fMcWA544-5A");
-				OpenURL("https://static.wikia.nocookie.net/shitpost/images/2/2a/Amogus.png/revision/latest?cb=20210717210340&path-prefix=es");
-			}
 			if (ImGui::MenuItem("Toaster Mode", "Just work at toaster speed", &toasterMode)) {}
 			if (ImGui::BeginMenu("Create 3D Mesh")) {
 				if(ImGui::MenuItem("Cube")) {
@@ -222,18 +218,9 @@ void ModuleEditor::Draw(){
 		}
 
 		if (ImGui::BeginMenu("Camera")) {
-			if (app->camera->psychoControls) {
-				if (ImGui::MenuItem("Disable Phycopath Camera Controls", "Disable ALT inputs"))
-				{
-					app->camera->psychoControls = false;
-				}
-			}
-			else {
-				if (ImGui::MenuItem("Enable Phycopath Camera Controls", "Enable ALT inputs"))
-				{
-					app->camera->psychoControls = true;
-				}
-			}
+			
+			ImGui::Text("Add new camera???");
+
 			ImGui::EndMenu();
 		}
 

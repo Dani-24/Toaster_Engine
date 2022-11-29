@@ -32,13 +32,12 @@ public:
 	bool finish;
 	bool firstPerson;
 
-	float camSpeed = 25.0f;
+	float camSpeed = 15.0f;
 
-	bool psychoControls = true;
 	bool mouseOnCamera = true;
 
 	float3 camFocusPos = float3(0,0,0);
-	float focusDist = 6;
+	float focusDist = 0;
 
 	float3 camOrbitalPos = float3(0, 0, 0);
 };
