@@ -151,6 +151,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Comp_Camera.h" />
     <ClInclude Include="External\Assimp\include\ai_assert.h" />
     <ClInclude Include="External\Assimp\include\anim.h" />
     <ClInclude Include="External\Assimp\include\camera.h" />
@@ -390,6 +391,7 @@
     <Image Include="icon1.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Comp_Camera.cpp" />
     <ClCompile Include="External\DevIL\include\luadevil.c" />
     <ClCompile Include="External\GPUDetector\DeviceId.cpp" />
     <ClCompile Include="External\ImGui\backends\imgui_impl_opengl3.cpp" />

@@ -694,6 +694,9 @@
     <ClInclude Include="Source\ModuleImporter.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
+    <ClInclude Include="Comp_Camera.h">
+      <Filter>Sources\Engine\GameObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Sources">
@@ -971,6 +974,9 @@
     </ClCompile>
     <ClCompile Include="Source\FileTree.cpp">
       <Filter>Sources\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="Comp_Camera.cpp">
+      <Filter>Sources\Engine\GameObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
