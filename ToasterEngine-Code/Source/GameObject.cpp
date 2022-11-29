@@ -158,6 +158,9 @@ void GameObject::OnEditor() {
 			}
 			ImGui::EndCombo();
 		}
+
+		ImGui::Image((ImTextureID)GO_texture->OpenGLID, ImVec2(100, 100));
+
 		ImGui::TextWrapped("Show Texture: ");
 		ImGui::SameLine();
 		ImGui::Selectable("Visible : ", &renderTexture);
