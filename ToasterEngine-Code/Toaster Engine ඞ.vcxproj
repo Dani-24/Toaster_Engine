@@ -151,7 +151,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Comp_Camera.h" />
     <ClInclude Include="External\Assimp\include\ai_assert.h" />
     <ClInclude Include="External\Assimp\include\anim.h" />
     <ClInclude Include="External\Assimp\include\camera.h" />
@@ -366,6 +365,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="Source\Application.h" />
     <ClInclude Include="Source\Color.h" />
+    <ClInclude Include="Source\Comp_Camera.h" />
     <ClInclude Include="Source\GameObject.h" />
     <ClInclude Include="Source\glmath.h" />
     <ClInclude Include="Source\Globals.h" />
@@ -391,7 +391,6 @@
     <Image Include="icon1.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Comp_Camera.cpp" />
     <ClCompile Include="External\DevIL\include\luadevil.c" />
     <ClCompile Include="External\GPUDetector\DeviceId.cpp" />
     <ClCompile Include="External\ImGui\backends\imgui_impl_opengl3.cpp" />
@@ -437,6 +436,7 @@
     <ClCompile Include="External\parson\parson.c" />
     <ClCompile Include="Source\Application.cpp" />
     <ClCompile Include="Source\Color.cpp" />
+    <ClCompile Include="Source\Comp_Camera.cpp" />
     <ClCompile Include="Source\FileTree.cpp" />
     <ClCompile Include="Source\GameObject.cpp" />
     <ClCompile Include="Source\glmath.cpp" />
