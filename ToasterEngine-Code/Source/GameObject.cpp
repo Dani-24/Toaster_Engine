@@ -181,7 +181,6 @@ void GameObject::OnEditor() {
 // TRANSFORM
 void GameObject::SetPos(vec3 pos) {
 	this->GO_trans.position = pos;
-
 	UpdatePosition();
 }
 
@@ -205,18 +204,25 @@ void GameObject::SetTransform(vec3 pos, vec3 rot, vec3 scale) {
 }
 
 void GameObject::Translate(vec3 pos) {
+
+	SetTransformMatrix(GO_trans.position, GO_trans.rotation, GO_trans.rotation);
+
 	this->GO_trans.position += pos;
 	UpdatePosition();
-
-	SetTransformMatrix(GO_trans.position, GO_trans.rotation, GO_trans.scale);
 }
 
 void GameObject::Rotate(vec3 rot) {
+
+	SetTransformMatrix(GO_trans.position, GO_trans.rotation, GO_trans.rotation);
+
 	this->GO_trans.rotation += rot;
 	UpdateRotation();
 }
 
 void GameObject::Scale(vec3 scale) {
+
+	SetTransformMatrix(GO_trans.position, GO_trans.rotation, GO_trans.rotation);
+
 	this->GO_trans.scale += scale;
 	UpdateScale();
 }
@@ -302,9 +308,6 @@ void GameObject::SetTransformMatrix(vec3 _position, vec3 _rotation, vec3 _scale)
 		GO_matrix[10] *= _scale.z;
 
 		GO_matrix = transpose(GO_matrix);
-
-		// ?
-		SetTransform(_position, _rotation, _scale);
 	}
 }
 	
@@ -322,19 +325,22 @@ Transform GameObject::GetGlobalTransform() {
 // Padre te ordena
 void GameObject::ParentPositionUpdate(vec3 pos) {
 	GO_parentTrans.position = pos;
-	
-	vec3 translation = GO_originalParentTrans.position + GO_parentTrans.position;
 
-	Translate(translation);
+	Translate(pos);
+	UpdatePosition();
 }
 
 void GameObject::ParentRotationUpdate(vec3 rot) {
 	GO_parentTrans.rotation = rot;
+
+	Rotate(rot);
 	UpdateRotation();
 }
 
 void GameObject::ParentScaleUpdate(vec3 scale) {
 	GO_parentTrans.scale = scale;
+
+	Scale(scale);
 	UpdateScale();
 }
 

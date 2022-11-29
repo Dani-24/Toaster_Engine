@@ -35,7 +35,7 @@ public:
 private:
 
 	float cooldown = 100, maxCooldown = 100, minCooldown = 0;
-
+	bool newScene = false;
 	bool exit = false;
 	bool showingEditor = true;
 
@@ -65,8 +65,8 @@ public:
 
 	uint goID = 0;
 
-	GameObject* selectedGameObj;
-	GameObject* root;
+	GameObject* selectedGameObj = nullptr;
+	GameObject* root = nullptr;
 	GameObject* draggingGO = nullptr;
 
 	uint AddGameObject(GameObject* GameObj);
@@ -81,7 +81,7 @@ public:
 	// Assets
 	void AssetTree(FileTree* node);
 
-	FileTree* fileTree;
+	FileTree* fileTree = nullptr;
 	FileTree* currentNode = nullptr;
 	std::vector<std::string> allFiles;
 
@@ -92,8 +92,8 @@ public:
 	std::vector<HierarchyNaming> Hnaming;
 
 	uint texture = NULL;
-	uint actualTexture;
-	uint checkers_texture;
+	uint actualTexture = NULL;
+	uint checkers_texture = NULL;
 
 private:
 	std::string ddname = "New GameObject";

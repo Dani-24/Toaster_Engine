@@ -12,8 +12,6 @@
 
 #include "Primitive.h"
 
-//#include "../External/ImGui/imgui_stdlib.h"
-
 ModuleEditor::ModuleEditor(Application* app, bool start_enabled) : Module(app, start_enabled){
 	logs.reserve(MAX_LOGS_SIZE);
 	fpslog.reserve(MAX_LOGS_SIZE);
@@ -80,6 +78,18 @@ update_status ModuleEditor::PostUpdate(float dt) {
 		}
 	}
 
+	// New Scene
+	if (!root->childs.empty() && newScene == true) {
+		for (int i = 0; i < root->childs.size(); i++) {
+			root->childs[i]->DeleteThisGameObject();
+		}
+		if (root->childs.empty()) {
+			newScene = false;
+			goID = 1;
+			Hnaming.clear();
+		}
+	}
+
 	for (int i = 0; i < gameObjects.size(); i++) {
 		// Render GO
 		gameObjects[i]->RenderMesh();
@@ -102,6 +112,7 @@ bool ModuleEditor::CleanUp() {
 	fpslog.clear();
 	mslog.clear();
 	memlog.clear();
+	gameObjects.clear();
 
 	RELEASE(fileTree);
 
@@ -140,9 +151,7 @@ void ModuleEditor::Draw(){
 		if (ImGui::BeginMenu("File")) {
 			if (ImGui::MenuItem("New Toast", "Ctrl+N")) {
 
-				for (int i = 0; i < root->childs.size(); i++) {
-					root->childs[i]->DeleteThisGameObject();
-				}
+				newScene = true;
 
 				root->name = "New Scene";
 			}
