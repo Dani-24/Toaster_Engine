@@ -31,7 +31,7 @@ bool ModuleEditor::Start() {
 	allFiles.clear();
 	allFiles = ModuleImporter::GetAllFiles("Assets");
 
-	checkers_texture = app->textures->ImportTexture("Assets/checkers_texture.png");
+	checkers_texture = app->textures->ImportTexture("Assets/Checkers.png");
 
 	return true;
 }

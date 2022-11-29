@@ -44,7 +44,7 @@ public:
 	Mesh* LoadFile(string file_path);
 	void LoadMesh(Mesh* mesh);
 
-	uint LoadTexture(string file_path);
+	/*uint LoadTexture(string file_path);*/
 
 private:
 

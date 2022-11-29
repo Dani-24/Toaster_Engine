@@ -157,6 +157,8 @@ bool ModuleRenderer3D::Init()
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 
+	io.IniFilename = "EditorConfig/imgui.ini";
+
 	// IMGUI CONFIG Flags (Should be configured later from the Engine? meh who cares)
 
 	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;		// Enable Keyboard Controls

@@ -28,7 +28,7 @@ std::map<std::string, uint> ModuleTexture::usedPaths;
 std::vector<ModuleTexture::BindedTextureInfo> ModuleTexture::bindedTexturesInfo;
 uint ModuleTexture::bindedTextures = 0;
 
-void ModuleTexture::ImportImage(const std::string& fileName, char* buffer, uint size)
+void ModuleTexture::ImportImageFromExternalFolder(const std::string& fileName, char* buffer, uint size)
 {
 	ILuint ImgId = 0;
 	ilGenImages(1, &ImgId);
@@ -147,8 +147,6 @@ uint ModuleTexture::CheckImage()
 
 uint ModuleTexture::ImportTexture(std::string path)
 {
-	LOG("Trying to toast %s texture", path.c_str());
-
 	//Check if the given texture has been already loaded
 	if (ModuleTexture::usedPaths.find(ModuleImporter::GetFileName(path, false)) != ModuleTexture::usedPaths.end())
 	{
@@ -172,6 +170,7 @@ uint ModuleTexture::ImportTexture(std::string path)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_Width, m_Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_LocalBuffer);
+
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	if (m_LocalBuffer)
@@ -186,7 +185,38 @@ uint ModuleTexture::ImportTexture(std::string path)
 	ModuleTexture::loadedTextures[m_RendererID] = engineTexture; // Add loaded texture inside TextureManager.
 	ModuleTexture::usedPaths[ModuleImporter::GetFileName(path, false)] = m_RendererID;
 
-	LOG("Loaded %s as %d", engineTexture.name.c_str(), m_RendererID);
+	int error = glGetError();
+
+	if (error) {
+		LOG("Error loading texture %s", path.c_str());
+		switch (error)
+		{
+		case GL_INVALID_ENUM:
+			LOG("GL ERROR : Invalid enum");
+			break;
+		case GL_INVALID_VALUE:
+			LOG("GL ERROR : Invalid value");
+			break;
+		case GL_INVALID_OPERATION:
+			LOG("GL ERROR : Invalid operation");
+			break;
+		case GL_NO_ERROR:
+			LOG("GL ERROR : No error");
+			break;
+		case GL_STACK_OVERFLOW:
+			LOG("GL ERROR : Stack overflow.com");
+			break;
+		case GL_STACK_UNDERFLOW:
+			LOG("GL ERROR : Stack underflow");
+			break;
+		case GL_OUT_OF_MEMORY:
+			LOG("GL ERROR : Out of memory");
+			break;
+		}		
+	}
+	else{
+		LOG("Loaded %s as %d", engineTexture.name.c_str(), m_RendererID);
+	}
 
 	return m_RendererID;
 }

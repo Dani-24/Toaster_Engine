@@ -151,51 +151,51 @@ void ModuleMesh3D::LoadMesh(Mesh* mesh)
 	meshes.push_back(mesh);
 }
 
-uint ModuleMesh3D::LoadTexture(string path) {
-
-	ILubyte* Lump;
-	ILuint Size;
-	FILE* File;
-
-	File = fopen(path.c_str(), "rb");
-	fseek(File, 0, SEEK_END);
-	Size = ftell(File);
-
-	Lump = (ILubyte*)malloc(Size);
-	fseek(File, 0, SEEK_SET);
-	fread(Lump, 1, Size, File);
-
-	LOG("SIZE: %i", Size);
-
-	if (ilLoadImage(path.c_str()) == true) {
-
-		LOG("FOUND");
-		GLuint texID;
-
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-		texID = ilutGLBindTexImage();
-
-		glBindTexture(GL_TEXTURE_2D, texID);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1024, 1024, 0, GL_RGBA, GL_UNSIGNED_BYTE, texImage);
-		glGenerateMipmap(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, 0);
-
-		ilDeleteImages(1, &texID);
-
-		glBindTexture(GL_TEXTURE_2D, 0);
-		fclose(File);
-		free(Lump);
-
-		return texID;
-	}
-
-	fclose(File);
-	LOG("NOT FOUND");
-}
+//uint ModuleMesh3D::LoadTexture(string path) {
+//
+//	ILubyte* Lump;
+//	ILuint Size;
+//	FILE* File;
+//
+//	File = fopen(path.c_str(), "rb");
+//	fseek(File, 0, SEEK_END);
+//	Size = ftell(File);
+//
+//	Lump = (ILubyte*)malloc(Size);
+//	fseek(File, 0, SEEK_SET);
+//	fread(Lump, 1, Size, File);
+//
+//	LOG("SIZE: %i", Size);
+//
+//	if (ilLoadImage(path.c_str()) == true) {
+//
+//		LOG("FOUND");
+//		GLuint texID;
+//
+//		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+//		texID = ilutGLBindTexImage();
+//
+//		glBindTexture(GL_TEXTURE_2D, texID);
+//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+//		//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1024, 1024, 0, GL_RGBA, GL_UNSIGNED_BYTE, texImage);
+//		glGenerateMipmap(GL_TEXTURE_2D);
+//		glBindTexture(GL_TEXTURE_2D, 0);
+//
+//		ilDeleteImages(1, &texID);
+//
+//		glBindTexture(GL_TEXTURE_2D, 0);
+//		fclose(File);
+//		free(Lump);
+//
+//		return texID;
+//	}
+//
+//	fclose(File);
+//	LOG("NOT FOUND");
+//}
 
 // === MESH === 
 Mesh::~Mesh() {
@@ -214,7 +214,7 @@ void Mesh::Render(uint texture, mat4x4 matrix)
 	glEnable(GL_TEXTURE_COORD_ARRAY);
 	glEnable(GL_TEXTURE_2D);
 	glEnableClientState(GL_VERTEX_ARRAY);
-	
+
 	if (texture != NULL) {
 		glBindTexture(GL_TEXTURE_2D, texture);
 	}

@@ -34,7 +34,6 @@ Application::Application()
 	AddModule(mesh3d);
 	AddModule(textures);
 
-
 	// Renderer last!
 	AddModule(renderer3D);
 }

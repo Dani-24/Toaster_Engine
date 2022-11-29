@@ -25,13 +25,14 @@ public:
 	~ModuleTexture();
 
 	// Image file to DDS
-	static void ImportImage(const std::string& filename, char* buffer, uint size);
+	static void ImportImageFromExternalFolder(const std::string& filename, char* buffer, uint size);
 
 	// Texture from DDS to OpenGL
 	static uint Load(char* buffer, int size, int* w, int* h, std::string&& filename);
 
 	static uint CheckImage();
 
+	// Load a texture from /Assets
 	static uint ImportTexture(std::string path);
 
 	// Managing
