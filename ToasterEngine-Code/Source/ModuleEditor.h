@@ -7,6 +7,8 @@
 
 #include "FileTree.cpp"
 
+#include "ModuleImporter.h"
+
 #define MAX_LOGS_SIZE 100
 
 class GameObject;
@@ -15,6 +17,12 @@ class FileTree;
 struct HierarchyNaming {
 	std::string dd_string;
 	int dd_counters = 1;
+};
+
+enum class DragDropFile {
+	MESH,
+	TEXTURE,
+	OTHER
 };
 
 class ModuleEditor : public Module 
@@ -88,7 +96,7 @@ public:
 	std::string dd_file_name = "";
 	int ddCooldown = 9999;
 	std::string message = "";
-
+	ResourceType dd_file_type;
 	std::vector<HierarchyNaming> Hnaming;
 
 	uint texture = NULL;

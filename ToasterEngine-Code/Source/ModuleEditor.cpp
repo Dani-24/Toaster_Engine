@@ -401,6 +401,8 @@ void ModuleEditor::ShowAssetManager(bool* open) {
 				ImGui::SetDragDropPayload(file_path.c_str(), &i, sizeof(std::string));
 				dd_file_name = file_path;
 
+				dd_file_type = app->importer->GetResourceType(file_path);
+
 				ddname = currentNode->files[i - dir_size];
 				ddname = ddname.substr(0, ddname.find_last_of("."));
 
@@ -435,9 +437,14 @@ void ModuleEditor::ShowAssetManager(bool* open) {
 		ImGui::End();
 	}
 	if (dd_file_name != "") {
-		GameObject* ddFile = new GameObject(ddname, root);
-		ddFile->AddMesh(app->mesh3d->LoadFile(dd_file_name));
-		ddFile->AddTexture(app->textures->ImportTexture(dd_file_name));
+		if (dd_file_type == ResourceType::MESH) {
+			GameObject* ddFile = new GameObject(ddname, root);
+			ddFile->AddMesh(app->mesh3d->LoadFile(dd_file_name));
+			ddFile->AddTexture(app->textures->ImportTexture(dd_file_name));
+		}
+		else if (dd_file_type == ResourceType::TEXTURE) {
+			selectedGameObj->AddTexture(app->textures->ImportTexture(dd_file_name));
+		}
 		dd_file_name = "";
 		ddCooldown = 0;
 	}
