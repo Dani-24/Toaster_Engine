@@ -354,7 +354,11 @@ void ModuleEditor::ShowConsoleMenu(bool *open) {
 		ImGui::End();
 	}
 	else {
-
+		if (!logs.empty()) {
+			if (ImGui::SmallButton("Clear Console Log")) {
+				logs.clear();
+			}
+		}
 		for (int i = logs.size() -1; i > 0; i--) {
 			ImGui::TextWrapped(logs[i].c_str());
 		}
