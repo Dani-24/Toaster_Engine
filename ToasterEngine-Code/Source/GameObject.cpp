@@ -44,18 +44,23 @@ void GameObject::DeleteThisGameObject() {
 		GO_mesh->~Mesh();
 		GO_mesh = nullptr;
 	}
-	GO_texture = NULL;
+	GO_texture = nullptr;
 
 	if (GO_camera != nullptr) {
+		app->camera->DeleteCamera(GO_camera);
 		GO_camera = nullptr;
 	}
 
 	// Delete from hierarchy
-	for (size_t i = 0; i < childs.size(); i++)
-	{
-		childs[i]->DeleteThisGameObject();
+	if (!childs.empty()) {
+		for (uint i = 0; i < childs.size(); i++)
+		{
+			childs[i]->DeleteThisGameObject();
+		}
 	}
-	parent->DeleteChild(this);
+	if (parent != nullptr) {
+		parent->DeleteChild(this);
+	}
 }
 
 void GameObject::DeleteChild(GameObject* chi) {
