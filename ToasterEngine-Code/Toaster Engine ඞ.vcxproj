@@ -364,6 +364,7 @@
     <ClInclude Include="External\SDL\include\SDL_vulkan.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Source\Application.h" />
+    <ClInclude Include="Source\Camera.h" />
     <ClInclude Include="Source\Color.h" />
     <ClInclude Include="Source\Comp_Camera.h" />
     <ClInclude Include="Source\GameObject.h" />
@@ -435,6 +436,7 @@
     <ClCompile Include="External\Mmgr\mmgr.cpp" />
     <ClCompile Include="External\parson\parson.c" />
     <ClCompile Include="Source\Application.cpp" />
+    <ClCompile Include="Source\Camera.cpp" />
     <ClCompile Include="Source\Color.cpp" />
     <ClCompile Include="Source\Comp_Camera.cpp" />
     <ClCompile Include="Source\FileTree.cpp" />

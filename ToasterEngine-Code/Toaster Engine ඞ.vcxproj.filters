@@ -19,9 +19,6 @@
     <ClInclude Include="Source\Module.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="Source\ModuleCamera3D.h">
-      <Filter>Sources\Modules</Filter>
-    </ClInclude>
     <ClInclude Include="Source\ModuleInput.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
@@ -697,6 +694,12 @@
     <ClInclude Include="Source\Comp_Camera.h">
       <Filter>Sources\Engine\GameObject</Filter>
     </ClInclude>
+    <ClInclude Include="Source\ModuleCamera3D.h">
+      <Filter>Sources\Modules\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Camera.h">
+      <Filter>Sources\Modules\Camera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Sources">
@@ -777,6 +780,9 @@
     <Filter Include="External Toasts\DevIL">
       <UniqueIdentifier>{a612b636-3f07-4622-8945-89ccaea2f0aa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Modules\Camera">
+      <UniqueIdentifier>{4a1a0866-fc88-499e-873d-f44db34bd554}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ToasterEngine-v2.rc">
@@ -803,9 +809,6 @@
     </ClCompile>
     <ClCompile Include="Source\log.cpp">
       <Filter>Sources\Tools</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ModuleCamera3D.cpp">
-      <Filter>Sources\Modules</Filter>
     </ClCompile>
     <ClCompile Include="Source\ModuleInput.cpp">
       <Filter>Sources\Modules</Filter>
@@ -977,6 +980,12 @@
     </ClCompile>
     <ClCompile Include="Source\Comp_Camera.cpp">
       <Filter>Sources\Engine\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ModuleCamera3D.cpp">
+      <Filter>Sources\Modules\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Camera.cpp">
+      <Filter>Sources\Modules\Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
