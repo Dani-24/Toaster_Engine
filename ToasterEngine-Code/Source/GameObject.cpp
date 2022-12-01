@@ -3,9 +3,9 @@
 #include "GameObject.h"
 #include "ModuleEditor.h"
 
-GameObject::GameObject(std::string name, GameObject* parent)
+GameObject::GameObject(std::string name, GameObject* parent, Camera* camera)
 {
-	
+
 	this->ID = app->editor->AddGameObject(this);
 
 	this->name = name;
@@ -14,7 +14,9 @@ GameObject::GameObject(std::string name, GameObject* parent)
 		parent->AddChild(this);
 	}
 
-	LOG("Created GameObject %s", name.c_str());
+	GO_camera = camera;
+
+	LOG("Created Camera GameObject %s", name.c_str());
 
 	app->editor->SetSelectedGameObject(this);
 }
@@ -43,6 +45,10 @@ void GameObject::DeleteThisGameObject() {
 		GO_mesh = nullptr;
 	}
 	GO_texture = NULL;
+
+	if (GO_camera != nullptr) {
+		GO_camera = nullptr;
+	}
 
 	// Delete from hierarchy
 	for (size_t i = 0; i < childs.size(); i++)
@@ -179,6 +185,36 @@ void GameObject::OnEditor() {
 
 		if (deleteTexture) {
 			GO_texture = nullptr;
+		}
+	}
+
+	// CAMERA COMPONENT
+	if (GO_camera != nullptr) {
+		app->editor->Space();
+
+		ImGui::TextWrapped("Component : Camera");
+
+		// Camera view here!!!!!!!!!!!!!
+		ImGui::Image(0, ImVec2(200, 100));
+
+		ImGui::TextWrapped("Propierties :");
+
+		ImGui::TextWrapped("Aspect Ratio : ");
+		ImGui::SameLine();
+		if (ImGui::DragFloat("AR", &GO_camera->aspectRatio, 0.1f)) {
+			GO_camera->SetAspectRatio(GO_camera->aspectRatio);
+		}
+
+		ImGui::TextWrapped("FOV :          ");
+		ImGui::SameLine();
+		if (ImGui::DragFloat("FOV", &GO_camera->FOV, 0.1f)) {
+			GO_camera->SetFOV(GO_camera->FOV);
+		}
+
+		ImGui::TextWrapped("Range :        ");
+		ImGui::SameLine();
+		if (ImGui::DragFloat("R", &GO_camera->range, 0.1f)) {
+			GO_camera->SetRange(GO_camera->range);
 		}
 	}
 }

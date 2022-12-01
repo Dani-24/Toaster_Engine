@@ -219,7 +219,10 @@ void ModuleEditor::Draw(){
 
 		if (ImGui::BeginMenu("Camera")) {
 			
-			ImGui::Text("Add new camera???");
+			if (ImGui::MenuItem("Create new Camera"))
+			{
+				app->camera->AddCamera(app->camera->CreateCamera());
+			}
 
 			ImGui::EndMenu();
 		}

@@ -22,7 +22,7 @@ public:
 	float4x4 GetViewMatrix();
 	vec3 GetPos();
 
-	void ChangeAspectRatio(float aspectRatio);
+	void SetAspectRatio(float aspectRatio);
 	float GetAspectRatio() { return aspectRatio; }
 
 	void SetFOV(float fov);
@@ -50,7 +50,9 @@ public:
 
 	float3 camOrbitalPos = float3(0, 0, 0);
 
-	float aspectRatio, FOV, range;
+	float aspectRatio = 1.7f;
+	float FOV = 60.0f;
+	float range = 1000.0f;
 
 	bool debugDraw = false;
 };

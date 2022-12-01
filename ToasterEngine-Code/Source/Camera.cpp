@@ -5,6 +5,10 @@ Camera::Camera() {
 
 	camFrustum.pos = float3(6.0f, 3.5f, 1.5f);
 	LookAt(float3(0, 0, 0));
+
+	//aspectRatio = camFrustum.horizontalFov / ( 2.f * atanf(tanf(camFrustum.verticalFov * 0.5f)));
+	//FOV = math::RadToDeg(camFrustum.verticalFov);
+	//range = camFrustum.farPlaneDistance;
 }
 
 Camera::~Camera() {
@@ -62,7 +66,7 @@ void Camera::FocusCam(float3 center, float offset) {
 	camFrustum.pos = center + (((camFrustum.pos - center).Normalized()) * offset);
 }
 
-void Camera::ChangeAspectRatio(float aspectRatio)
+void Camera::SetAspectRatio(float aspectRatio)
 {
 	this->aspectRatio = aspectRatio;
 	camFrustum.horizontalFov = 2.f * atanf(tanf(camFrustum.verticalFov * 0.5f) * aspectRatio);
@@ -70,7 +74,7 @@ void Camera::ChangeAspectRatio(float aspectRatio)
 
 void Camera::SetFOV(float fov)
 {
-	camFrustum.verticalFov = FOV = math::DegToRad(fov);
+	camFrustum.verticalFov = FOV = fov;
 	camFrustum.horizontalFov = 2.0f * atanf(tanf(camFrustum.verticalFov / 2.0f) * aspectRatio);
 }
 

@@ -14,11 +14,15 @@ public:
 	update_status Update(float dt);
 	bool CleanUp();
 
-	void AddCamera(Camera newCam);
-	void DeleteCamera(Camera cam);
+	void AddCamera(Camera* newCam);
+	void DeleteCamera(Camera* cam);
+
+	Camera* CreateCamera();
 
 public:
-	Camera editorCamera;
-	std::vector<Camera> cameras;
+	Camera* editorCamera;
+	std::vector<Camera*> cameras;
 	uint camerasID = 0;
+
+	Camera* activeCamera;
 };

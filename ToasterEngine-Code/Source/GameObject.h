@@ -1,8 +1,10 @@
 #pragma once
 
 #include "Globals.h"
+
 #include "ModuleMesh3D.h"
 #include "ModuleTexture.h"
+#include "ModuleCamera3D.h"
 
 #include <math.h>
 #include "../External/ImGui/imgui.h"
@@ -16,8 +18,7 @@ struct Transform {
 class GameObject
 {
 public:
-
-	GameObject(std::string name, GameObject* parent);
+	GameObject(std::string name, GameObject* parent, Camera* cam = nullptr);
 	~GameObject();
 
 	void DeleteThisGameObject();
@@ -122,4 +123,8 @@ private:
 	const char* texture_path;
 
 	bool renderTexture;
+
+	// Camera
+public:
+	Camera* GO_camera = nullptr;
 };
