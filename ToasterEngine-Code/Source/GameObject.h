@@ -126,5 +126,5 @@ private:
 
 	// Camera
 public:
-	Camera* GO_camera = nullptr;
+	Camera* GO_camera;
 };

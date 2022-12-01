@@ -20,7 +20,8 @@ bool ModuleCamera3D::Start()
 	// Editor Camera
 	editorCamera = new Camera();
 
-	// Create Scene Main Camera
+	editorCamera->cameraBuffer.SetBufferInfo();
+	editorCamera->cameraBuffer.SetBufferDimensions(app->window->width, app->window->height);
 
 	return ret;
 }
@@ -48,13 +49,16 @@ update_status ModuleCamera3D::Update(float dt)
 	return UPDATE_CONTINUE;
 }
 
-void ModuleCamera3D::AddCamera(Camera* newCam) {
+void ModuleCamera3D::AddCamera(Camera* newCam, std::string name) {
 
-	GameObject* cameraObject = new GameObject("New Camera", app->editor->root, newCam);
+	GameObject* cameraObject = new GameObject(name, app->editor->root, newCam);
 	app->editor->AddGameObject(cameraObject);
 
 	newCam->ID = camerasID;
 	cameras.push_back(newCam);
+
+	newCam->cameraBuffer.SetBufferInfo();
+	newCam->cameraBuffer.SetBufferDimensions(app->window->width, app->window->height);
 
 	activeCamera = newCam;
 }

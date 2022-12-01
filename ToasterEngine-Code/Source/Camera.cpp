@@ -2,13 +2,8 @@
 #include "Application.h"
 
 Camera::Camera() {
-
 	camFrustum.pos = float3(6.0f, 3.5f, 1.5f);
 	LookAt(float3(0, 0, 0));
-
-	//aspectRatio = camFrustum.horizontalFov / ( 2.f * atanf(tanf(camFrustum.verticalFov * 0.5f)));
-	//FOV = math::RadToDeg(camFrustum.verticalFov);
-	//range = camFrustum.farPlaneDistance;
 }
 
 Camera::~Camera() {

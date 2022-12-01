@@ -25,13 +25,17 @@ ModuleEditor::~ModuleEditor() {
 bool ModuleEditor::Start() {
 	LOG("TOASTER: Loading Editor");
 
-	root = new GameObject("Scene", nullptr);
-
 	fileTree = currentNode = ModuleImporter::GetFileTree("Assets");
 	allFiles.clear();
 	allFiles = ModuleImporter::GetAllFiles("Assets");
 
 	checkers_texture = app->textures->ImportTexture("Assets/Checkers.png");
+
+	root = new GameObject("Scene", nullptr);
+
+	// Create Scene Main Camera
+	Camera* mainSceneCam = new Camera();
+	app->camera->AddCamera(mainSceneCam, "Main Scene Camera");
 
 	return true;
 }
@@ -127,7 +131,7 @@ void ModuleEditor::Draw(){
 	static bool showConsoleMenu = true;
 	static bool showHierarchy = true;
 	static bool showInspector = true;
-	static bool showGameEditorWindow = false;
+	static bool showGameEditorWindow = true;
 	static bool showConfiguration = false;
 	static bool toasterMode = false;
 	static bool showAssetManager = true;
@@ -221,7 +225,7 @@ void ModuleEditor::Draw(){
 			
 			if (ImGui::MenuItem("Create new Camera"))
 			{
-				app->camera->AddCamera(app->camera->CreateCamera());
+				app->camera->AddCamera(app->camera->CreateCamera(), "New Camera");
 			}
 
 			ImGui::EndMenu();
@@ -302,21 +306,24 @@ void ModuleEditor::Draw(){
 }
 
 void ModuleEditor::ShowGameEditorWindow(bool* open) {
-	if (!ImGui::Begin("Game Editor", open)) {
+	if (!ImGui::Begin("Editor", open)) {
 		ImGui::End();
 	}
 	else {
 
 		// RENDER CAMERA HERE
+		ImGui::Image((ImTextureID)app->camera->editorCamera->cameraBuffer.GetTexture(), ImGui::GetWindowSize(), ImVec2(0, 1), ImVec2(1, 0));
 
-		//with out the size, rescalet okey but crash
-		//ImGui::BeginChild("", ImVec2(SCREEN_WIDTH, SCREEN_HEIGHT));
+		ImGui::End();
+	}
 
-		//ImVec2 sizeWindScn = ImGui::GetWindowSize();
+	if (!ImGui::Begin("Game", open)) {
+		ImGui::End();
+	}
+	else {
 
-		////ImGui::Image((ImTextureID)app->renderer3D->camBuff, sizeWindScn, ImVec2(0, 1), ImVec2(1, 0));
-
-		//ImGui::EndChild();		
+		// RENDER CAMERA HERE
+		ImGui::Image((ImTextureID)app->camera->activeCamera->cameraBuffer.GetTexture(), ImGui::GetWindowSize(), ImVec2(0, 1), ImVec2(1, 0));
 
 		ImGui::End();
 	}

@@ -3,7 +3,9 @@
 #include "Globals.h"
 #include "glmath.h"
 
-#include"../External/MathGeoLib/include/Geometry/Frustum.h"
+#include "../External/MathGeoLib/include/Geometry/Frustum.h"
+
+#include "Buffer.h"
 
 class Camera {
 public:
@@ -55,4 +57,6 @@ public:
 	float range = 1000.0f;
 
 	bool debugDraw = false;
+
+	Buffer cameraBuffer;
 };

@@ -16,7 +16,7 @@ GameObject::GameObject(std::string name, GameObject* parent, Camera* camera)
 
 	GO_camera = camera;
 
-	LOG("Created Camera GameObject %s", name.c_str());
+	LOG("Created GameObject %s", name.c_str());
 
 	app->editor->SetSelectedGameObject(this);
 }
@@ -194,8 +194,7 @@ void GameObject::OnEditor() {
 
 		ImGui::TextWrapped("Component : Camera");
 
-		// Camera view here!!!!!!!!!!!!!
-		ImGui::Image(0, ImVec2(200, 100));
+		ImGui::Image((ImTextureID)GO_camera->cameraBuffer.GetTexture(), ImVec2(200,100), ImVec2(0, 1), ImVec2(1, 0));
 
 		ImGui::TextWrapped("Propierties :");
 

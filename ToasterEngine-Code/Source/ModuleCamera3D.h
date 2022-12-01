@@ -14,7 +14,7 @@ public:
 	update_status Update(float dt);
 	bool CleanUp();
 
-	void AddCamera(Camera* newCam);
+	void AddCamera(Camera* newCam, std::string name);
 	void DeleteCamera(Camera* cam);
 
 	Camera* CreateCamera();
@@ -24,5 +24,5 @@ public:
 	std::vector<Camera*> cameras;
 	uint camerasID = 0;
 
-	Camera* activeCamera;
+	Camera* activeCamera = nullptr;
 };

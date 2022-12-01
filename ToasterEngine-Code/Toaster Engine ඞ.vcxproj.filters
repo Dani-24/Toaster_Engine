@@ -697,6 +697,9 @@
     <ClInclude Include="Source\Camera.h">
       <Filter>Sources\Modules\Camera</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Buffer.h">
+      <Filter>Sources\Tools</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Sources">
@@ -980,6 +983,9 @@
     </ClCompile>
     <ClCompile Include="Source\Camera.cpp">
       <Filter>Sources\Modules\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Buffer.cpp">
+      <Filter>Sources\Tools</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

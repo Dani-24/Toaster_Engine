@@ -27,9 +27,9 @@ public:
 	//The surface contained by the window
 	SDL_Surface* screen_surface;
 
-private:
-
 	int width, height;
+
+private:
 
 	float brightness = 1;
 

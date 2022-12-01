@@ -183,6 +183,14 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(app->camera->editorCamera->GetViewMatrix().ptr());
 
+	app->camera->activeCamera->cameraBuffer.BindBuffer();
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	glClearColor(Cyan.r, Cyan.g, Cyan.b, 1.f);
+
+	app->camera->editorCamera->cameraBuffer.BindBuffer();
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	glClearColor(Cyan.r, Cyan.g, Cyan.b, 1.f);
+
 	// light 0 on cam pos
 	lights[0].SetPos(app->camera->editorCamera->GetPos().x, app->camera->editorCamera->GetPos().y, app->camera->editorCamera->GetPos().z);
 
@@ -196,6 +204,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
+
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(app->window->window);
 	ImGui::NewFrame();
@@ -232,7 +241,6 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-
 	ImGui::UpdatePlatformWindows();
 	ImGui::RenderPlatformWindowsDefault();
 
@@ -250,8 +258,6 @@ bool ModuleRenderer3D::CleanUp()
 	ImGui::DestroyContext();
 
 	SDL_GL_DeleteContext(context);
-
-	//glDeleteFramebuffers(1, &frameBuff);
 
 	return true;
 }
