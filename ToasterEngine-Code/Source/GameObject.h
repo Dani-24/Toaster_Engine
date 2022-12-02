@@ -43,7 +43,7 @@ public:
 private:
 
 	uint ID;
-	GameObject* parent;
+	GameObject* parent = nullptr;
 
 public:
 
@@ -65,10 +65,6 @@ public:
 
 	void SetTransform(vec3 pos, vec3 rot, vec3 scale);
 
-	void Translate(vec3 pos);
-	void Rotate(vec3 rot);
-	void Scale(vec3 scale);
-
 	// Apply Transformations
 	void UpdatePosition();
 	void UpdateRotation();
@@ -77,6 +73,7 @@ public:
 
 	// Matrix
 	void SetTransformMatrix(vec3 _position, vec3 _rotation, vec3 _scale);
+	void SetGlobalMatrix();
 	Transform GetGlobalTransform();
 
 	// Parent
@@ -85,16 +82,12 @@ public:
 	void ParentScaleUpdate(vec3 scale);
 	void ParentTransformUpdate(vec3 pos, vec3 rot, vec3 scale);
 
-private:
-
-	bool transformByQuat = false;
-
 public:
 	mat4x4 GO_matrix;
 
 private:
 	Transform GO_trans;
-	Transform GO_parentTrans, GO_originalParentTrans;
+	Transform GO_parentTrans, GO_parentOriginalTrans;
 
 public:
 	// MESH

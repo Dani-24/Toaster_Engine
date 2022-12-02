@@ -92,8 +92,8 @@ update_status ModuleEditor::PostUpdate(float dt) {
 		}
 	}
 
+	// Render GO Meshes
 	for (int i = 0; i < gameObjects.size(); i++) {
-		// Render GO
 		gameObjects[i]->RenderMesh();
 	}
 
@@ -490,10 +490,18 @@ void ModuleEditor::ShowInspectorMenu(bool* open) {
 
 			ImGui::TextWrapped("ID: %d", selectedGameObj->GetID());
 
-			Space();
-
-			if (selectedGameObj != root) { // Don't allow to delete the root
+			if (selectedGameObj != root) { // Don't allow to delete or edit the root
 				
+				ImGui::NewLine();
+
+				if (selectedGameObj->GetParent() != nullptr) {
+					ImGui::TextWrapped("Child of");
+					ImGui::SameLine();
+					ImGui::TextWrapped(selectedGameObj->GetParent()->GetName().c_str());
+				}
+
+				Space();
+
 				selectedGameObj->OnEditor();
 
 				Space();
@@ -588,7 +596,6 @@ void ModuleEditor::DrawGameObject(GameObject* gameObj, int iteration) {
 		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GameObject"))
 		{
 			if (gameObj->GetParent() != draggingGO) { // Avoid making a parent of a child of a parent of a child of a parent of a child of a parent of a child of a parent
-				draggingGO->GetParent()->DeleteChild(draggingGO);
 				gameObj->AddChild(draggingGO);
 				draggingGO = nullptr;
 			}

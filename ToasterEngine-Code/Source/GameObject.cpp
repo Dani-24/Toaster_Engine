@@ -12,6 +12,7 @@ GameObject::GameObject(std::string name, GameObject* parent, Camera* camera)
 
 	if (parent != nullptr) {
 		parent->AddChild(this);
+		GO_parentTrans = parent->GO_trans;
 	}
 
 	GO_camera = camera;
@@ -81,20 +82,27 @@ void GameObject::DeleteChild(GameObject* chi) {
 }
 
 void GameObject::AddChild(GameObject* chi) {
+
+	if (chi->parent != nullptr) {
+		chi->parent->DeleteChild(chi);
+	}
+
 	chi->SetParent(this);
+
 	childs.push_back(chi);
 }
 
 void GameObject::SetParent(GameObject* par) {
 	parent = par;
-	GO_originalParentTrans = par->GO_trans;
+	GO_parentOriginalTrans = par->GetGlobalTransform();
 }
 
 // ImGUI
 void GameObject::OnEditor() {
 
 	// Transform Component
-	ImGui::TextWrapped("Component : TRANSFORM"); ImGui::NewLine();
+	ImGui::TextWrapped("Component : TRANSFORM"); 
+	ImGui::NewLine();
 
 	ImGui::TextWrapped("Position : ");
 	ImGui::SameLine();
@@ -120,9 +128,6 @@ void GameObject::OnEditor() {
 			SetScale(vec3(scale.x, scale.y, scale.z));
 		}
 	}
-
-	SetTransformMatrix(vec3(pos.x, pos.y, pos.z), vec3(rot.x, rot.y, rot.z), vec3(scale.x, scale.y, scale.z));
-
 	// MESH COMPONENT
 	if (GO_mesh != nullptr) {
 
@@ -307,30 +312,6 @@ void GameObject::SetTransform(vec3 pos, vec3 rot, vec3 scale) {
 	UpdateTransform();
 }
 
-void GameObject::Translate(vec3 pos) {
-
-	SetTransformMatrix(GO_trans.position, GO_trans.rotation, GO_trans.rotation);
-
-	this->GO_trans.position += pos;
-	UpdatePosition();
-}
-
-void GameObject::Rotate(vec3 rot) {
-
-	SetTransformMatrix(GO_trans.position, GO_trans.rotation, GO_trans.rotation);
-
-	this->GO_trans.rotation += rot;
-	UpdateRotation();
-}
-
-void GameObject::Scale(vec3 scale) {
-
-	SetTransformMatrix(GO_trans.position, GO_trans.rotation, GO_trans.rotation);
-
-	this->GO_trans.scale += scale;
-	UpdateScale();
-}
-
 // Apply Transformations
 void GameObject::UpdatePosition() {
 
@@ -338,8 +319,10 @@ void GameObject::UpdatePosition() {
 
 	for (size_t i = 0; i < childs.size(); i++)
 	{
-		childs.at(i)->ParentPositionUpdate(globalPosition);
+		childs[i]->ParentPositionUpdate(globalPosition);
 	}
+
+	SetGlobalMatrix();
 }
 
 void GameObject::UpdateRotation() {
@@ -350,6 +333,8 @@ void GameObject::UpdateRotation() {
 	{
 		childs.at(i)->ParentRotationUpdate(globalRotation);
 	}
+
+	SetGlobalMatrix();
 }
 
 void GameObject::UpdateScale() {
@@ -360,6 +345,8 @@ void GameObject::UpdateScale() {
 	{
 		childs.at(i)->ParentScaleUpdate(globalScale);
 	}
+
+	SetGlobalMatrix();
 }
 
 void GameObject::UpdateTransform() {
@@ -370,81 +357,74 @@ void GameObject::UpdateTransform() {
 	{
 		childs.at(i)->ParentTransformUpdate(globalTransform.position, globalTransform.scale, globalTransform.rotation);
 	}
+
+	SetGlobalMatrix();
 }
 
 // Matrix
 void GameObject::SetTransformMatrix(vec3 _position, vec3 _rotation, vec3 _scale)
 {
-	if (transformByQuat) {
-		/*Transform globalTransform = GetGlobalTransform();
+	float x = _rotation.x * DEGTORAD;
+	float y = _rotation.y * DEGTORAD;
+	float z = _rotation.z * DEGTORAD;
 
-		math::Quat rotation = Quat::FromEulerXYZ(math::DegToRad(globalTransform.rotation.x), math::DegToRad(globalTransform.rotation.y), math::DegToRad(globalTransform.rotation.z));
+	GO_matrix[0] = cos(y) * cos(z);
+	GO_matrix[1] = -cos(x) * sin(z) + sin(y) * cos(z) * sin(x);
+	GO_matrix[2] = sin(x) * sin(z) + sin(y) * cos(z) * cos(x);
+	GO_matrix[3] = _position.x;
 
-		GO_matrix = float4x4::FromTRS(globalTransform.position, rotation, float3(1, 1, 1));*/
-	}
-	else {
-		float x = _rotation.x * DEGTORAD;
-		float y = _rotation.y * DEGTORAD;
-		float z = _rotation.z * DEGTORAD;
+	GO_matrix[4] = cos(y) * sin(z);
+	GO_matrix[5] = cos(x) * cos(z) + sin(y) * sin(z) * sin(z);
+	GO_matrix[6] = -sin(x) * cos(z) + sin(y) * sin(z) * cos(x);
+	GO_matrix[7] = _position.y;
 
-		GO_matrix[0] = cos(y) * cos(z);
-		GO_matrix[1] = -cos(x) * sin(z) + sin(y) * cos(z) * sin(x);
-		GO_matrix[2] = sin(x) * sin(z) + sin(y) * cos(z) * cos(x);
-		GO_matrix[3] = _position.x;
+	GO_matrix[8] = -sin(y);
+	GO_matrix[9] = cos(y) * sin(x);
+	GO_matrix[10] = cos(x) * cos(y);
+	GO_matrix[11] = _position.z;
 
-		GO_matrix[4] = cos(y) * sin(z);
-		GO_matrix[5] = cos(x) * cos(z) + sin(y) * sin(z) * sin(z);
-		GO_matrix[6] = -sin(x) * cos(z) + sin(y) * sin(z) * cos(x);
-		GO_matrix[7] = _position.y;
+	GO_matrix[12] = 0;
+	GO_matrix[13] = 0;
+	GO_matrix[14] = 0;
+	GO_matrix[15] = 1;
 
-		GO_matrix[8] = -sin(y);
-		GO_matrix[9] = cos(y) * sin(x);
-		GO_matrix[10] = cos(x) * cos(y);
-		GO_matrix[11] = _position.z;
+	GO_matrix[0] *= _scale.x;
+	GO_matrix[5] *= _scale.y;
+	GO_matrix[10] *= _scale.z;
 
-		GO_matrix[12] = 0;
-		GO_matrix[13] = 0;
-		GO_matrix[14] = 0;
-		GO_matrix[15] = 1;
-
-		GO_matrix[0] *= _scale.x;
-		GO_matrix[5] *= _scale.y;
-		GO_matrix[10] *= _scale.z;
-
-		GO_matrix = transpose(GO_matrix);
-	}
+	GO_matrix = transpose(GO_matrix);
 }
-	
+
+void GameObject::SetGlobalMatrix() {
+
+	Transform gTrans = GetGlobalTransform();
+	SetTransformMatrix(gTrans.position, gTrans.rotation, gTrans.scale);
+}
+
 Transform GameObject::GetGlobalTransform() {
-	if (GetParent() == NULL) return GO_trans;
+	if (GetParent() == nullptr) return GO_trans;
 
 	Transform global_transform;
-	global_transform.position = GO_parentTrans.position + GO_trans.position;
-	global_transform.rotation = GO_parentTrans.rotation + GO_trans.rotation;
-	global_transform.scale = GO_parentTrans.scale + GO_trans.scale;
+	global_transform.position = GO_parentTrans.position - GO_parentOriginalTrans.position + GO_trans.position;
+	global_transform.rotation = GO_parentTrans.rotation - GO_parentOriginalTrans.rotation + GO_trans.rotation;
+	global_transform.scale = GO_parentTrans.scale * GO_trans.scale;
 
 	return global_transform;
 }
 
-// Padre te ordena
+// SugarDaddy
 void GameObject::ParentPositionUpdate(vec3 pos) {
 	GO_parentTrans.position = pos;
-
-	Translate(pos);
 	UpdatePosition();
 }
 
 void GameObject::ParentRotationUpdate(vec3 rot) {
 	GO_parentTrans.rotation = rot;
-
-	Rotate(rot);
 	UpdateRotation();
 }
 
 void GameObject::ParentScaleUpdate(vec3 scale) {
 	GO_parentTrans.scale = scale;
-
-	Scale(scale);
 	UpdateScale();
 }
 
