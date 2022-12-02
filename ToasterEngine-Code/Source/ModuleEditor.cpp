@@ -121,6 +121,7 @@ bool ModuleEditor::CleanUp() {
 	return true;
 }
 
+// IMGUI DRAW
 void ModuleEditor::Draw(){
 
 	static bool closeOpenClose = false;
@@ -294,9 +295,9 @@ void ModuleEditor::Draw(){
 
 		if (ImGui::BeginMenu("Help")) {
 
-			if (ImGui::MenuItem("About", NULL, &showAboutMenu)) {}
-			if (ImGui::MenuItem("Show Demo Window",NULL, &showDemoWindow)) {}
-			if (ImGui::MenuItem("Engine Documentation"))
+			if (ImGui::MenuItem("About", "Engine Info", &showAboutMenu)) {}
+			if (ImGui::MenuItem("Show Demo Window", "ImGui Demo", &showDemoWindow)) {}
+			if (ImGui::MenuItem("Engine Documentation", "URL"))
 			{
 				OpenURL("https://github.com/Dani-24/Toaster_Engine");
 			}
@@ -308,22 +309,8 @@ void ModuleEditor::Draw(){
 	}
 }
 
+// Game & Editor camera views
 void ModuleEditor::ShowGameEditorWindow(bool* open) {
-
-	if (!ImGui::Begin("Editor")) {
-		ImGui::End();
-	}
-	else {
-
-		ImVec2 windowSize = ImGui::GetWindowSize();
-		windowSize.y = windowSize.y - 35;
-
-		// RENDER EDITOR CAMERA HERE
-		ImGui::Image((ImTextureID)app->camera->editorCamera->cameraBuffer.GetTexture(), windowSize, ImVec2(0, 1), ImVec2(1, 0));
-
-		ImGui::End();
-	}
-
 	if (!ImGui::Begin("Game")) {
 		ImGui::End();
 	}
@@ -342,37 +329,23 @@ void ModuleEditor::ShowGameEditorWindow(bool* open) {
 		}
 		ImGui::End();
 	}
-}
 
-void ModuleEditor::AreYouSureAboutThat(bool *open) {
-
-	int sizeX = 300;
-	int sizeY = 60;
-	ImGui::SetNextWindowSize(ImVec2(sizeX, sizeY));
-	ImGui::SetNextWindowPos(ImVec2(SCREEN_WIDTH / 2 - sizeX / 2, SCREEN_HEIGHT / 2 - sizeY / 2));
-
-	if (!ImGui::Begin("Closing this toaster in :", open)) {
+	if (!ImGui::Begin("Editor")) {
 		ImGui::End();
 	}
-	else{
+	else {
 
-		if (cooldown <= minCooldown) {
-			exit = true;
-		}
-		else {
-			cooldown -= 2;
-		}
+		ImVec2 windowSize = ImGui::GetWindowSize();
+		windowSize.y = windowSize.y - 35;
 
-		char progressText[32];
-		sprintf(progressText, "%.0f/%.0f", cooldown, maxCooldown);
-
-		ImGui::ProgressBar(cooldown / maxCooldown, ImVec2(-1, 0), progressText);
+		// RENDER EDITOR CAMERA HERE
+		ImGui::Image((ImTextureID)app->camera->editorCamera->cameraBuffer.GetTexture(), windowSize, ImVec2(0, 1), ImVec2(1, 0));
 
 		ImGui::End();
 	}
-
 }
 
+// Console
 void ModuleEditor::ShowConsoleMenu(bool *open) {
 
 	if (!ImGui::Begin("Console LOG", open)) {
@@ -392,6 +365,18 @@ void ModuleEditor::ShowConsoleMenu(bool *open) {
 	}
 }
 
+void ModuleEditor::AddLogMsg(const char* msg) {
+
+	if (logs.size() <= MAX_LOGS_SIZE) {
+		logs.push_back(msg);
+	}
+	else {
+		logs.erase(logs.begin());
+		logs.push_back(msg);
+	}
+}
+
+// Assets
 void ModuleEditor::ShowAssetManager(bool* open) {
 	if (!ImGui::Begin("Assets", open)) {
 		ImGui::End();
@@ -490,17 +475,7 @@ void ModuleEditor::ShowAssetExplorer(bool* open) {
 	}
 }
 
-void ModuleEditor::AddLogMsg(const char* msg) {
-
-	if (logs.size() <= MAX_LOGS_SIZE) {
-		logs.push_back(msg);
-	}
-	else {
-		logs.erase(logs.begin());
-		logs.push_back(msg);
-	}
-}
-
+// Inspector
 void ModuleEditor::ShowInspectorMenu(bool* open) {
 	if (!ImGui::Begin("Inspector", open)) {
 		ImGui::End();
@@ -538,6 +513,7 @@ void ModuleEditor::ShowInspectorMenu(bool* open) {
 	}
 }
 
+// Hierarchy
 void ModuleEditor::ShowHierarchyMenu(bool* open) {
 	if (!ImGui::Begin("Hierarchy", open)) {
 		ImGui::End();
@@ -629,14 +605,18 @@ void ModuleEditor::DrawGameObject(GameObject* gameObj, int iteration) {
 	}
 }
 
+// Engine Info
 void ModuleEditor::ShowAboutMenu(bool* open) {
-	if (!ImGui::Begin("About toasts", open)) {
+	if (!ImGui::Begin("About toasts . . .", open)) {
 		ImGui::End();
 	}
 	else {
 
 		// INFO
-		ImGui::TextWrapped("TOASTER Engine v0.0.1"); // A VERSION GETTER THERE WOULD BE COOL
+		ImGui::TextWrapped(TITLE);
+
+		Texture* engineIcon = app->textures->LoadTexture("Assets/default_Meshes/icon1.png");
+		ImGui::Image((ImTextureID)engineIcon->OpenGLID, ImVec2(100, 100));
 		
 		Space();
 
@@ -646,7 +626,7 @@ void ModuleEditor::ShowAboutMenu(bool* open) {
 			ShellExecute(0, 0, "https://github.com/Dani-24", 0, 0, SW_SHOW);
 		}
 
-		ImGui::TextWrapped("Help me pls");
+		ImGui::TextWrapped("All i want for christmass ...");
 
 		Space();
 
@@ -761,10 +741,7 @@ void ModuleEditor::ShowConfiguration(bool* open) {
 	}
 }
 
-void ModuleEditor::Space() {
-	ImGui::NewLine(); ImGui::Separator(); ImGui::NewLine();
-}
-
+// GameObjects managment
 uint ModuleEditor::AddGameObject(GameObject* GameObj) {
 
 	gameObjects.push_back(GameObj);
@@ -776,6 +753,40 @@ uint ModuleEditor::AddGameObject(GameObject* GameObj) {
 
 void ModuleEditor::SetSelectedGameObject(GameObject* GameObj) {
 	selectedGameObj = GameObj;
+}
+
+// Other
+void ModuleEditor::AreYouSureAboutThat(bool* open) {
+
+	int sizeX = 300;
+	int sizeY = 60;
+	ImGui::SetNextWindowSize(ImVec2(sizeX, sizeY));
+	ImGui::SetNextWindowPos(ImVec2(SCREEN_WIDTH / 2 - sizeX / 2, SCREEN_HEIGHT / 2 - sizeY / 2));
+
+	if (!ImGui::Begin("Closing this toaster in :", open)) {
+		ImGui::End();
+	}
+	else {
+
+		if (cooldown <= minCooldown) {
+			exit = true;
+		}
+		else {
+			cooldown -= 2;
+		}
+
+		char progressText[32];
+		sprintf(progressText, "%.0f/%.0f", cooldown, maxCooldown);
+
+		ImGui::ProgressBar(cooldown / maxCooldown, ImVec2(-1, 0), progressText);
+
+		ImGui::End();
+	}
+
+}
+
+void ModuleEditor::Space() {
+	ImGui::NewLine(); ImGui::Separator(); ImGui::NewLine();
 }
 
 void ModuleEditor::AssetTree(FileTree* node) {

@@ -42,13 +42,11 @@ void Camera::LookAt(const float3& Spot)
 }
 
 
-// -----------------------------------------------------------------
 void Camera::Move(const float3& Movement)
 {
 	camFrustum.pos += Movement;
 }
 
-// -----------------------------------------------------------------
 float4x4 Camera::GetViewMatrix()
 {
 	math::float4x4 matrix;

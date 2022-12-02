@@ -17,7 +17,7 @@ GameObject::GameObject(std::string name, GameObject* parent, Camera* camera)
 	GO_camera = camera;
 
 	if (GO_camera != nullptr) {
-		SetPos(vec3(GO_camera->camFrustum.pos.x, GO_camera->camFrustum.pos.y, GO_camera->camFrustum.pos.z));
+		SetPos(GO_camera->GetPos());
 	}
 
 	LOG("Created GameObject %s", name.c_str());
