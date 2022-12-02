@@ -39,8 +39,9 @@ bool ModuleCamera3D::CleanUp()
 // -----------------------------------------------------------------
 update_status ModuleCamera3D::Update(float dt)
 {
-	
-	editorCamera->EditorCameraControl(dt);
+	if (moveEditCam) {
+		editorCamera->EditorCameraControl(dt);
+	}
 
 	for (int i = 0; i < cameras.size(); i++) {
 		cameras[i]->UpdateCamera(dt);

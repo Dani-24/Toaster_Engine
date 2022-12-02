@@ -341,6 +341,13 @@ void ModuleEditor::ShowGameEditorWindow(bool* open) {
 		// RENDER EDITOR CAMERA HERE
 		ImGui::Image((ImTextureID)app->camera->editorCamera->cameraBuffer.GetTexture(), windowSize, ImVec2(0, 1), ImVec2(1, 0));
 
+		if (ImGui::IsWindowHovered()) {
+			app->camera->moveEditCam = true;
+		}
+		else {
+			app->camera->moveEditCam = false;
+		}
+
 		ImGui::End();
 	}
 }

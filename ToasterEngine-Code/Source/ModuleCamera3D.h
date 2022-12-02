@@ -21,6 +21,8 @@ public:
 
 public:
 	Camera* editorCamera;
+	bool moveEditCam = false;
+
 	std::vector<Camera*> cameras;
 	uint camerasID = 0;
 
