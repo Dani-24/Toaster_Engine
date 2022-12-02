@@ -114,10 +114,12 @@ update_status Application::Update()
 	}
 	
 	// Active Camera
-	renderer3D->renderOnThisCamera = camera->activeCamera;
+	if (camera->activeCamera != nullptr) {
+		renderer3D->renderOnThisCamera = camera->activeCamera;
 
-	for (uint i = 0; i < list_modules.size() && ret == UPDATE_CONTINUE; i++) {
-		ret = list_modules[i]->PostUpdate(dt);
+		for (uint i = 0; i < list_modules.size() && ret == UPDATE_CONTINUE; i++) {
+			ret = list_modules[i]->PostUpdate(dt);
+		}
 	}
 
 	FinishUpdate();

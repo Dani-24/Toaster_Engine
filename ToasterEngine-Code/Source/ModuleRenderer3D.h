@@ -74,5 +74,5 @@ private:
 
 public:
 	
-	Camera* renderOnThisCamera;
+	Camera* renderOnThisCamera = nullptr;
 };

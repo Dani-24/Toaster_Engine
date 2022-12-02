@@ -16,6 +16,10 @@ GameObject::GameObject(std::string name, GameObject* parent, Camera* camera)
 
 	GO_camera = camera;
 
+	if (GO_camera != nullptr) {
+		SetPos(vec3(GO_camera->camFrustum.pos.x, GO_camera->camFrustum.pos.y, GO_camera->camFrustum.pos.z));
+	}
+
 	LOG("Created GameObject %s", name.c_str());
 
 	app->editor->SetSelectedGameObject(this);
@@ -47,6 +51,7 @@ void GameObject::DeleteThisGameObject() {
 	GO_texture = nullptr;
 
 	if (GO_camera != nullptr) {
+		app->camera->activeCamera = nullptr;
 		app->camera->DeleteCamera(GO_camera);
 		GO_camera = nullptr;
 	}
@@ -105,11 +110,14 @@ void GameObject::OnEditor() {
 		SetRot(vec3(rot.x, rot.y, rot.z));
 	}
 
-	ImGui::TextWrapped("Scale :    ");
-	ImGui::SameLine();
 	float3 scale = float3(GO_trans.scale.x, GO_trans.scale.y, GO_trans.scale.z);
-	if (ImGui::DragFloat3("scl", &scale[0], 0.1f)) {
-		SetScale(vec3(scale.x, scale.y, scale.z));
+	if (GO_camera == nullptr) {
+		ImGui::TextWrapped("Scale :    ");
+		ImGui::SameLine();
+		
+		if (ImGui::DragFloat3("scl", &scale[0], 0.1f)) {
+			SetScale(vec3(scale.x, scale.y, scale.z));
+		}
 	}
 
 	SetTransformMatrix(vec3(pos.x, pos.y, pos.z), vec3(rot.x, rot.y, rot.z), vec3(scale.x, scale.y, scale.z));
@@ -199,7 +207,7 @@ void GameObject::OnEditor() {
 		app->editor->Space();
 
 		ImGui::TextWrapped("Component : Camera");
-
+		ImGui::SameLine();
 		if (ImGui::Checkbox("Active", &GO_camera->active)) {
 			if (GO_camera->active) {
 				app->camera->activeCamera = GO_camera;
@@ -211,9 +219,15 @@ void GameObject::OnEditor() {
 			}
 		}
 
+		ImGui::NewLine();
+
 		ImGui::Image((ImTextureID)GO_camera->cameraBuffer.GetTexture(), ImVec2(200,100), ImVec2(0, 1), ImVec2(1, 0));
+		
+		ImGui::NewLine();
 
 		ImGui::TextWrapped("Propierties :");
+
+		ImGui::NewLine();
 
 		ImGui::TextWrapped("Aspect Ratio : ");
 		ImGui::SameLine();
@@ -232,6 +246,11 @@ void GameObject::OnEditor() {
 		if (ImGui::DragFloat("R", &GO_camera->range, 0.1f)) {
 			GO_camera->SetRange(GO_camera->range);
 		}
+
+		ImGui::TextWrapped("Looking at :        ");
+		if (ImGui::DragFloat3("XYZ", &camLookAt[0], 0.1f)) {
+			GO_camera->LookAt(camLookAt);
+		}
 	}
 }
 
@@ -249,7 +268,30 @@ void GameObject::SetPos(vec3 pos) {
 void GameObject::SetRot(vec3 rot) {
 	this->GO_trans.rotation = rot;
 
+	if (GO_camera != nullptr) {
+		Quat dir;
 
+		GO_camera->camFrustum.WorldMatrix().Decompose(float3(), dir, float3());
+
+		Quat X = Quat::identity;
+		X.SetFromAxisAngle(float3(1, 0, 0), rot.x * DEGTORAD);
+
+		dir = dir * X;
+
+		Quat Y = Quat::identity;
+		Y.SetFromAxisAngle(float3(0, 1, 0), rot.y * DEGTORAD);
+
+		dir = dir * Y;
+
+		Quat Z = Quat::identity;
+		Z.SetFromAxisAngle(float3(0, 0, 1), rot.z * DEGTORAD);
+
+		dir = dir * Z;
+
+		float4x4 mat = GO_camera->camFrustum.WorldMatrix();
+		mat.SetRotatePart(dir.Normalized());
+		GO_camera->camFrustum.SetWorldMatrix(mat.Float3x4Part());
+	}
 
 	UpdateRotation();
 }

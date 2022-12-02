@@ -47,13 +47,28 @@ private:
 	bool exit = false;
 	bool showingEditor = true;
 
+	// Closes the Program
 	void AreYouSureAboutThat(bool *open);
+
+	// Gameobject Inspector
 	void ShowInspectorMenu(bool* open);
+
+	// Show all your gameobjects at the Scene
 	void ShowHierarchyMenu(bool* open);
+
+	// Engine Console Log
 	void ShowConsoleMenu(bool* open);
+
+	// Info About the toaster
 	void ShowAboutMenu(bool* open);
+
+	// Game & Editor Camera views
 	void ShowGameEditorWindow(bool* open);
+
+	// Engine Configuration
 	void ShowConfiguration(bool* open);
+
+	// Show Engine/Game Assets
 	void ShowAssetManager(bool* open);
 	void ShowAssetExplorer(bool* open);
 
@@ -77,16 +92,20 @@ public:
 	GameObject* root = nullptr;
 	GameObject* draggingGO = nullptr;
 
+	// Adds a GameObject to the editor GO list
 	uint AddGameObject(GameObject* GameObj);
+
+	// Set/get the Selected GameObject
 	void SetSelectedGameObject(GameObject* GameObj);
 	GameObject* GetSelectedGameObject() { return selectedGameObj; }
 
+	// Draw GameObjects on Hierarchy
 	void PrepareDrawGameObject(GameObject* gameObj, bool hasCh);
 	void DrawGameObject(GameObject* gameObj, int iteration);
 
 	GameObject* printedGameObj = nullptr;
 
-	// Assets
+	// Assets as a tree
 	void AssetTree(FileTree* node);
 
 	FileTree* fileTree = nullptr;
@@ -107,5 +126,6 @@ private:
 	std::string ddname = "New GameObject";
 
 public:
+	// Log a const char*
 	void AddLogMsg(const char* msg);
 };

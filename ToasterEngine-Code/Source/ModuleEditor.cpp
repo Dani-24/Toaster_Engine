@@ -236,19 +236,19 @@ void ModuleEditor::Draw(){
 			// SHOW EDITOR
 			if (showingEditor)
 			{
-				if (ImGui::MenuItem("Hide All Editor Windows"))
+				if (ImGui::MenuItem("Hide All Windows"))
 				{
 					showingEditor = !showingEditor;
 
-					showConsoleMenu = showHierarchy = showInspector = showGameEditorWindow = showAssetManager = showAssetExplorer = false;
+					showConsoleMenu = showHierarchy = showInspector = showAssetManager = showAssetExplorer = false;
 				}
 			}
 			else {
-				if (ImGui::MenuItem("Show All Editor Windows"))
+				if (ImGui::MenuItem("Show All Windows"))
 				{
 					showingEditor = !showingEditor;
 
-					showConsoleMenu = showHierarchy = showInspector = showGameEditorWindow = showAssetManager = showAssetExplorer = true;
+					showConsoleMenu = showHierarchy = showInspector = showAssetManager = showAssetExplorer = true;
 
 				}
 			}
@@ -266,7 +266,7 @@ void ModuleEditor::Draw(){
 			}
 
 			// GAME EDITOR WINDOW
-			if (ImGui::MenuItem("Game Editor Window", NULL, &showGameEditorWindow)) {};
+			/*if (ImGui::MenuItem("Game Editor Window", NULL, &showGameEditorWindow)) {};*/
 
 			// ASSET MANAGER
 			if (ImGui::MenuItem("Asset Manager", NULL, &showAssetManager)) {};
@@ -306,25 +306,37 @@ void ModuleEditor::Draw(){
 }
 
 void ModuleEditor::ShowGameEditorWindow(bool* open) {
-	if (!ImGui::Begin("Editor", open)) {
+
+	if (!ImGui::Begin("Editor")) {
 		ImGui::End();
 	}
 	else {
 
-		// RENDER CAMERA HERE
-		ImGui::Image((ImTextureID)app->camera->editorCamera->cameraBuffer.GetTexture(), ImGui::GetWindowSize(), ImVec2(0, 1), ImVec2(1, 0));
+		ImVec2 windowSize = ImGui::GetWindowSize();
+		windowSize.y = windowSize.y - 35;
+
+		// RENDER EDITOR CAMERA HERE
+		ImGui::Image((ImTextureID)app->camera->editorCamera->cameraBuffer.GetTexture(), windowSize, ImVec2(0, 1), ImVec2(1, 0));
 
 		ImGui::End();
 	}
 
-	if (!ImGui::Begin("Game", open)) {
+	if (!ImGui::Begin("Game")) {
 		ImGui::End();
 	}
 	else {
 
-		// RENDER CAMERA HERE
-		ImGui::Image((ImTextureID)app->camera->activeCamera->cameraBuffer.GetTexture(), ImGui::GetWindowSize(), ImVec2(0, 1), ImVec2(1, 0));
+		ImVec2 windowSize = ImGui::GetWindowSize();
+		windowSize.y = windowSize.y - 35;
 
+		// RENDER ACTIVE CAMERA HERE
+		if (app->camera->activeCamera != nullptr) {
+			ImGui::Image((ImTextureID)app->camera->activeCamera->cameraBuffer.GetTexture(), windowSize, ImVec2(0, 1), ImVec2(1, 0));
+		}
+		else {
+			ImGui::Image(NULL, ImGui::GetWindowSize(), ImVec2(0, 1), ImVec2(1, 0));
+
+		}
 		ImGui::End();
 	}
 }

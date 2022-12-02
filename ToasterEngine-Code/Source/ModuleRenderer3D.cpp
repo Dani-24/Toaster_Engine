@@ -192,7 +192,6 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
-
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(app->window->window);
 	ImGui::NewFrame();
@@ -227,11 +226,11 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
 
 	ImGui::Render();
+
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 	ImGui::UpdatePlatformWindows();
 	ImGui::RenderPlatformWindowsDefault();
-
 
 	glLoadIdentity();
 
