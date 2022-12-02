@@ -4,6 +4,8 @@
 #include "glmath.h"
 #include "Light.h"
 
+#include "Camera.h"
+
 #define MAX_LIGHTS 8
 
 class Hardware {
@@ -71,5 +73,6 @@ private:
 	Hardware hardware;
 
 public:
-	//uint camBuff, frameBuff, renderBuff;
+	
+	Camera* renderOnThisCamera;
 };

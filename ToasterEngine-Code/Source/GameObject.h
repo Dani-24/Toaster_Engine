@@ -88,7 +88,11 @@ public:
 private:
 
 	bool transformByQuat = false;
+
+public:
 	mat4x4 GO_matrix;
+
+private:
 	Transform GO_trans;
 	Transform GO_parentTrans, GO_originalParentTrans;
 

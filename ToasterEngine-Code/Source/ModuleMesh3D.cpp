@@ -236,6 +236,7 @@ void Mesh::Render(uint texture, mat4x4 matrix)
 
 	// Unbind
 	glBindTexture(GL_TEXTURE_2D, 0);
+
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_TEXTURE_COORD_ARRAY);

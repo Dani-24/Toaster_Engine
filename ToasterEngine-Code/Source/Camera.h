@@ -10,7 +10,7 @@
 class Camera {
 public:
 
-	Camera();
+	Camera(float3 pos = float3(0.0f, 0.0f, 0.0f), float3 LookAt = float3(0.0f, 0.0f, 0.0f));
 	~Camera();
 
 	void UpdateCamera(float dt);
@@ -59,4 +59,6 @@ public:
 	bool debugDraw = false;
 
 	Buffer cameraBuffer;
+
+	bool active;
 };

@@ -86,6 +86,7 @@ void GameObject::SetParent(GameObject* par) {
 
 // ImGUI
 void GameObject::OnEditor() {
+
 	// Transform Component
 	ImGui::TextWrapped("Component : TRANSFORM"); ImGui::NewLine();
 
@@ -199,6 +200,17 @@ void GameObject::OnEditor() {
 
 		ImGui::TextWrapped("Component : Camera");
 
+		if (ImGui::Checkbox("Active", &GO_camera->active)) {
+			if (GO_camera->active) {
+				app->camera->activeCamera = GO_camera;
+				for (int i = 0; i < app->camera->cameras.size(); i++) {
+					if (app->camera->cameras[i] != GO_camera) {
+						app->camera->cameras[i]->active = false;
+					}
+				}
+			}
+		}
+
 		ImGui::Image((ImTextureID)GO_camera->cameraBuffer.GetTexture(), ImVec2(200,100), ImVec2(0, 1), ImVec2(1, 0));
 
 		ImGui::TextWrapped("Propierties :");
@@ -226,11 +238,18 @@ void GameObject::OnEditor() {
 // TRANSFORM
 void GameObject::SetPos(vec3 pos) {
 	this->GO_trans.position = pos;
+
+	if (GO_camera != nullptr) {
+		GO_camera->camFrustum.pos = float3(pos.x, pos.y, pos.z);
+	}
+
 	UpdatePosition();
 }
 
 void GameObject::SetRot(vec3 rot) {
 	this->GO_trans.rotation = rot;
+
+
 
 	UpdateRotation();
 }

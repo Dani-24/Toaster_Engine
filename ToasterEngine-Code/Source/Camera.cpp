@@ -1,9 +1,10 @@
 #include "Camera.h"
 #include "Application.h"
 
-Camera::Camera() {
-	camFrustum.pos = float3(6.0f, 3.5f, 1.5f);
-	LookAt(float3(0, 0, 0));
+Camera::Camera(float3 pos, float3 lookat) {
+	camFrustum.pos = pos;
+	LookAt(lookat);
+	active = false;
 }
 
 Camera::~Camera() {
@@ -12,7 +13,13 @@ Camera::~Camera() {
 
 void Camera::UpdateCamera(float dt)
 {
-	
+	if (this == app->camera->activeCamera) {
+		active = true;
+	}
+	else {
+		active = false;
+	}
+
 	if (debugDraw) {
 		DebugDraw();
 	}

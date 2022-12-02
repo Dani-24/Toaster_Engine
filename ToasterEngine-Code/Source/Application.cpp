@@ -106,6 +106,16 @@ update_status Application::Update()
 		ret = list_modules[i]->Update(dt);
 	}
 
+	// Editor camera
+	renderer3D->renderOnThisCamera = camera->editorCamera;
+
+	for (uint i = 0; i < list_modules.size() && ret == UPDATE_CONTINUE; i++) {
+		ret = list_modules[i]->PostUpdate(dt);
+	}
+	
+	// Active Camera
+	renderer3D->renderOnThisCamera = camera->activeCamera;
+
 	for (uint i = 0; i < list_modules.size() && ret == UPDATE_CONTINUE; i++) {
 		ret = list_modules[i]->PostUpdate(dt);
 	}
