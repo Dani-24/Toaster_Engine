@@ -24,7 +24,7 @@ bool ModuleScene::Start()
 
 	GameObject* house = new GameObject("Demo Baker House", app->editor->root);
 	house->AddMesh(app->mesh3d->LoadFile("Assets/BakerHouse.fbx"));
-	house->AddTexture(app->textures->ImportTexture("Assets/Baker_house.png"));
+	house->AddTexture(app->textures->LoadTexture("Assets/Baker_house.png"));
 
 	return ret;
 }

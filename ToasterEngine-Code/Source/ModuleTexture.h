@@ -32,8 +32,13 @@ public:
 
 	static uint CheckImage();
 
+	static Texture* LoadTexture(std::string path);
+
+private:
 	// Load a texture from /Assets
 	static uint ImportTexture(std::string path);
+
+public:
 
 	// Managing
 	struct BindedTextureInfo

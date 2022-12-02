@@ -49,6 +49,7 @@ void GameObject::DeleteThisGameObject() {
 		GO_mesh = nullptr;
 	}
 	GO_texture = nullptr;
+	GO_allTextures.clear();
 
 	if (GO_camera != nullptr) {
 		app->camera->activeCamera = nullptr;
@@ -162,19 +163,16 @@ void GameObject::OnEditor() {
 
 		ImGui::TextWrapped("Component : TEXTURES");
 
-		if (ImGui::BeginCombo("Texture", texture_path, ImGuiComboFlags_HeightSmall))
+		if (ImGui::BeginCombo("Texture", GO_texture->name.c_str(), ImGuiComboFlags_HeightSmall))
 		{
-			bool is_selected = (GO_texture->OpenGLID == GO_originalTexture->OpenGLID);
-			if (ImGui::Selectable("Default", is_selected))
-			{
-				GO_texture->OpenGLID = GO_originalTexture->OpenGLID;
-				texture_path = "Default";
-			}
-			is_selected = (GO_texture->OpenGLID == app->textures->CheckImage());
-			if (ImGui::Selectable("Checkers", is_selected))
-			{
-				GO_texture->OpenGLID = app->textures->CheckImage();
-				texture_path = "Checkers";
+			for (int i = 0; i < GO_allTextures.size(); i++) {
+
+				bool is_selected = (GO_texture == GO_allTextures[i]);
+				if (ImGui::Selectable(GO_allTextures[i]->name.c_str(), is_selected))
+				{
+					GO_texture = GO_allTextures[i];
+				}
+
 			}
 			ImGui::EndCombo();
 		}
@@ -465,7 +463,7 @@ void GameObject::AddMesh(Mesh* m) {
 void GameObject::RenderMesh() {
 	if (GO_mesh != nullptr && GO_mesh->shouldRender) 
 	{
-		if (renderTexture && GetTexture() != nullptr) {
+		if (renderTexture == true && GetTexture() != nullptr) {
 			GO_mesh->Render(GetTexture()->OpenGLID, GO_matrix);
 		}
 		else {
@@ -475,18 +473,24 @@ void GameObject::RenderMesh() {
 }
 
 void GameObject::DisplayMesh(bool display) {
+	if (GO_mesh != nullptr) {
+		GO_mesh->shouldRender = display;
 
-	GO_mesh->shouldRender = display;
-
-	for (int i = 0; i < childs.size(); i++) {
-		childs[i]->DisplayMesh(display);
+		for (int i = 0; i < childs.size(); i++) {
+			childs[i]->DisplayMesh(display);
+		}
 	}
 }
 
 // TEXTURE
-void GameObject::AddTexture(uint t) {
-	GO_texture = new Texture();
-	GO_texture->OpenGLID = t;
-	GO_originalTexture->OpenGLID = t;
-	texture_path = "Default";
+void GameObject::AddTexture(Texture* t) {
+	if (GO_allTextures.empty()) {
+		GO_texture = app->editor->checkers_texture;
+		GO_texture->name = "Checkers";
+		GO_allTextures.push_back(GO_texture);
+
+		renderTexture = true;
+	}
+	GO_texture = t;
+	GO_allTextures.push_back(GO_texture);
 }

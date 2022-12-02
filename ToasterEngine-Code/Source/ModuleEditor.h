@@ -120,7 +120,7 @@ public:
 
 	uint texture = NULL;
 	uint actualTexture = NULL;
-	uint checkers_texture = NULL;
+	Texture* checkers_texture = nullptr;
 
 private:
 	std::string ddname = "New GameObject";

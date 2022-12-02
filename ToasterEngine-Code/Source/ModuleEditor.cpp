@@ -29,7 +29,7 @@ bool ModuleEditor::Start() {
 	allFiles.clear();
 	allFiles = ModuleImporter::GetAllFiles("Assets");
 
-	checkers_texture = app->textures->ImportTexture("Assets/Checkers.png");
+	checkers_texture = app->textures->LoadTexture("Assets/Checkers.png");
 
 	root = new GameObject("Scene", nullptr);
 
@@ -212,7 +212,7 @@ void ModuleEditor::Draw(){
 
 					GameObject* house = new GameObject("Baker House", root);
 					house->AddMesh(app->mesh3d->LoadFile("Assets/BakerHouse.fbx"));
-					house->AddTexture(app->textures->ImportTexture("Assets/Baker_house.png"));
+					house->AddTexture(app->textures->LoadTexture("Assets/Baker_house.png"));
 				}
 
 				ImGui::EndMenu();
@@ -264,9 +264,6 @@ void ModuleEditor::Draw(){
 					app->scene->axis = !app->scene->axis;
 				}
 			}
-
-			// GAME EDITOR WINDOW
-			/*if (ImGui::MenuItem("Game Editor Window", NULL, &showGameEditorWindow)) {};*/
 
 			// ASSET MANAGER
 			if (ImGui::MenuItem("Asset Manager", NULL, &showAssetManager)) {};
@@ -462,10 +459,10 @@ void ModuleEditor::ShowAssetManager(bool* open) {
 		if (dd_file_type == ResourceType::MESH) {
 			GameObject* ddFile = new GameObject(ddname, root);
 			ddFile->AddMesh(app->mesh3d->LoadFile(dd_file_name));
-			ddFile->AddTexture(app->textures->ImportTexture(dd_file_name));
+			//ddFile->AddTexture(app->textures->LoadTexture(dd_file_name));
 		}
 		else if (dd_file_type == ResourceType::TEXTURE) {
-			selectedGameObj->AddTexture(app->textures->ImportTexture(dd_file_name));
+			selectedGameObj->AddTexture(app->textures->LoadTexture(dd_file_name));
 		}
 		dd_file_name = "";
 		ddCooldown = 0;

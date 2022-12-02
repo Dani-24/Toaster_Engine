@@ -145,6 +145,15 @@ uint ModuleTexture::CheckImage()
 	return textureID;
 }
 
+Texture* ModuleTexture::LoadTexture(std::string path) {
+	
+	Texture* houseText = new Texture();
+	houseText->OpenGLID = ImportTexture(path);
+	houseText->name = path;
+
+	return houseText;
+}
+
 uint ModuleTexture::ImportTexture(std::string path)
 {
 	//Check if the given texture has been already loaded

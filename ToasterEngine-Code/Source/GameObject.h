@@ -115,16 +115,13 @@ private:
 
 public:
 	// TEXTURE
-	void AddTexture(uint texture);
+	void AddTexture(Texture* texture);
 	Texture* GetTexture() { return GO_texture; }
-
-	void ShowTexture(bool visible) { renderTexture = visible; }
 
 private:
 
+	std::vector<Texture*> GO_allTextures;
 	Texture* GO_texture = nullptr;
-	Texture* GO_originalTexture = new Texture();
-	const char* texture_path;
 
 	bool renderTexture;
 
