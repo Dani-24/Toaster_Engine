@@ -92,7 +92,7 @@ public:
 	GameObject* root = nullptr;
 	GameObject* draggingGO = nullptr;
 
-	// Adds a GameObject to the editor GO list
+	// Adds a GameObject to the editor GO list (Called from GameObject.cpp)
 	uint AddGameObject(GameObject* GameObj);
 
 	// Set/get the Selected GameObject

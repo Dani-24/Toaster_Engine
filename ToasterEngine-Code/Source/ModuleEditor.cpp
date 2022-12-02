@@ -151,7 +151,7 @@ void ModuleEditor::Draw(){
 	if (ImGui::BeginMainMenuBar()) {
 
 		if (ImGui::BeginMenu("File")) {
-			if (ImGui::MenuItem("New Toast", "Ctrl+N")) {
+			if (ImGui::MenuItem("New Toast", "New Scene")) {
 
 				newScene = true;
 
@@ -179,9 +179,16 @@ void ModuleEditor::Draw(){
 			if (ImGui::MenuItem("Redo", "WIP")) {
 
 			}
-			if (ImGui::MenuItem("Toaster Mode", "Just work at toaster speed", &toasterMode)) {}
+			if (ImGui::MenuItem("Toaster Mode", "Just work at toaster speed", &toasterMode)) {
+			
+			}
+
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::BeginMenu("GameObjects")) {
 			if (ImGui::BeginMenu("Create 3D Mesh")) {
-				if(ImGui::MenuItem("Cube")) {
+				if (ImGui::MenuItem("Cube")) {
 
 					GameObject* cube = new GameObject("Cube", root);
 					cube->AddMesh(app->mesh3d->LoadFile("Assets/default_Meshes/cube.fbx"));
@@ -215,17 +222,18 @@ void ModuleEditor::Draw(){
 
 				ImGui::EndMenu();
 			}
+			if (ImGui::BeginMenu("Camera")) {
 
-			ImGui::EndMenu();
-		}
+				if (ImGui::MenuItem("Create new Camera"))
+				{
+					app->camera->AddCamera(app->camera->CreateCamera(), "New Camera");
+				}
 
-		if (ImGui::BeginMenu("Camera")) {
-			
-			if (ImGui::MenuItem("Create new Camera"))
-			{
-				app->camera->AddCamera(app->camera->CreateCamera(), "New Camera");
+				ImGui::EndMenu();
 			}
-
+			if (ImGui::MenuItem("Create Empty GameObject")) {
+				GameObject* GO = new GameObject("Empty GameObject", root);
+			}
 			ImGui::EndMenu();
 		}
 
