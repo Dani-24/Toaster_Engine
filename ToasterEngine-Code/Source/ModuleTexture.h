@@ -30,13 +30,15 @@ public:
 	// Texture from DDS to OpenGL
 	static uint Load(char* buffer, int size, int* w, int* h, std::string&& filename);
 
-	static uint CheckImage();
+	Texture* CheckersImage();
 
 	static Texture* LoadTexture(std::string path);
 
 private:
 	// Load a texture from /Assets
 	static uint ImportTexture(std::string path);
+
+	Texture* checkersTexture = new Texture();
 
 public:
 

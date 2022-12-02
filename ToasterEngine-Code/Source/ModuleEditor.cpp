@@ -29,8 +29,6 @@ bool ModuleEditor::Start() {
 	allFiles.clear();
 	allFiles = ModuleImporter::GetAllFiles("Assets");
 
-	checkers_texture = app->textures->LoadTexture("Assets/default_Meshes/Checkers.png");
-
 	root = new GameObject("Scene", nullptr);
 
 	// Create Scene Main Camera

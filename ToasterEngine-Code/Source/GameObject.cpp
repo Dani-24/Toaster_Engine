@@ -485,7 +485,7 @@ void GameObject::DisplayMesh(bool display) {
 // TEXTURE
 void GameObject::AddTexture(Texture* t) {
 	if (GO_allTextures.empty()) {
-		GO_texture = app->editor->checkers_texture;
+		GO_texture = app->textures->CheckersImage();
 		GO_texture->name = "Checkers";
 		GO_allTextures.push_back(GO_texture);
 

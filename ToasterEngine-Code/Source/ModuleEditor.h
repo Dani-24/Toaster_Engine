@@ -118,10 +118,6 @@ public:
 	ResourceType dd_file_type;
 	std::vector<HierarchyNaming> Hnaming;
 
-	uint texture = NULL;
-	uint actualTexture = NULL;
-	Texture* checkers_texture = nullptr;
-
 private:
 	std::string ddname = "New GameObject";
 
