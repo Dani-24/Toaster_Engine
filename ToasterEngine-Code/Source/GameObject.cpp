@@ -269,21 +269,27 @@ void GameObject::OnEditor() {
 
 // TRANSFORM
 void GameObject::SetPos(vec3 pos) {
-	this->GO_trans.position = pos;
+	if (app->editor->paused == false) {
+		this->GO_trans.position = pos;
 
-	UpdatePosition();
+		UpdatePosition();
+	}
 }
 
 void GameObject::SetRot(vec3 rot) {
-	this->GO_trans.rotation = rot;
+	if (app->editor->paused == false) {
+		this->GO_trans.rotation = rot;
 
-	UpdateRotation();
+		UpdateRotation();
+	}
 }
 
 void GameObject::SetScale(vec3 scale) {
-	this->GO_trans.scale = scale;
+	if (app->editor->paused == false) {
+		this->GO_trans.scale = scale;
 
-	UpdateScale();
+		UpdateScale();
+	}
 }
 
 void GameObject::SetTransform(vec3 pos, vec3 rot, vec3 scale) {

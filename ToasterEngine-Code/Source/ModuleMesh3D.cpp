@@ -71,6 +71,7 @@ Mesh* ModuleMesh3D::LoadFile(string file_path, GameObject* go)
 
 			Mesh* meshData = new Mesh();
 			meshData->path = file_path;
+			meshData->name = sceneMesh->mName.C_Str();
 
 			Import(sceneMesh, meshData);
 			meshes.push_back(meshData);
@@ -89,7 +90,7 @@ Mesh* ModuleMesh3D::LoadFile(string file_path, GameObject* go)
 			if (go == nullptr) {
 				go = app->editor->root;
 			}
-			GameObject* meshChild = new GameObject(file_path.c_str(), go);
+			GameObject* meshChild = new GameObject(meshes[i]->name.c_str(), go);
 			meshChild->AddTexture(go->GetTexture());
 			meshChild->AddMesh(meshes[i]);
 		}

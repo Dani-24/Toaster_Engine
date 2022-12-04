@@ -93,6 +93,7 @@ update_status ModuleEditor::PostUpdate(float dt) {
 	if (!root->childs.empty() && newScene == true) {
 		for (int i = 0; i < root->childs.size(); i++) {
 			root->childs[i]->DeleteThisGameObject();
+			app->camera->activeCamera = nullptr;
 		}
 		if (root->childs.empty()) {
 			newScene = false;
@@ -103,8 +104,15 @@ update_status ModuleEditor::PostUpdate(float dt) {
 
 	// Render GO Meshes
 	for (int i = 0; i < gameObjects.size(); i++) {
-		if (app->camera->activeCamera->FrustumCulling(gameObjects[i])) {
+		if (app->camera->activeCamera != nullptr) {
+			if (app->camera->activeCamera->FrustumCulling(gameObjects[i])) {
+				gameObjects[i]->RenderMesh();
+			}
+		}
+		else {
+			// If no active camera just render all on editor
 			gameObjects[i]->RenderMesh();
+			gameObjects[i]->DrawAABB();
 		}
 
 		if (showAllAABB) {
@@ -331,6 +339,18 @@ void ModuleEditor::Draw(){
 			}
 
 			ImGui::EndMenu();
+		}
+
+		if (ImGui::RadioButton("Play", playing)) {
+			playing = true;
+		}
+
+		if (ImGui::RadioButton("Pause", paused)) {
+			paused = !paused;
+		}
+
+		if (ImGui::RadioButton("Stop", !playing)) {
+			playing = false;
 		}
 
 		ImGui::EndMainMenuBar();

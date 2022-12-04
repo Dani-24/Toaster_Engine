@@ -131,4 +131,7 @@ private:
 public:
 	// Log a const char*
 	void AddLogMsg(const char* msg);
+
+	bool playing = false;
+	bool paused = false;
 };

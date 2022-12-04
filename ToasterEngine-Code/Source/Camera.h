@@ -58,7 +58,7 @@ public:
 
 	float aspectRatio = 1.7f;
 	float FOV = 60.0f;
-	float range = 200.0f;
+	float range = 500.0f;
 
 	bool debugDraw = false;
 

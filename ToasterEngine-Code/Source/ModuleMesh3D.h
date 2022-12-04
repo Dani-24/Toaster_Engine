@@ -34,6 +34,7 @@ struct Mesh {
 	uint num_textureCoords = 0;
 	float* textureCoords = nullptr;
 
+	string name;
 	string path;
 
 	void Render(uint texture, mat4x4 matrix);
