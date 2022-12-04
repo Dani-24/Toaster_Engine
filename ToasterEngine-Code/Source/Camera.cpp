@@ -1,8 +1,26 @@
 #include "Camera.h"
 #include "Application.h"
 
-Camera::Camera(float3 pos, float3 lookat) {
+Camera::Camera(float3 pos, float3 lookat, bool isEditor) {
 	camFrustum.pos = pos;
+
+	if (!isEditor) {
+		camFrustum.type = math::FrustumType::PerspectiveFrustum;
+
+		float3 X = float3(1.0f, 0.0f, 0.0f);
+		float3 Y = float3(0.0f, 1.0f, 0.0f);
+		float3 Z = float3(0.0f, 0.0f, 1.0f);
+
+		camFrustum.verticalFov = FOV = math::DegToRad(60.0f);
+		aspectRatio = 1.7f;
+		camFrustum.horizontalFov = 2.0f * atanf(tanf(camFrustum.verticalFov / 2.0f) * aspectRatio);
+
+		camFrustum.nearPlaneDistance = 0.01f;
+		camFrustum.farPlaneDistance = range;
+
+		camFrustum.front = Z;
+		camFrustum.up = Y;
+	}
 	LookAt(lookat);
 	active = false;
 }
@@ -20,12 +38,11 @@ void Camera::UpdateCamera(float dt)
 		active = false;
 	}
 
-	if (debugDraw) {
+	if (this == app->editor->selectedGameObj->GO_camera || app->editor->showAllAABB) {
 		DebugDraw();
 	}
 }
 
-// -----------------------------------------------------------------
 void Camera::Look(Frustum& Position, const float3& Reference, bool RotateAroundReference)
 {
 	Position.front = (Reference - Position.pos).Normalized();
@@ -33,14 +50,12 @@ void Camera::Look(Frustum& Position, const float3& Reference, bool RotateAroundR
 	Position.up = Position.front.Cross(X);
 }
 
-// -----------------------------------------------------------------
 void Camera::LookAt(const float3& Spot)
 {
 	camFrustum.front = (Spot - camFrustum.pos).Normalized();
 	float3 X = float3(0, 1, 0).Cross(camFrustum.front).Normalized();
 	camFrustum.up = camFrustum.front.Cross(X);
 }
-
 
 void Camera::Move(const float3& Movement)
 {
@@ -74,7 +89,7 @@ void Camera::SetAspectRatio(float aspectRatio)
 
 void Camera::SetFOV(float fov)
 {
-	camFrustum.verticalFov = FOV = fov;
+	camFrustum.verticalFov = FOV = math::DegToRad(fov);
 	camFrustum.horizontalFov = 2.0f * atanf(tanf(camFrustum.verticalFov / 2.0f) * aspectRatio);
 }
 
@@ -86,7 +101,83 @@ void Camera::SetRange(float range)
 
 void Camera::DebugDraw() {
 
-	// Draw the frustum
+	float3 corners[8];
+	float3 frustum_corners[8];
+
+	// Get Frustum corners
+	corners[0] = camFrustum.CornerPoint(0) - camFrustum.pos;
+	corners[1] = camFrustum.CornerPoint(2) - camFrustum.pos;
+	corners[2] = camFrustum.CornerPoint(4) - camFrustum.pos;
+	corners[3] = camFrustum.CornerPoint(6) - camFrustum.pos;
+	corners[4] = camFrustum.CornerPoint(1) - camFrustum.pos;
+	corners[5] = camFrustum.CornerPoint(3) - camFrustum.pos;
+	corners[6] = camFrustum.CornerPoint(5) - camFrustum.pos;
+	corners[7] = camFrustum.CornerPoint(7) - camFrustum.pos;
+
+	// Normalise corners to get a -1, 0, 1 vector
+	frustum_corners[0] = (corners[4] - corners[0]).Normalized() + camFrustum.pos;
+	frustum_corners[1] = (corners[5] - corners[1]).Normalized() + camFrustum.pos;
+	frustum_corners[2] = (corners[6] - corners[2]).Normalized() + camFrustum.pos;
+	frustum_corners[3] = (corners[7] - corners[3]).Normalized() + camFrustum.pos;
+	frustum_corners[4] = (corners[4] - corners[0]).Normalized() * 10 + camFrustum.pos;
+	frustum_corners[5] = (corners[5] - corners[1]).Normalized() * 10 + camFrustum.pos;
+	frustum_corners[6] = (corners[6] - corners[2]).Normalized() * 10 + camFrustum.pos;
+	frustum_corners[7] = (corners[7] - corners[3]).Normalized() * 10 + camFrustum.pos;
+
+	std::vector<float3> frustum_lines;
+	// Near Plane lines
+	frustum_lines.push_back(frustum_corners[0]);
+	frustum_lines.push_back(frustum_corners[1]);
+	frustum_lines.push_back(frustum_corners[0]);
+	frustum_lines.push_back(frustum_corners[2]);
+	frustum_lines.push_back(frustum_corners[1]);
+	frustum_lines.push_back(frustum_corners[3]);
+	frustum_lines.push_back(frustum_corners[2]);
+	frustum_lines.push_back(frustum_corners[3]);
+
+	// Far Plane lines
+	corners[0] += camFrustum.pos;
+	corners[1] += camFrustum.pos;
+	corners[2] += camFrustum.pos;
+	corners[3] += camFrustum.pos;
+	corners[4] += camFrustum.pos;
+	corners[5] += camFrustum.pos;
+	corners[6] += camFrustum.pos;
+	corners[7] += camFrustum.pos;
+
+	frustum_lines.push_back(corners[4]);
+	frustum_lines.push_back(corners[5]);
+	frustum_lines.push_back(corners[4]);
+	frustum_lines.push_back(corners[6]);
+	frustum_lines.push_back(corners[5]);
+	frustum_lines.push_back(corners[7]);
+	frustum_lines.push_back(corners[6]);
+	frustum_lines.push_back(corners[7]);
+
+	// Lines between Far & Near planes
+	frustum_lines.push_back(frustum_corners[0]);
+	frustum_lines.push_back(corners[4]);
+	frustum_lines.push_back(frustum_corners[1]);
+	frustum_lines.push_back(corners[5]);
+	frustum_lines.push_back(frustum_corners[2]);
+	frustum_lines.push_back(corners[6]);
+	frustum_lines.push_back(frustum_corners[3]);
+	frustum_lines.push_back(corners[7]);
+
+	// Focus Plane
+	frustum_lines.push_back(frustum_corners[4]);
+	frustum_lines.push_back(frustum_corners[5]);
+	frustum_lines.push_back(frustum_corners[4]);
+	frustum_lines.push_back(frustum_corners[6]);
+	frustum_lines.push_back(frustum_corners[5]);
+	frustum_lines.push_back(frustum_corners[7]);
+	frustum_lines.push_back(frustum_corners[6]);
+	frustum_lines.push_back(frustum_corners[7]);
+
+	// Add Lines to the DrawLines queue
+	for (int i = 0; i < frustum_lines.size(); i++) {
+		app->scene->AddLines(frustum_lines[i], Green);
+	}
 
 }
 
@@ -183,4 +274,31 @@ void Camera::EditorCameraControl(float dt) {
 		camFrustum.pos = orbitPoint + camFrustum.front * -camFrustum.pos.Distance(orbitPoint);
 		LookAt(orbitPoint);
 	}
+}
+
+bool Camera::FrustumCulling(GameObject* go) {
+	bool canRender = true;
+
+	/*float3 corners[8];
+	go->aabb.GetCornerPoints(corners);
+
+	for (uint i = 0; i < 6; i++)
+	{
+		int count = 8;
+
+		for (uint j = 0; j < 8; j++)
+		{
+			if (camFrustum.GetPlane(i).IsOnPositiveSide(corners[j]))
+			{
+				count--;
+			}
+		}
+
+		if (count == 0)
+		{
+			canRender = true;
+		}
+	}*/
+
+	return canRender;
 }

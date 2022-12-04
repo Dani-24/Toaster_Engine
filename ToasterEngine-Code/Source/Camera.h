@@ -6,11 +6,14 @@
 #include "../External/MathGeoLib/include/Geometry/Frustum.h"
 
 #include "Buffer.h"
+#include "Primitive.h"
+
+class GameObject;
 
 class Camera {
 public:
 
-	Camera(float3 pos = float3(5.0f, 3.0f, 0.0f), float3 LookAt = float3(0.0f, 1.0f, 0.0f));
+	Camera(float3 pos = float3(5.0f, 3.0f, 0.0f), float3 LookAt = float3(0.0f, 1.0f, 0.0f), bool isEditor = false);
 	~Camera();
 
 	void UpdateCamera(float dt);
@@ -25,17 +28,16 @@ public:
 	vec3 GetPos();
 
 	void SetAspectRatio(float aspectRatio);
-	float GetAspectRatio() { return aspectRatio; }
-
 	void SetFOV(float fov);
-	float GetFOV() { return FOV; };
-
 	void SetRange(float range);
-	float GetRange() { return range; };
 
 	void DebugDraw();
 
 	void EditorCameraControl(float dt);
+
+	// Return if the object is inside the frustum
+	bool FrustumCulling(GameObject* go);
+
 
 public:
 
@@ -54,7 +56,7 @@ public:
 
 	float aspectRatio = 1.7f;
 	float FOV = 60.0f;
-	float range = 1000.0f;
+	float range = 200.0f;
 
 	bool debugDraw = false;
 

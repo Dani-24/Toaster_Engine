@@ -118,6 +118,8 @@ public:
 	ResourceType dd_file_type;
 	std::vector<HierarchyNaming> Hnaming;
 
+	bool showAllAABB = false;
+
 private:
 	std::string ddname = "New GameObject";
 

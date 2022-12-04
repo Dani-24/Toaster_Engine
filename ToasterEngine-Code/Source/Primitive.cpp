@@ -67,6 +67,9 @@ void Primitive::Render() const
 	InnerRender();
 
 	glPopMatrix();
+
+	// restore RGB color
+	glColor3f(255, 255, 255);
 }
 
 void Primitive::InnerRender() const

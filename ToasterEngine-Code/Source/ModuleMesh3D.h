@@ -12,6 +12,7 @@ using namespace std;
 
 #define VERTEX_ARG 5
 
+class GameObject;
 struct Mesh {
 
 	Mesh() {}
@@ -26,7 +27,6 @@ struct Mesh {
 	float* vertices = nullptr;
 
 	string path;
-	bool shouldRender = true;
 
 	void Render(uint texture, mat4x4 matrix);
 };
@@ -41,12 +41,10 @@ public:
 	update_status PostUpdate(float dt);
 	bool CleanUp();
 
-	Mesh* LoadFile(string file_path);
+	Mesh* LoadFile(string file_path, GameObject* go = nullptr);
 	void LoadMesh(Mesh* mesh);
-
-	/*uint LoadTexture(string file_path);*/
 
 private:
 
-	vector<Mesh*> meshes;
+	//vector<Mesh*> meshes;
 };

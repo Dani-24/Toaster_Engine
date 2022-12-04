@@ -94,7 +94,17 @@ update_status ModuleEditor::PostUpdate(float dt) {
 
 	// Render GO Meshes
 	for (int i = 0; i < gameObjects.size(); i++) {
-		gameObjects[i]->RenderMesh();
+		if (app->camera->activeCamera->FrustumCulling(gameObjects[i])) {
+			gameObjects[i]->RenderMesh();
+		}
+
+		if (showAllAABB) {
+			gameObjects[i]->DrawAABB();
+		}
+	}
+
+	if (selectedGameObj != nullptr) {
+		selectedGameObj->DrawAABB();
 	}
 
 	if (!exit) {
@@ -187,6 +197,15 @@ void ModuleEditor::Draw(){
 			ImGui::EndMenu();
 		}
 
+		if (ImGui::BeginMenu("View")) {
+
+			if (ImGui::MenuItem("Show All AABB", NULL, &showAllAABB)) {
+
+			}
+
+			ImGui::EndMenu();
+		}
+
 		if (ImGui::BeginMenu("GameObjects")) {
 			if (ImGui::BeginMenu("Create 3D Mesh")) {
 				if (ImGui::MenuItem("Cube")) {
@@ -217,8 +236,8 @@ void ModuleEditor::Draw(){
 				if (ImGui::MenuItem("Demo: Baker House")) {
 
 					GameObject* house = new GameObject("Baker House", root);
-					house->AddMesh(app->mesh3d->LoadFile("Assets/BakerHouse.fbx"));
 					house->AddTexture(app->textures->LoadTexture("Assets/Baker_house.png"));
+					house->AddMesh(app->mesh3d->LoadFile("Assets/BakerHouse.fbx", house));
 				}
 
 				ImGui::EndMenu();
@@ -456,8 +475,8 @@ void ModuleEditor::ShowAssetManager(bool* open) {
 	if (dd_file_name != "") {
 		if (dd_file_type == ResourceType::MESH) {
 			GameObject* ddFile = new GameObject(ddname, root);
-			ddFile->AddMesh(app->mesh3d->LoadFile(dd_file_name));
 			//ddFile->AddTexture(app->textures->LoadTexture(dd_file_name));
+			ddFile->AddMesh(app->mesh3d->LoadFile(dd_file_name, ddFile));
 		}
 		else if (dd_file_type == ResourceType::TEXTURE) {
 			selectedGameObj->AddTexture(app->textures->LoadTexture(dd_file_name));

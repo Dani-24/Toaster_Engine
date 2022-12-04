@@ -2,6 +2,13 @@
 #include "Module.h"
 #include "Globals.h"
 
+#include "Primitive.h"
+
+struct f3line {
+	float3 line;
+	Color color;
+};
+
 class ModuleScene : public Module
 {
 public:
@@ -14,9 +21,11 @@ public:
 	update_status PostUpdate(float dt);
 	bool CleanUp();
 
-private:
-
+	void AddLines(float3 line, Color color);
+	void DrawLines();
 
 public:
 	bool axis = true;
+
+	std::vector<f3line> lines;
 };

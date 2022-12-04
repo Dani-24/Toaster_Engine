@@ -16,10 +16,11 @@ GameObject::GameObject(std::string name, GameObject* parent, Camera* camera)
 	}
 
 	GO_camera = camera;
-
 	if (GO_camera != nullptr) {
 		SetPos(GO_camera->GetPos());
 	}
+
+	GetGlobalTransform();
 
 	LOG("Created GameObject %s", name.c_str());
 
@@ -139,17 +140,17 @@ void GameObject::OnEditor() {
 		ImGui::TextWrapped("Show Mesh: ");
 		ImGui::SameLine();
 
-		ImGui::Selectable("Visible : ", &GO_mesh->shouldRender);
+		ImGui::Selectable("Visible : ", &renderMesh);
 		ImGui::SameLine();
 
-		if (GO_mesh->shouldRender) {
+		if (renderMesh) {
 			ImGui::TextColored(ImVec4(0.5f, 1.0f, 0.0f, 1.0f), "True");
 		}
 		else {
 			ImGui::TextColored(ImVec4(1.f, 0.0f, 0.0f, 1.0f), "False");
 		}
 
-		DisplayMesh(GO_mesh->shouldRender);
+		DisplayMesh(renderMesh);
 
 		// Delete Mesh
 
@@ -240,8 +241,9 @@ void GameObject::OnEditor() {
 
 		ImGui::TextWrapped("FOV :          ");
 		ImGui::SameLine();
-		if (ImGui::DragFloat("FOV", &GO_camera->FOV, 0.1f)) {
-			GO_camera->SetFOV(GO_camera->FOV);
+		float fov = math::RadToDeg(GO_camera->FOV);
+		if (ImGui::DragFloat("FOV", &fov, 0.1f)) {
+			GO_camera->SetFOV(fov);
 		}
 
 		ImGui::TextWrapped("Range :        ");
@@ -261,40 +263,11 @@ void GameObject::OnEditor() {
 void GameObject::SetPos(vec3 pos) {
 	this->GO_trans.position = pos;
 
-	if (GO_camera != nullptr) {
-		GO_camera->camFrustum.pos = float3(pos.x, pos.y, pos.z);
-	}
-
 	UpdatePosition();
 }
 
 void GameObject::SetRot(vec3 rot) {
 	this->GO_trans.rotation = rot;
-
-	if (GO_camera != nullptr) {
-		Quat dir;
-
-		GO_camera->camFrustum.WorldMatrix().Decompose(float3(), dir, float3());
-
-		Quat X = Quat::identity;
-		X.SetFromAxisAngle(float3(1, 0, 0), rot.x * DEGTORAD);
-
-		dir = dir * X;
-
-		Quat Y = Quat::identity;
-		Y.SetFromAxisAngle(float3(0, 1, 0), rot.y * DEGTORAD);
-
-		dir = dir * Y;
-
-		Quat Z = Quat::identity;
-		Z.SetFromAxisAngle(float3(0, 0, 1), rot.z * DEGTORAD);
-
-		dir = dir * Z;
-
-		float4x4 mat = GO_camera->camFrustum.WorldMatrix();
-		mat.SetRotatePart(dir.Normalized());
-		GO_camera->camFrustum.SetWorldMatrix(mat.Float3x4Part());
-	}
 
 	UpdateRotation();
 }
@@ -322,6 +295,11 @@ void GameObject::UpdatePosition() {
 		childs[i]->ParentPositionUpdate(globalPosition);
 	}
 
+	// Camera
+	if (GO_camera != nullptr) {
+		GO_camera->camFrustum.pos = float3(globalPosition.x, globalPosition.y, globalPosition.z);
+	}
+
 	SetGlobalMatrix();
 }
 
@@ -332,6 +310,32 @@ void GameObject::UpdateRotation() {
 	for (size_t i = 0; i < childs.size(); i++)
 	{
 		childs.at(i)->ParentRotationUpdate(globalRotation);
+	}
+
+	//Camera
+	if (GO_camera != nullptr) {
+		Quat dir;
+
+		GO_camera->camFrustum.WorldMatrix().Decompose(float3(), dir, float3());
+
+		Quat X = Quat::identity;
+		X.SetFromAxisAngle(float3(1, 0, 0), globalRotation.x * DEGTORAD);
+
+		dir = dir * X;
+
+		Quat Y = Quat::identity;
+		Y.SetFromAxisAngle(float3(0, 1, 0), globalRotation.y * DEGTORAD);
+
+		dir = dir * Y;
+
+		Quat Z = Quat::identity;
+		Z.SetFromAxisAngle(float3(0, 0, 1), globalRotation.z * DEGTORAD);
+
+		dir = dir * Z;
+
+		float4x4 mat = GO_camera->camFrustum.WorldMatrix();
+		mat.SetRotatePart(dir.Normalized());
+		GO_camera->camFrustum.SetWorldMatrix(mat.Float3x4Part());
 	}
 
 	SetGlobalMatrix();
@@ -356,6 +360,34 @@ void GameObject::UpdateTransform() {
 	for (size_t i = 0; i < childs.size(); i++)
 	{
 		childs.at(i)->ParentTransformUpdate(globalTransform.position, globalTransform.scale, globalTransform.rotation);
+	}
+
+	// Camera
+	if (GO_camera != nullptr) {
+		GO_camera->camFrustum.pos = float3(globalTransform.position.x, globalTransform.position.y, globalTransform.position.z);
+
+		Quat dir;
+
+		GO_camera->camFrustum.WorldMatrix().Decompose(float3(), dir, float3());
+
+		Quat X = Quat::identity;
+		X.SetFromAxisAngle(float3(1, 0, 0), globalTransform.rotation.x * DEGTORAD);
+
+		dir = dir * X;
+
+		Quat Y = Quat::identity;
+		Y.SetFromAxisAngle(float3(0, 1, 0), globalTransform.rotation.y * DEGTORAD);
+
+		dir = dir * Y;
+
+		Quat Z = Quat::identity;
+		Z.SetFromAxisAngle(float3(0, 0, 1), globalTransform.rotation.z * DEGTORAD);
+
+		dir = dir * Z;
+
+		float4x4 mat = GO_camera->camFrustum.WorldMatrix();
+		mat.SetRotatePart(dir.Normalized());
+		GO_camera->camFrustum.SetWorldMatrix(mat.Float3x4Part());
 	}
 
 	SetGlobalMatrix();
@@ -404,7 +436,6 @@ void GameObject::SetGlobalMatrix() {
 Transform GameObject::GetGlobalTransform() {
 	if (GetParent() == nullptr) return GO_trans;
 
-	Transform global_transform;
 	global_transform.position = GO_parentTrans.position - GO_parentOriginalTrans.position + GO_trans.position;
 	global_transform.rotation = GO_parentTrans.rotation - GO_parentOriginalTrans.rotation + GO_trans.rotation;
 	global_transform.scale = GO_parentTrans.scale * GO_trans.scale;
@@ -438,10 +469,11 @@ void GameObject::ParentTransformUpdate(vec3 pos, vec3 rot, vec3 scale) {
 // MESH
 void GameObject::AddMesh(Mesh* m) {
 	GO_mesh = m;
+	GenerateAABB();
 }
 
 void GameObject::RenderMesh() {
-	if (GO_mesh != nullptr && GO_mesh->shouldRender) 
+	if (GO_mesh != nullptr && renderMesh)
 	{
 		if (renderTexture == true && GetTexture() != nullptr) {
 			GO_mesh->Render(GetTexture()->OpenGLID, GO_matrix);
@@ -454,7 +486,7 @@ void GameObject::RenderMesh() {
 
 void GameObject::DisplayMesh(bool display) {
 	if (GO_mesh != nullptr) {
-		GO_mesh->shouldRender = display;
+		renderMesh = display;
 
 		for (int i = 0; i < childs.size(); i++) {
 			childs[i]->DisplayMesh(display);
@@ -473,4 +505,122 @@ void GameObject::AddTexture(Texture* t) {
 	}
 	GO_texture = t;
 	GO_allTextures.push_back(GO_texture);
+}
+
+void GameObject::DeleteTextures() {
+	GO_texture = nullptr;
+	GO_allTextures.clear();
+}
+
+// Bounding Boxes
+void GameObject::GenerateAABB()
+{
+	if (GO_mesh != nullptr) {
+		if (!aabb_init) aabb_init = true;
+
+		aabb.SetNegativeInfinity();
+		aabb.Enclose((float3*)GO_mesh->vertices, GO_mesh->num_vertices);
+	}
+}
+
+void GameObject::DrawAABB() {
+	if (this != app->editor->root) {
+		float3 pos = float3(global_transform.position.x, global_transform.position.y, global_transform.position.z);
+
+		if (GO_camera == nullptr && GO_mesh != nullptr) {
+			float3 corners[8];
+			float3 frustum_corners[8];
+
+			// Get Frustum corners
+			corners[0] = aabb.CornerPoint(0) + pos;
+			corners[1] = aabb.CornerPoint(2) + pos;
+			corners[2] = aabb.CornerPoint(4) + pos;
+			corners[3] = aabb.CornerPoint(6) + pos;
+			corners[4] = aabb.CornerPoint(1) + pos;
+			corners[5] = aabb.CornerPoint(3) + pos;
+			corners[6] = aabb.CornerPoint(5) + pos;
+			corners[7] = aabb.CornerPoint(7) + pos;
+
+			std::vector<float3> frustum_lines;
+
+			frustum_lines.push_back(corners[0]);
+			frustum_lines.push_back(corners[1]);
+			frustum_lines.push_back(corners[0]);
+			frustum_lines.push_back(corners[2]);
+			frustum_lines.push_back(corners[1]);
+			frustum_lines.push_back(corners[3]);
+			frustum_lines.push_back(corners[2]);
+			frustum_lines.push_back(corners[3]);
+
+			frustum_lines.push_back(corners[4]);
+			frustum_lines.push_back(corners[5]);
+			frustum_lines.push_back(corners[4]);
+			frustum_lines.push_back(corners[6]);
+			frustum_lines.push_back(corners[5]);
+			frustum_lines.push_back(corners[7]);
+			frustum_lines.push_back(corners[6]);
+			frustum_lines.push_back(corners[7]);
+
+			frustum_lines.push_back(corners[0]);
+			frustum_lines.push_back(corners[4]);
+			frustum_lines.push_back(corners[1]);
+			frustum_lines.push_back(corners[5]);
+			frustum_lines.push_back(corners[2]);
+			frustum_lines.push_back(corners[6]);
+			frustum_lines.push_back(corners[3]);
+			frustum_lines.push_back(corners[7]);
+
+			// Add Lines to the DrawLines queue
+			for (int i = 0; i < frustum_lines.size(); i++) {
+				app->scene->AddLines(frustum_lines[i], Red);
+			}
+		}
+		else if (GO_camera == nullptr) { // If the GameObject has no mesh
+			float3 corners[8];
+			float3 frustum_corners[8];
+
+			corners[0] = float3(-1, -1, -1) + pos;
+			corners[1] = float3(-1, -1, 1) + pos;
+			corners[2] = float3(-1, 1, -1) + pos;
+			corners[3] = float3(-1, 1, 1) + pos;
+			corners[4] = float3(1, -1, -1) + pos;
+			corners[5] = float3(1, -1, 1) + pos;
+			corners[6] = float3(1, 1, -1) + pos;
+			corners[7] = float3(1, 1, 1) + pos;
+
+			std::vector<float3> frustum_lines;
+
+			frustum_lines.push_back(corners[0]);
+			frustum_lines.push_back(corners[1]);
+			frustum_lines.push_back(corners[0]);
+			frustum_lines.push_back(corners[2]);
+			frustum_lines.push_back(corners[1]);
+			frustum_lines.push_back(corners[3]);
+			frustum_lines.push_back(corners[2]);
+			frustum_lines.push_back(corners[3]);
+
+			frustum_lines.push_back(corners[4]);
+			frustum_lines.push_back(corners[5]);
+			frustum_lines.push_back(corners[4]);
+			frustum_lines.push_back(corners[6]);
+			frustum_lines.push_back(corners[5]);
+			frustum_lines.push_back(corners[7]);
+			frustum_lines.push_back(corners[6]);
+			frustum_lines.push_back(corners[7]);
+
+			frustum_lines.push_back(corners[0]);
+			frustum_lines.push_back(corners[4]);
+			frustum_lines.push_back(corners[1]);
+			frustum_lines.push_back(corners[5]);
+			frustum_lines.push_back(corners[2]);
+			frustum_lines.push_back(corners[6]);
+			frustum_lines.push_back(corners[3]);
+			frustum_lines.push_back(corners[7]);
+
+			// Add Lines to the DrawLines queue
+			for (int i = 0; i < frustum_lines.size(); i++) {
+				app->scene->AddLines(frustum_lines[i], Orange);
+			}
+		}
+	}
 }

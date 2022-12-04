@@ -89,6 +89,8 @@ private:
 	Transform GO_trans;
 	Transform GO_parentTrans, GO_parentOriginalTrans;
 
+	Transform global_transform;
+
 public:
 	// MESH
 	void AddMesh(Mesh* m);
@@ -110,6 +112,7 @@ public:
 	// TEXTURE
 	void AddTexture(Texture* texture);
 	Texture* GetTexture() { return GO_texture; }
+	void DeleteTextures();
 
 private:
 
@@ -123,4 +126,12 @@ public:
 	Camera* GO_camera;
 
 	float3 camLookAt = float3(0.0f, 1.0f, 0.0f);
+
+	// AABB
+public:
+	void GenerateAABB();
+	void DrawAABB();
+
+	bool aabb_init = false;
+	AABB aabb;
 };

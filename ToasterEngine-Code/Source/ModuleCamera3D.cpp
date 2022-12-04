@@ -18,7 +18,7 @@ bool ModuleCamera3D::Start()
 	bool ret = true;
 
 	// Editor Camera
-	editorCamera = new Camera(float3(6.0f, 3.5f, 1.5f), float3(0, 0, 0));
+	editorCamera = new Camera(float3(6.0f, 3.5f, 1.5f), float3(0, 0, 0), true);
 
 	editorCamera->cameraBuffer.SetBufferInfo();
 	editorCamera->cameraBuffer.SetBufferDimensions(app->window->width, app->window->height);

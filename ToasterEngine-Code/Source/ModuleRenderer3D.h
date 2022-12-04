@@ -6,6 +6,8 @@
 
 #include "Camera.h"
 
+#include "Primitive.h"
+
 #define MAX_LIGHTS 8
 
 class Hardware {
@@ -72,7 +74,6 @@ private:
 	// Hardware
 	Hardware hardware;
 
-public:
-	
+public:	
 	Camera* renderOnThisCamera = nullptr;
 };

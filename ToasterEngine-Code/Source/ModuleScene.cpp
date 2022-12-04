@@ -1,7 +1,6 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleScene.h"
-#include "Primitive.h"
 
 #include "../External/MathGeoLib/include/MathGeoLib.h"
 
@@ -23,8 +22,8 @@ bool ModuleScene::Start()
 	bool ret = true;
 
 	GameObject* house = new GameObject("Demo Baker House", app->editor->root);
-	house->AddMesh(app->mesh3d->LoadFile("Assets/BakerHouse.fbx"));
 	house->AddTexture(app->textures->LoadTexture("Assets/Baker_house.png"));
+	house->AddMesh(app->mesh3d->LoadFile("Assets/BakerHouse.fbx", house));
 
 	return ret;
 }
@@ -38,17 +37,18 @@ update_status ModuleScene::PreUpdate(float dt) {
 update_status ModuleScene::Update(float dt)
 {
 
-	//LOG("%d", RandomIntValue());
-
 	return UPDATE_CONTINUE;
 }
 
 update_status ModuleScene::PostUpdate(float dt) {
-
 	if (axis) {
 		PlanePrimitive p(0, 1, 0, 0);
 		p.axis = true;
 		p.Render();
+	}
+
+	if(app->renderer3D->renderOnThisCamera != app->camera->editorCamera){
+		DrawLines();
 	}
 
 	return UPDATE_CONTINUE;
@@ -59,4 +59,28 @@ bool ModuleScene::CleanUp()
 	LOG("Unloading scene");
 
 	return true;
+}
+
+void ModuleScene::AddLines(float3 line, Color c) {
+	f3line fline;
+
+	fline.line = line;
+	fline.color = c;
+
+	lines.push_back(fline);
+}
+
+void ModuleScene::DrawLines() {
+
+	for (int i = 0; i < lines.size(); i++) {
+		LinePrimitive drawline;
+		drawline.origin = vec3(lines[i].line.x, lines[i].line.y, lines[i].line.z);
+		drawline.destination = vec3(lines[i+1].line.x, lines[i+1].line.y, lines[i+1].line.z);
+		drawline.color = lines[i].color;
+		i++; // +2
+
+		drawline.Render();
+	}
+
+	lines.clear();
 }

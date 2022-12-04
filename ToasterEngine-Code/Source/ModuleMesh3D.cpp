@@ -14,6 +14,8 @@
 #include "../External/DevIL/include/ilut.h"
 #include "../External/DevIL/include/il.h"
 
+#include "GameObject.h"
+
 ModuleMesh3D::ModuleMesh3D(Application* app, bool start_enabled) : Module(app, start_enabled){}
 ModuleMesh3D::~ModuleMesh3D(){}
 
@@ -35,13 +37,13 @@ bool ModuleMesh3D::Start()
 
 bool ModuleMesh3D::CleanUp()
 {
-	LOG("TOASTER: Cleaning meshes");
+	//LOG("TOASTER: Cleaning meshes");
 
-	for (int i = 0; i < meshes.size(); i++) {
+	/*for (int i = 0; i < meshes.size(); i++) {
 		delete meshes[i];
 		meshes[i] = nullptr;
 	}
-	meshes.clear();
+	meshes.clear();*/
 
 	// detach log stream
 	aiDetachAllLogStreams();
@@ -64,9 +66,11 @@ update_status ModuleMesh3D::PostUpdate(float dt)
 	return UPDATE_CONTINUE;
 }
 
-Mesh* ModuleMesh3D::LoadFile(string file_path)
+Mesh* ModuleMesh3D::LoadFile(string file_path, GameObject* go)
 {
 	const aiScene* scene = aiImportFile(file_path.c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
+
+	std::vector<Mesh*> meshes;
 
 	Mesh* mesh = new Mesh();
 	mesh->path = file_path;
@@ -75,7 +79,7 @@ Mesh* ModuleMesh3D::LoadFile(string file_path)
 	{
 		//Iterate scene meshes
 		for (int i = 0; i < scene->mNumMeshes; i++) {
-			
+
 			//Copy fbx mesh info to Mesh struct
 			mesh->num_vertices = scene->mMeshes[i]->mNumVertices;
 			mesh->vertices = new float[mesh->num_vertices * VERTEX_ARG];
@@ -114,6 +118,8 @@ Mesh* ModuleMesh3D::LoadFile(string file_path)
 
 				//Add mesh to array
 				LoadMesh(mesh);
+
+				meshes.push_back(mesh);
 			}
 			else {
 				LOG("This toast has no faces: %s", file_path.c_str());
@@ -123,10 +129,25 @@ Mesh* ModuleMesh3D::LoadFile(string file_path)
 		aiReleaseImport(scene);
 	}
 	else {
-		LOG("Error loading this shit %s", file_path.c_str());
+		LOG("This has no meshes or it's cursed -> %s", file_path.c_str());
 		delete mesh;
 	}
-	return mesh;
+
+	if (meshes.size() < 2) {
+		return mesh;
+	}
+	else {
+		for (int i = 0; i < meshes.size(); i++) {
+			if (go == nullptr) {
+				go = app->editor->root;
+			}
+			GameObject* meshChild = new GameObject(file_path.c_str(), go);
+			meshChild->AddTexture(go->GetTexture());
+			meshChild->AddMesh(meshes[i]);
+		}
+		go->DeleteTextures();
+		return nullptr;
+	}
 }
 
 void ModuleMesh3D::LoadMesh(Mesh* mesh)
@@ -148,54 +169,8 @@ void ModuleMesh3D::LoadMesh(Mesh* mesh)
 	glDisableClientState(GL_VERTEX_ARRAY);
 
 	//Add mesh to meshes vector
-	meshes.push_back(mesh);
+	//meshes.push_back(mesh);
 }
-
-//uint ModuleMesh3D::LoadTexture(string path) {
-//
-//	ILubyte* Lump;
-//	ILuint Size;
-//	FILE* File;
-//
-//	File = fopen(path.c_str(), "rb");
-//	fseek(File, 0, SEEK_END);
-//	Size = ftell(File);
-//
-//	Lump = (ILubyte*)malloc(Size);
-//	fseek(File, 0, SEEK_SET);
-//	fread(Lump, 1, Size, File);
-//
-//	LOG("SIZE: %i", Size);
-//
-//	if (ilLoadImage(path.c_str()) == true) {
-//
-//		LOG("FOUND");
-//		GLuint texID;
-//
-//		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-//		texID = ilutGLBindTexImage();
-//
-//		glBindTexture(GL_TEXTURE_2D, texID);
-//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-//		//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1024, 1024, 0, GL_RGBA, GL_UNSIGNED_BYTE, texImage);
-//		glGenerateMipmap(GL_TEXTURE_2D);
-//		glBindTexture(GL_TEXTURE_2D, 0);
-//
-//		ilDeleteImages(1, &texID);
-//
-//		glBindTexture(GL_TEXTURE_2D, 0);
-//		fclose(File);
-//		free(Lump);
-//
-//		return texID;
-//	}
-//
-//	fclose(File);
-//	LOG("NOT FOUND");
-//}
 
 // === MESH === 
 Mesh::~Mesh() {
