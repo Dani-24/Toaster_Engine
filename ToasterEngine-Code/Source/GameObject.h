@@ -133,6 +133,5 @@ public:
 	void CreateAABB();
 	void DrawAABB();
 
-	bool aabb_init = false;
 	AABB aabb;
 };

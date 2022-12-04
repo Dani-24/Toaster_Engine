@@ -22,6 +22,8 @@ GameObject::GameObject(std::string name, GameObject* parent, Camera* camera)
 
 	GetGlobalTransform();
 
+	CreateAABB();
+
 	LOG("Created GameObject %s", name.c_str());
 
 	app->editor->SetSelectedGameObject(this);
@@ -522,29 +524,44 @@ void GameObject::DeleteTextures() {
 void GameObject::CreateAABB()
 {
 	if (GO_mesh != nullptr) {
-		if (!aabb_init) aabb_init = true;
 
 		aabb.SetNegativeInfinity();
 		aabb.Enclose((float3*)GO_mesh->vertices, GO_mesh->num_vertices);
+	}
+	else {
+		aabb.SetNegativeInfinity();
+		
+		math::Polygon p;
+
+		float3 pos = float3(GO_trans.position.x, GO_trans.position.y, GO_trans.position.z);
+
+		p.p.push_back(float3(-1, -1, -1) + pos);
+		p.p.push_back(float3(-1, -1, 1) + pos);
+		p.p.push_back(float3(-1, 1, -1) + pos);
+		p.p.push_back(float3(-1, 1, 1) + pos);
+		p.p.push_back(float3(1, -1, -1) + pos);
+		p.p.push_back(float3(1, -1, 1) + pos);
+		p.p.push_back(float3(1, 1, -1) + pos);
+		p.p.push_back(float3(1, 1, 1) + pos);
+
+		aabb.Enclose(p);
 	}
 }
 
 void GameObject::DrawAABB() {
 	if (this != app->editor->root) {
-		float3 pos = float3(0, 0, 0);//float3(global_transform.position.x, global_transform.position.y, global_transform.position.z);
-		if (GO_camera == nullptr && GO_mesh != nullptr) {
 			float3 corners[8];
 			float3 frustum_corners[8];
 
 			// Get Frustum corners
-			corners[0] = aabb.CornerPoint(0) + pos;
-			corners[1] = aabb.CornerPoint(2) + pos;
-			corners[2] = aabb.CornerPoint(4) + pos;
-			corners[3] = aabb.CornerPoint(6) + pos;
-			corners[4] = aabb.CornerPoint(1) + pos;
-			corners[5] = aabb.CornerPoint(3) + pos;
-			corners[6] = aabb.CornerPoint(5) + pos;
-			corners[7] = aabb.CornerPoint(7) + pos;
+			corners[0] = aabb.CornerPoint(0);
+			corners[1] = aabb.CornerPoint(2);
+			corners[2] = aabb.CornerPoint(4);
+			corners[3] = aabb.CornerPoint(6);
+			corners[4] = aabb.CornerPoint(1);
+			corners[5] = aabb.CornerPoint(3);
+			corners[6] = aabb.CornerPoint(5);
+			corners[7] = aabb.CornerPoint(7);
 
 			std::vector<float3> frustum_lines;
 
@@ -577,60 +594,15 @@ void GameObject::DrawAABB() {
 
 			// Add Lines to the DrawLines queue
 			for (int i = 0; i < frustum_lines.size(); i++) {
-				app->scene->AddLines(frustum_lines[i], Red);
-			}
-		}
-		else{ // If the GameObject has no mesh
-			float3 corners[8];
-			float3 frustum_corners[8];
-
-			corners[0] = float3(-1, -1, -1) + pos;
-			corners[1] = float3(-1, -1, 1) + pos;
-			corners[2] = float3(-1, 1, -1) + pos;
-			corners[3] = float3(-1, 1, 1) + pos;
-			corners[4] = float3(1, -1, -1) + pos;
-			corners[5] = float3(1, -1, 1) + pos;
-			corners[6] = float3(1, 1, -1) + pos;
-			corners[7] = float3(1, 1, 1) + pos;
-
-			std::vector<float3> frustum_lines;
-
-			frustum_lines.push_back(corners[0]);
-			frustum_lines.push_back(corners[1]);
-			frustum_lines.push_back(corners[0]);
-			frustum_lines.push_back(corners[2]);
-			frustum_lines.push_back(corners[1]);
-			frustum_lines.push_back(corners[3]);
-			frustum_lines.push_back(corners[2]);
-			frustum_lines.push_back(corners[3]);
-
-			frustum_lines.push_back(corners[4]);
-			frustum_lines.push_back(corners[5]);
-			frustum_lines.push_back(corners[4]);
-			frustum_lines.push_back(corners[6]);
-			frustum_lines.push_back(corners[5]);
-			frustum_lines.push_back(corners[7]);
-			frustum_lines.push_back(corners[6]);
-			frustum_lines.push_back(corners[7]);
-
-			frustum_lines.push_back(corners[0]);
-			frustum_lines.push_back(corners[4]);
-			frustum_lines.push_back(corners[1]);
-			frustum_lines.push_back(corners[5]);
-			frustum_lines.push_back(corners[2]);
-			frustum_lines.push_back(corners[6]);
-			frustum_lines.push_back(corners[3]);
-			frustum_lines.push_back(corners[7]);
-
-			// Add Lines to the DrawLines queue
-			for (int i = 0; i < frustum_lines.size(); i++) {
-				if (GO_camera == nullptr) {
+				if (GO_camera == nullptr && GO_mesh != nullptr) {
+					app->scene->AddLines(frustum_lines[i], Red);
+				}
+				else if (GO_camera == nullptr) {
 					app->scene->AddLines(frustum_lines[i], Orange);
 				}
 				else {
 					app->scene->AddLines(frustum_lines[i], Green);
 				}
 			}
-		}
 	}
 }
