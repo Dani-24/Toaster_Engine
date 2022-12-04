@@ -124,6 +124,12 @@ update_status ModuleInput::PreUpdate(float dt)
 			quit = true;
 			break;
 
+			case SDL_DROPFILE:
+			{
+				app->importer->DragDropFile(e.drop.file);
+				break;
+			}
+
 			case SDL_WINDOWEVENT:
 			{
 				if(e.window.event == SDL_WINDOWEVENT_RESIZED)

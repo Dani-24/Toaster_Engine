@@ -13,7 +13,7 @@ class GameObject;
 class Camera {
 public:
 
-	Camera(float3 pos = float3(10.0f, 4.0f, 0.0f), float3 LookAt = float3(0.0f, 1.0f, 0.0f), bool isEditor = false);
+	Camera(float3 pos = float3(100.0f, 20.0f, 0.0f), float3 LookAt = float3(0.0f, 0.0f, 0.0f), bool isEditor = false);
 	~Camera();
 
 	void UpdateCamera(float dt);

@@ -40,6 +40,15 @@ bool ModuleEditor::Start() {
 
 update_status ModuleEditor::PreUpdate(float dt) 
 {
+	// Recharge Asset folder
+	if (assetsReload < 0) {
+		fileTree = currentNode = ModuleImporter::GetFileTree("Assets");
+		assetsReload = 100;
+	}
+	else {
+		assetsReload -= 1;
+	}
+
 	return UPDATE_CONTINUE;
 }
 
@@ -419,6 +428,8 @@ void ModuleEditor::ShowAssetManager(bool* open) {
 	}
 	else {
 		
+		uint forbidenNum = 8;
+		uint forbidenOriginal = forbidenNum;
 		uint rows = 0;
 		uint dir_size = currentNode->directories.size();
 		for (uint i = 0; i < dir_size; i++)
@@ -477,7 +488,12 @@ void ModuleEditor::ShowAssetManager(bool* open) {
 				ImGui::EndDragDropSource();
 			}
 
-			ImGui::SameLine();
+			if (i != forbidenNum) {
+				ImGui::SameLine();
+			}
+			else {
+				forbidenNum += forbidenOriginal;
+			}
 		}
 		
 		ImGui::End();
@@ -489,7 +505,9 @@ void ModuleEditor::ShowAssetManager(bool* open) {
 			ddFile->AddMesh(app->mesh3d->LoadFile(dd_file_name, ddFile));
 		}
 		else if (dd_file_type == ResourceType::TEXTURE) {
-			selectedGameObj->AddTexture(app->textures->LoadTexture(dd_file_name));
+			if (selectedGameObj != nullptr) {
+				selectedGameObj->AddTexture(app->textures->LoadTexture(dd_file_name));
+			}
 		}
 		dd_file_name = "";
 		ddCooldown = 0;

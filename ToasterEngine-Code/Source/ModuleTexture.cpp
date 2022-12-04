@@ -49,7 +49,7 @@ void ModuleTexture::ImportImageFromExternalFolder(const std::string& fileName, c
 		data = new ILubyte[imgSize]; // allocate data buffer
 		ilSaveL(IL_DDS, data, imgSize); // Save to buffer with the ilSaveIL function
 
-		ModuleImporter::Save(fileName + ".dds", (char*)data, imgSize, false);
+		ModuleImporter::Save(fileName + ".dds", (char*)data, imgSize);
 
 		RELEASE_ARRAY(data);
 	}

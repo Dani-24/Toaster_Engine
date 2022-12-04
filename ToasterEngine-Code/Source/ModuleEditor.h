@@ -126,6 +126,8 @@ public:
 private:
 	std::string ddname = "New GameObject";
 
+	int assetsReload = 100;
+
 public:
 	// Log a const char*
 	void AddLogMsg(const char* msg);

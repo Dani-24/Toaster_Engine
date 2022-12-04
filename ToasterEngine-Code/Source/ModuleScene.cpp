@@ -21,9 +21,10 @@ bool ModuleScene::Start()
 	LOG("TOASTER: Preparing Default Scene");
 	bool ret = true;
 
-	GameObject* house = new GameObject("Demo Baker House", app->editor->root);
-	house->AddTexture(app->textures->LoadTexture("Assets/Baker_house.png"));
-	house->AddMesh(app->mesh3d->LoadFile("Assets/BakerHouse.fbx", house));
+	GameObject* openGameObject = new GameObject("Demo Street Environment", app->editor->root);
+	openGameObject->AddTexture(app->textures->LoadTexture("Assets/street_env_text1.png"));
+	openGameObject->AddTexture(app->textures->LoadTexture("Assets/street_env_text2.png"));
+	openGameObject->AddMesh(app->mesh3d->LoadFile("Assets/street_environment.fbx", openGameObject));
 
 	return ret;
 }

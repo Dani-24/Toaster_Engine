@@ -9,7 +9,6 @@ ModuleImporter::ModuleImporter(Application* app, bool start_enabled) : Module(ap
 {
 	PHYSFS_init(0);
 
-	// Add Write Dir
 	if (PHYSFS_setWriteDir(".") == 0) LOG("File System error while creating write dir: %s\n", PHYSFS_getLastError());
 
 	CreateFileDirectory(".");
@@ -98,7 +97,7 @@ uint ModuleImporter::Load(const std::string filePath, char** buffer)
 	{
 		if (!fsFile)
 		{
-			LOG("File System error while opening file %s: %s\n", filePath.c_str(), PHYSFS_getLastError());
+			LOG("FILE SYSTEM: error while opening file %s: %s\n", filePath.c_str(), PHYSFS_getLastError());
 
 			break;
 		}
@@ -107,7 +106,7 @@ uint ModuleImporter::Load(const std::string filePath, char** buffer)
 
 		if (size <= 0)
 		{
-			LOG("File System error while reading from file %s: %s\n", filePath.c_str(), PHYSFS_getLastError());
+			LOG("FILE SYSTEM: error while reading from file %s: %s\n", filePath.c_str(), PHYSFS_getLastError());
 
 			break;
 		}
@@ -118,68 +117,32 @@ uint ModuleImporter::Load(const std::string filePath, char** buffer)
 
 		if (byteCount != size)
 		{
-			LOG("File System error while reading from file %s: %s\n", filePath.c_str(), PHYSFS_getLastError());
+			LOG("FILE SYSTEM: error while reading from file %s: %s\n", filePath.c_str(), PHYSFS_getLastError());
 			RELEASE_ARRAY(*buffer);
 			break;
 		}
 
-		//Adding end of file at the end of the buffer. Loading a shader file does not add this for some reason
 		(*buffer)[size] = '\0';
 
 	} while (false);
 
-	if (PHYSFS_close(fsFile) == 0) LOG("File System error while closing file %s: %s\n", filePath.c_str(), PHYSFS_getLastError());
+	if (PHYSFS_close(fsFile) == 0) LOG("FILE SYSTEM: error while closing file %s: %s\n", filePath.c_str(), PHYSFS_getLastError());
 
 	return byteCount;
 }
 
-uint ModuleImporter::Save(const std::string filePath, char* buffer, uint size, bool append)
+void ModuleImporter::Save(const std::string desiredFilePath, char* buffer, uint size)
 {
-	uint byteCount = 0;
+	PHYSFS_file* physfs_lib_file = nullptr;
+	physfs_lib_file = PHYSFS_openWrite(desiredFilePath.c_str());
 
-	bool exist = DoTheFileExists(filePath);
-
-	PHYSFS_file* des = nullptr;
-
-	do
-	{
-		if (append)	des = PHYSFS_openAppend(filePath.c_str());
-		else des = PHYSFS_openWrite(filePath.c_str());
-
-		if (!des)
-		{
-			LOG("FILE SYSTEM: Could not open file '%s' to write. ERROR: %s", filePath.c_str(), PHYSFS_getLastError());
-			break;
-		}
-
-		byteCount = PHYSFS_writeBytes(des, (const void*)buffer, size);
-
-		if (byteCount != size)
-		{
-			LOG("FILE SYSTEM: Could not write to file '%s'. ERROR: %s", filePath.c_str(), PHYSFS_getLastError());
-			break;
-		}
-
-		if (!exist)
-		{
-			LOG("FILE SYSTEM: New file '%s' created with %u bytes", filePath.c_str(), byteCount);
-			break;
-		}
-
-		if (append)
-		{
-			LOG("FILE SYSTEM: Append %u bytes to file '%s'", byteCount, filePath.c_str());
-
-			break;
-		}
-
-		LOG("FILE SYSTEM: File '%s' overwritten with %u bytes", filePath.c_str(), byteCount);
-
-	} while (false);
-
-	if (PHYSFS_close(des) == 0) LOG("FILE SYSTEM: Could not close file '%s'. ERROR: %s", filePath.c_str(), PHYSFS_getLastError());
-
-	return byteCount;
+	if (physfs_lib_file != nullptr) {
+		PHYSFS_writeBytes(physfs_lib_file, (const void*)buffer, size);
+		PHYSFS_close(physfs_lib_file);
+	}
+	else {
+		LOG("FILE SYSTEM: ERROR saving an imported file to %s", desiredFilePath.c_str());
+	}
 }
 
 bool ModuleImporter::Copy(const std::string src, std::string des, bool replace)
@@ -188,7 +151,6 @@ bool ModuleImporter::Copy(const std::string src, std::string des, bool replace)
 
 	bool isDir = PHYSFS_isDirectory(src.c_str());
 
-	// Files case
 	if (!isDir)
 	{
 		std::string fileName = GetFileName(src, true);
@@ -212,7 +174,7 @@ bool ModuleImporter::Copy(const std::string src, std::string des, bool replace)
 			{
 				if (DoTheFileExists(src))
 				{
-					Save(des, buffer, srcSize, false);
+					Save(des, buffer, srcSize);
 					break;
 				}
 
@@ -221,14 +183,7 @@ bool ModuleImporter::Copy(const std::string src, std::string des, bool replace)
 				break;
 			}
 
-			uint desSize = Save(des, buffer, srcSize, false);
-
-			if (desSize <= 0)
-			{
-				LOG("FILE SYSTEM: Could not save file '%s'", src.c_str());
-				successful = false;
-				break;
-			}
+			Save(des, buffer, srcSize);
 
 			LOG("FILE SYSTEM: Successfully copied source file: '%s' to the destination file: '%s'", src.c_str(), des.c_str());
 
@@ -265,9 +220,7 @@ ResourceType ModuleImporter::GetResourceType(const std::string& filename)
 
 	std::transform(fileExtension.begin(), fileExtension.end(), fileExtension.begin(), ::tolower);
 
-	//TODO: Add our own file extensions to this checks
-
-	if (fileExtension == "fbx" || fileExtension == "dae") return ResourceType::MESH;
+	if (fileExtension == "fbx" || fileExtension == "dae" || fileExtension == "FBX") return ResourceType::MESH;
 	if (fileExtension == "tga" || fileExtension == "png" || fileExtension == "jpg" || fileExtension == "dds") return ResourceType::TEXTURE;
 
 	return ResourceType::SUSSYFILE;
@@ -315,6 +268,76 @@ std::vector<std::string> ModuleImporter::GetAllFiles(std::string path)
 		{
 			ret.push_back(list[i]);
 		}
+	}
+
+	return ret;
+}
+
+void ModuleImporter::DragDropFile(const char* path) {
+	
+	std::string importedPath = path;
+	std::string fileName = importedPath.substr(importedPath.find_last_of('\\') + 1);
+	std::string fileExtension = fileName.substr(fileName.find_last_of('.') + 1);
+	std::string destinationPath = "Assets/";
+
+	const char* fileName = fileName.c_str();
+
+	std::string finalAssetPath = destinationPath + fileName;
+
+	LOG("FILE SYSTEM: Adding file: %s", finalAssetPath.c_str());
+
+	//AddPathToFileSystem(dropped_filedir_s.c_str());
+
+	std::FILE* file;
+	fopen_s(&file, path, "rb");
+
+	fseek(file, 0, SEEK_END);
+	uint size = ftell(file);
+	rewind(file);
+
+	char* buffer = new char[size];
+
+	size = fread(buffer, 1, size, file);
+
+	uint bufferSize = FileToBuffer(fileName.c_str(), &buffer);
+
+	if (size > 0)
+	{
+		Save(finalAssetPath, buffer, size);
+
+		if (buffer != nullptr) {
+			delete[] buffer;
+			buffer = nullptr;
+		}
+	}
+
+	fclose(file);
+}
+
+uint ModuleImporter::FileToBuffer(const char* filePath, char** fileBuffer) const {
+
+	uint ret = 0;
+
+	PHYSFS_file* pysfsFile = PHYSFS_openRead(filePath);
+
+	if (pysfsFile != nullptr)
+	{
+		PHYSFS_sint32 size = (PHYSFS_sint32)PHYSFS_fileLength(pysfsFile);
+
+		if (size > 0)
+		{
+			*fileBuffer = new char[size + 1];
+			uint readData = (uint)PHYSFS_read(pysfsFile, *fileBuffer, 1, size);
+
+			if (readData == size)
+			{
+				ret = readData;
+				(*fileBuffer)[size] = '\0';
+
+			}
+		}
+
+		PHYSFS_close(pysfsFile);
 	}
 
 	return ret;

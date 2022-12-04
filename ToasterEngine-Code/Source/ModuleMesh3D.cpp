@@ -37,15 +37,6 @@ bool ModuleMesh3D::Start()
 
 bool ModuleMesh3D::CleanUp()
 {
-	//LOG("TOASTER: Cleaning meshes");
-
-	/*for (int i = 0; i < meshes.size(); i++) {
-		delete meshes[i];
-		meshes[i] = nullptr;
-	}
-	meshes.clear();*/
-
-	// detach log stream
 	aiDetachAllLogStreams();
 
 	return true;
@@ -72,9 +63,6 @@ Mesh* ModuleMesh3D::LoadFile(string file_path, GameObject* go)
 
 	std::vector<Mesh*> meshes;
 
-	/*Mesh* mesh = new Mesh();
-	mesh->path = file_path;*/
-
 	if (scene != nullptr && scene->HasMeshes())
 	{
 		for (int i = 0; i < scene->mNumMeshes; i++) {
@@ -87,62 +75,6 @@ Mesh* ModuleMesh3D::LoadFile(string file_path, GameObject* go)
 			Import(sceneMesh, meshData);
 			meshes.push_back(meshData);
 		}
-
-		//Iterate scene meshes
-		/*for (int i = 0; i < scene->mNumMeshes; i++) {
-
-			//Copy fbx mesh info to Mesh struct
-			mesh->num_vertices = scene->mMeshes[i]->mNumVertices;
-			mesh->vertices = new float[mesh->num_vertices * VERTEX_ARG];
-
-			for (int v = 0; v < mesh->num_vertices; v++) {
-				//vertices
-				mesh->vertices[v * VERTEX_ARG] = scene->mMeshes[i]->mVertices[v].x;
-				mesh->vertices[v * VERTEX_ARG + 1] = scene->mMeshes[i]->mVertices[v].y;
-				mesh->vertices[v * VERTEX_ARG + 2] = scene->mMeshes[i]->mVertices[v].z;
-
-				//uvs
-				if (scene->mMeshes[i]->HasTextureCoords(0)) {
-					mesh->vertices[v * VERTEX_ARG + 3] = scene->mMeshes[i]->mTextureCoords[0][v].x;
-					mesh->vertices[v * VERTEX_ARG + 4] = scene->mMeshes[i]->mTextureCoords[0][v].y;
-				}
-				else {
-					mesh->vertices[v * VERTEX_ARG + 3] = 0;
-					mesh->vertices[v * VERTEX_ARG + 4] = 0;
-				}
-			}
-
-			LOG("Loading 3d mesh %s with %d vertices", file_path.c_str(), mesh->num_vertices);
-
-			//Load Faces
-			if (scene->mMeshes[i]->HasFaces())
-			{
-				//Copy fbx mesh indices info to Mesh struct
-				mesh->num_indices = scene->mMeshes[i]->mNumFaces * 3;
-				mesh->indices = new uint[mesh->num_indices]; // assume each face is a triangle
-
-				//Iterate mesh faces
-				for (uint j = 0; j < scene->mMeshes[i]->mNumFaces; j++)
-				{
-					// TRIANGLE SUPREMACY
-					if (scene->mMeshes[i]->mFaces[j].mNumIndices != 3) {
-						LOG("Warning, do not enter this game if you're under 18 years old- geometry face with != 3 indices!");
-					}
-					else {
-						memcpy(&mesh->indices[j * 3], scene->mMeshes[i]->mFaces[j].mIndices, 3 * sizeof(uint));
-					}
-				}
-
-				//Add mesh to array
-				LoadMesh(mesh);
-
-				meshes.push_back(mesh);
-			}
-			else {
-				LOG("This toast has no faces: %s", file_path.c_str());
-				delete mesh;
-			}
-		}*/
 		aiReleaseImport(scene);
 	}
 	else {

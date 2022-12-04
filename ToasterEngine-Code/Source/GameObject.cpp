@@ -55,17 +55,19 @@ void GameObject::DeleteThisGameObject() {
 	GO_texture = nullptr;
 	GO_allTextures.clear();
 
+	// Delete Cameras
 	if (GO_camera != nullptr) {
 		app->camera->activeCamera = nullptr;
 		app->camera->DeleteCamera(GO_camera);
 		GO_camera = nullptr;
 	}
 
-	// Delete from hierarchy
+	// Delete childs / hierarchy
 	if (!childs.empty()) {
 		for (uint i = 0; i < childs.size(); i++)
 		{
-			childs[i]->DeleteThisGameObject();
+			childs[i]->pendindToDelete = true;
+			//childs[i]->DeleteThisGameObject();
 		}
 	}
 	if (parent != nullptr) {
@@ -504,6 +506,14 @@ void GameObject::DisplayMesh(bool display) {
 
 // TEXTURE
 void GameObject::AddTexture(Texture* t) {
+
+	// Assign texture to childs when adding a texture to an empty object
+	if (GO_mesh == nullptr && !childs.empty()) {
+		for (int i = 0; i < childs.size(); i++) {
+			childs[i]->AddTexture(t);
+		}
+	}
+
 	if (GO_allTextures.empty()) {
 		GO_texture = app->textures->CheckersImage();
 		GO_texture->name = "Checkers";
