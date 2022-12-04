@@ -280,8 +280,6 @@ void ModuleImporter::DragDropFile(const char* path) {
 	std::string fileExtension = fileName.substr(fileName.find_last_of('.') + 1);
 	std::string destinationPath = "Assets/";
 
-	const char* fileName = fileName.c_str();
-
 	std::string finalAssetPath = destinationPath + fileName;
 
 	LOG("FILE SYSTEM: Adding file: %s", finalAssetPath.c_str());
