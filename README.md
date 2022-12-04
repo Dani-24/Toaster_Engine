@@ -21,7 +21,7 @@ This thing has been developed by Dani Toledo , aka [Dani24](https://github.com/D
 
 ### Controls
 
-Just use the mouse!
+Just investigate with the mouse!
 
 Any specific shortcut is shown at the engine UI.
 
@@ -34,6 +34,8 @@ Any specific shortcut is shown at the engine UI.
 * Zoom : Mouse Wheel
 
 * Pick an item from Editor camera view : Right Click
+
+* Create an empty GameObject : Menu top bar -> GameObjects -> New Empty GameObject
 
 ## FAQ
 
