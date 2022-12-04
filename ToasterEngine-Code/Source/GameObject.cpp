@@ -429,6 +429,8 @@ void GameObject::SetTransformMatrix(vec3 _position, vec3 _rotation, vec3 _scale)
 	GO_matrix[10] *= _scale.z;
 
 	GO_matrix = transpose(GO_matrix);
+
+	aabb.SetPos(float3(_position.x, _position.y, _position.z));
 }
 
 void GameObject::SetGlobalMatrix() {
@@ -529,8 +531,7 @@ void GameObject::CreateAABB()
 
 void GameObject::DrawAABB() {
 	if (this != app->editor->root) {
-		float3 pos = float3(global_transform.position.x, global_transform.position.y, global_transform.position.z);
-
+		float3 pos = float3(0, 0, 0);//float3(global_transform.position.x, global_transform.position.y, global_transform.position.z);
 		if (GO_camera == nullptr && GO_mesh != nullptr) {
 			float3 corners[8];
 			float3 frustum_corners[8];
@@ -579,7 +580,7 @@ void GameObject::DrawAABB() {
 				app->scene->AddLines(frustum_lines[i], Red);
 			}
 		}
-		else if (GO_camera == nullptr) { // If the GameObject has no mesh
+		else{ // If the GameObject has no mesh
 			float3 corners[8];
 			float3 frustum_corners[8];
 
@@ -623,7 +624,12 @@ void GameObject::DrawAABB() {
 
 			// Add Lines to the DrawLines queue
 			for (int i = 0; i < frustum_lines.size(); i++) {
-				app->scene->AddLines(frustum_lines[i], Orange);
+				if (GO_camera == nullptr) {
+					app->scene->AddLines(frustum_lines[i], Orange);
+				}
+				else {
+					app->scene->AddLines(frustum_lines[i], Green);
+				}
 			}
 		}
 	}

@@ -120,6 +120,9 @@ public:
 
 	bool showAllAABB = false;
 
+	vec2 editorPos = vec2(0, 0);
+	vec2 editorSize = vec2(0, 0);
+
 private:
 	std::string ddname = "New GameObject";
 

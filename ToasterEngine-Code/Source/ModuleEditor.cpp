@@ -354,6 +354,12 @@ void ModuleEditor::ShowGameEditorWindow(bool* open) {
 	}
 	else {
 
+		editorPos.x = ImGui::GetWindowPos().x;
+		editorPos.y = ImGui::GetWindowPos().y + ImGui::GetFrameHeight();
+
+		editorSize.x = ImGui::GetWindowSize().x;
+		editorSize.y = ImGui::GetWindowSize().y - ImGui::GetFrameHeight();
+
 		ImVec2 windowSize = ImGui::GetWindowSize();
 		windowSize.y = windowSize.y - 35;
 
@@ -362,6 +368,10 @@ void ModuleEditor::ShowGameEditorWindow(bool* open) {
 
 		if (ImGui::IsWindowHovered()) {
 			app->camera->moveEditCam = true;
+			
+			if (app->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_UP) {
+				app->camera->editorCamera->CalculateMousePicking();
+			}
 		}
 		else {
 			app->camera->moveEditCam = false;

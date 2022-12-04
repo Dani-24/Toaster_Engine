@@ -1,6 +1,8 @@
 #include "Camera.h"
 #include "Application.h"
 
+#include "ModuleEditor.h"
+
 Camera::Camera(float3 pos, float3 lookat, bool isEditor) {
 	camFrustum.pos = pos;
 
@@ -21,6 +23,15 @@ Camera::Camera(float3 pos, float3 lookat, bool isEditor) {
 		camFrustum.front = Z;
 		camFrustum.up = Y;
 	}
+	else {
+		camFrustum.type = math::FrustumType::PerspectiveFrustum;
+		camFrustum.nearPlaneDistance = 0.01f;
+		camFrustum.farPlaneDistance = 9999;
+
+		camFrustum.verticalFov = FOV = math::DegToRad(60.0f);
+		aspectRatio = 1.7f;
+		camFrustum.horizontalFov = 2.0f * atanf(tanf(camFrustum.verticalFov / 2.0f) * aspectRatio);
+	}
 	LookAt(lookat);
 	active = false;
 }
@@ -38,8 +49,10 @@ void Camera::UpdateCamera(float dt)
 		active = false;
 	}
 
-	if (this == app->editor->selectedGameObj->GO_camera || app->editor->showAllAABB) {
-		DebugDraw();
+	if (app->editor->selectedGameObj != nullptr) {
+		if (this == app->editor->selectedGameObj->GO_camera || app->editor->showAllAABB) {
+			DebugDraw();
+		}
 	}
 }
 
@@ -164,21 +177,25 @@ void Camera::DebugDraw() {
 	frustum_lines.push_back(frustum_corners[3]);
 	frustum_lines.push_back(corners[7]);
 
-	// Focus Plane
-	frustum_lines.push_back(frustum_corners[4]);
-	frustum_lines.push_back(frustum_corners[5]);
-	frustum_lines.push_back(frustum_corners[4]);
-	frustum_lines.push_back(frustum_corners[6]);
-	frustum_lines.push_back(frustum_corners[5]);
-	frustum_lines.push_back(frustum_corners[7]);
-	frustum_lines.push_back(frustum_corners[6]);
-	frustum_lines.push_back(frustum_corners[7]);
-
 	// Add Lines to the DrawLines queue
 	for (int i = 0; i < frustum_lines.size(); i++) {
 		app->scene->AddLines(frustum_lines[i], Green);
 	}
 
+}
+
+bool Camera::FrustumCulling(GameObject* go) {
+	bool canRender = false;
+	if (frustumCulling) {
+		if (camFrustum.Contains(go->aabb)) {
+			canRender = true;
+		}
+	}
+	else {
+		return true;
+	}
+
+	return canRender;
 }
 
 void Camera::EditorCameraControl(float dt) {
@@ -276,16 +293,49 @@ void Camera::EditorCameraControl(float dt) {
 	}
 }
 
-bool Camera::FrustumCulling(GameObject* go) {
-	bool canRender = false;
-	if (frustumCulling) {
-		if (camFrustum.Contains(go->aabb)) {
-			canRender = true;
+void Camera::CalculateMousePicking()
+{
+	float mouseX = (((float)app->input->GetMouseX() - app->editor->editorPos.x) / app->editor->editorSize.x) - 0.5f;
+	float mouseY = (((float)app->input->GetMouseY() - app->editor->editorPos.y) / app->editor->editorSize.y) - 0.5f;
+
+	LineSegment raycast = camFrustum.UnProjectLineSegment(mouseX * 2, -mouseY * 2);
+
+	std::vector<GO_Hitted> go_hits;
+
+	for (int i = 0; i < app->editor->gameObjects.size(); i++)
+	{
+		if (raycast.Intersects(app->editor->gameObjects[i]->aabb))
+		{
+			LOG("HIT");
+			GO_Hitted go;
+
+			go.gameObject = app->editor->gameObjects[i];
+			go.distance = Sqrt((this->GetPos().x - app->editor->gameObjects[i]->GetPos().x) * (this->GetPos().x - app->editor->gameObjects[i]->GetPos().x) +
+				(this->GetPos().y - app->editor->gameObjects[i]->GetPos().y) * (this->GetPos().y - app->editor->gameObjects[i]->GetPos().y) +
+				(this->GetPos().z - app->editor->gameObjects[i]->GetPos().z) * (this->GetPos().z - app->editor->gameObjects[i]->GetPos().z));
+
+			go_hits.push_back(go);
 		}
 	}
-	else {
-		return true;
+
+	// Return Nullptr is no gameobject was selected
+	if (go_hits.empty()) {
+		app->editor->SetSelectedGameObject(nullptr);
+		return;
 	}
 
-	return canRender;
+	// Check the closest gameobject
+	float closest = 100000;
+	for (int i = 0; i < go_hits.size(); i++) {
+		if (go_hits[i].distance < closest) {
+			closest = go_hits[i].distance;
+		}
+	}
+
+	// Set closest gameobject selected
+	for (int i = 0; i < go_hits.size(); i++) {
+		if(closest == go_hits[i].distance)
+		app->editor->SetSelectedGameObject(go_hits[i].gameObject);
+		break;
+	}
 }

@@ -35,8 +35,11 @@ public:
 
 	void EditorCameraControl(float dt);
 
-	// Return if the object is inside the frustum
+	// Return if the GameObject is inside the camera frustum
 	bool FrustumCulling(GameObject* go);
+
+	// Mouse Picking
+	void CalculateMousePicking();
 
 public:
 
@@ -63,4 +66,10 @@ public:
 
 	bool active;
 	bool frustumCulling = true;
+};
+
+struct GO_Hitted
+{
+	GameObject* gameObject;
+	float distance;
 };

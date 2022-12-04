@@ -412,6 +412,11 @@ void AABB::Translate(const float3 &offset)
 	maxPoint += offset;
 }
 
+void AABB::SetPos(float3 pos) {
+	minPoint = originalMin + pos;
+	maxPoint = originalMax + pos;
+}
+
 void AABB::Scale(const float3 &centerPoint, float scaleFactor)
 {
 	return Scale(centerPoint, float3(scaleFactor, scaleFactor, scaleFactor));
@@ -907,6 +912,9 @@ void AABB::Enclose(const float3 &point)
 {
 	minPoint = Min(minPoint, point);
 	maxPoint = Max(maxPoint, point);
+
+	originalMin = minPoint;
+	originalMax = maxPoint;
 }
 
 void AABB::Enclose(const LineSegment &lineSegment)

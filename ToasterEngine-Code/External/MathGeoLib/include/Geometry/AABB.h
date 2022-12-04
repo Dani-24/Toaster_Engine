@@ -316,6 +316,10 @@ public:
 		@see Scale(), Transform(). */
 	void Translate(const float3 &offset);
 
+	void SetPos(float3 pos);
+
+	float3 originalMin, originalMax;
+
 	/// Applies a uniform scale to this AABB.
 	/** This function scales this AABB structure in-place, using the given center point as the origin
 		for the scaling operation.

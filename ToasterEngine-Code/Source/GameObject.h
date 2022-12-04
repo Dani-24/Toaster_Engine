@@ -106,6 +106,7 @@ private:
 
 	Mesh* GO_mesh = nullptr;
 
+public:
 	bool renderMesh;
 
 public:
