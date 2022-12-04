@@ -277,28 +277,15 @@ void Camera::EditorCameraControl(float dt) {
 }
 
 bool Camera::FrustumCulling(GameObject* go) {
-	bool canRender = true;
-
-	/*float3 corners[8];
-	go->aabb.GetCornerPoints(corners);
-
-	for (uint i = 0; i < 6; i++)
-	{
-		int count = 8;
-
-		for (uint j = 0; j < 8; j++)
-		{
-			if (camFrustum.GetPlane(i).IsOnPositiveSide(corners[j]))
-			{
-				count--;
-			}
-		}
-
-		if (count == 0)
-		{
+	bool canRender = false;
+	if (frustumCulling) {
+		if (camFrustum.Contains(go->aabb)) {
 			canRender = true;
 		}
-	}*/
+	}
+	else {
+		return true;
+	}
 
 	return canRender;
 }

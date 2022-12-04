@@ -85,11 +85,11 @@ public:
 public:
 	mat4x4 GO_matrix;
 
+	Transform global_transform;
+
 private:
 	Transform GO_trans;
 	Transform GO_parentTrans, GO_parentOriginalTrans;
-
-	Transform global_transform;
 
 public:
 	// MESH
@@ -129,7 +129,7 @@ public:
 
 	// AABB
 public:
-	void GenerateAABB();
+	void CreateAABB();
 	void DrawAABB();
 
 	bool aabb_init = false;

@@ -233,6 +233,10 @@ void GameObject::OnEditor() {
 
 		ImGui::NewLine();
 
+		ImGui::Checkbox("Frustum Culling", &GO_camera->frustumCulling);
+
+		ImGui::NewLine();
+
 		ImGui::TextWrapped("Aspect Ratio : ");
 		ImGui::SameLine();
 		if (ImGui::DragFloat("AR", &GO_camera->aspectRatio, 0.1f)) {
@@ -469,7 +473,7 @@ void GameObject::ParentTransformUpdate(vec3 pos, vec3 rot, vec3 scale) {
 // MESH
 void GameObject::AddMesh(Mesh* m) {
 	GO_mesh = m;
-	GenerateAABB();
+	CreateAABB();
 }
 
 void GameObject::RenderMesh() {
@@ -513,7 +517,7 @@ void GameObject::DeleteTextures() {
 }
 
 // Bounding Boxes
-void GameObject::GenerateAABB()
+void GameObject::CreateAABB()
 {
 	if (GO_mesh != nullptr) {
 		if (!aabb_init) aabb_init = true;
