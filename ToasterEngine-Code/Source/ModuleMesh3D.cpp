@@ -78,7 +78,7 @@ Mesh* ModuleMesh3D::LoadFile(string file_path, GameObject* go)
 		aiReleaseImport(scene);
 	}
 	else {
-		LOG("This has no meshes or it's cursed -> %s", file_path.c_str());
+		LOG("MESH : This has no meshes or it's cursed -> %s", file_path.c_str());
 	}
 
 	if (meshes.size() < 2) {
@@ -133,7 +133,7 @@ void ModuleMesh3D::Import(const aiMesh* sceneMesh, Mesh* meshData) {
 
 	memcpy(meshData->vertices, sceneMesh->mVertices, sizeof(float) * meshData->num_vertices * VERTEX_ARG);
 
-	LOG("New mesh with %d vertices", meshData->num_vertices);
+	LOG("MESH : New mesh with %d vertices", meshData->num_vertices);
 
 	//copy faces
 	if (sceneMesh->HasFaces())
