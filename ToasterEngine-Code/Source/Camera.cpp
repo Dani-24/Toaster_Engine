@@ -306,7 +306,6 @@ void Camera::CalculateMousePicking()
 	{
 		if (raycast.Intersects(app->editor->gameObjects[i]->aabb))
 		{
-			LOG("HIT");
 			GO_Hitted go;
 
 			go.gameObject = app->editor->gameObjects[i];
