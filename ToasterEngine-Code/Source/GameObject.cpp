@@ -302,7 +302,7 @@ void GameObject::SetTransform(vec3 pos, vec3 rot, vec3 scale) {
 // Apply Transformations
 void GameObject::UpdatePosition() {
 
-	vec3 globalPosition = GO_parentTrans.position + GO_trans.position;
+	vec3 globalPosition = GO_parentTrans.position - GO_parentOriginalTrans.position + GO_trans.position;
 
 	for (size_t i = 0; i < childs.size(); i++)
 	{
@@ -319,7 +319,7 @@ void GameObject::UpdatePosition() {
 
 void GameObject::UpdateRotation() {
 
-	vec3 globalRotation = GO_parentTrans.rotation + GO_trans.rotation;
+	vec3 globalRotation = GO_parentTrans.rotation - GO_parentOriginalTrans.rotation + GO_trans.rotation;
 
 	for (size_t i = 0; i < childs.size(); i++)
 	{
