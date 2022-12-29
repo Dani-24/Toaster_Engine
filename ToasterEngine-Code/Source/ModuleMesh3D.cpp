@@ -16,6 +16,8 @@
 
 #include "GameObject.h"
 
+#include "ModuleAnimation.h"
+
 ModuleMesh3D::ModuleMesh3D(Application* app, bool start_enabled) : Module(app, start_enabled){}
 ModuleMesh3D::~ModuleMesh3D(){}
 
@@ -81,6 +83,18 @@ Mesh* ModuleMesh3D::LoadFile(string file_path, GameObject* go)
 	else {
 		LOG("MESH : This has no meshes or it's cursed -> %s", file_path.c_str());
 	}
+	
+	// Loading Animations
+
+	std::vector<Animation*> animations;
+
+	if (scene != nullptr && scene->HasAnimations()) {
+		for (uint i = 0; i < scene->mNumAnimations; i++) {
+			animations.push_back(app->anim3d->LoadAnimation(scene->mAnimations[i]));
+		}
+	}
+
+	//
 
 	if (meshes.size() < 2) {
 		return meshes[0];
@@ -93,6 +107,7 @@ Mesh* ModuleMesh3D::LoadFile(string file_path, GameObject* go)
 			GameObject* meshChild = new GameObject(meshes[i]->name.c_str(), go);
 			meshChild->AddTexture(go->GetTexture());
 			meshChild->AddMesh(meshes[i]);
+			meshChild->AddAnimation(animations);
 		}
 		go->DeleteTextures();
 		return nullptr;

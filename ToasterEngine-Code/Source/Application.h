@@ -12,6 +12,7 @@
 #include "ModuleMesh3D.h"
 #include "ModuleImporter.h"
 #include "ModuleTexture.h"
+#include "ModuleAnimation.h"
 
 #include "GameObject.h"
 
@@ -25,6 +26,7 @@ public:
 	ModuleCamera3D* camera;
 	ModuleEditor* editor;
 	ModuleMesh3D* mesh3d;
+	ModuleAnimation* anim3d;
 	ModuleImporter* importer;
 	ModuleTexture* textures;
 

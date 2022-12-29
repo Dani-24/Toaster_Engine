@@ -5,6 +5,7 @@
 #include "ModuleMesh3D.h"
 #include "ModuleTexture.h"
 #include "ModuleCamera3D.h"
+#include "ModuleAnimation.h"
 
 #include <math.h>
 #include "../External/ImGui/imgui.h"
@@ -134,4 +135,10 @@ public:
 	void DrawAABB();
 
 	AABB aabb;
+
+	// ANIMATIONS
+public:
+	void AddAnimation(std::vector<Animation*> animations);
+
+	std::vector<Animation*> animations;
 };

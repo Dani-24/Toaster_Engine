@@ -622,3 +622,8 @@ void GameObject::DrawAABB() {
 			}
 	}
 }
+
+void GameObject::AddAnimation(std::vector<Animation*> animations)
+{
+	this->animations = animations;
+}
