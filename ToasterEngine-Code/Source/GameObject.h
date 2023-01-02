@@ -165,16 +165,16 @@ public:
 
 	// Bones
 	GameObject* rootBone = nullptr;
-	std::vector <GameObject*> bones;
+	std::map <GameObject*, Channel*> bones;
 
 	void DrawBones(GameObject* p);
 
 	// Channels
 	void UpdateChannelsTransform(const Animation* settings, const Animation* blend, float blendRatio);
 
-	float3	GetChannelPosition(const Channel& ch, float currentKey, float3 default) const;
-	Quat	GetChannelRotation(const Channel& ch, float currentKey, Quat default) const;
-	float3	GetChannelScale(const Channel& ch, float currentKey, float3 default) const;
+	float3	GetChannelPosition(const Channel& ch, float currentKey, float3 defPos) const;
+	float3	GetChannelRotation(const Channel& ch, float currentKey, float3 defRot) const;
+	float3	GetChannelScale(const Channel& ch, float currentKey, float3 defScale) const;
 
 	void StartAnimation();
 	void UpdateAnimation(float dt, bool playing);

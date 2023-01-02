@@ -12,7 +12,7 @@ struct /*Disney*/Channel {
 	std::string name;
 
 	std::map<double, float3> posKeys;
-	std::map<double, Quat> rotKeys;
+	std::map<double, float3> rotKeys;
 	std::map<double, float3> scaleKeys;
 
 	//bool HasPosKey() const;
@@ -20,8 +20,8 @@ struct /*Disney*/Channel {
 	std::map<double, float3>::const_iterator GetNextPosKey(double currentKey) const;
 
 	//bool HasRotKey() const;
-	std::map<double, Quat>::const_iterator GetPrevRotKey(double currentKey) const;
-	std::map<double, Quat>::const_iterator GetNextRotKey(double currentKey) const;
+	std::map<double, float3>::const_iterator GetPrevRotKey(double currentKey) const;
+	std::map<double, float3>::const_iterator GetNextRotKey(double currentKey) const;
 
 	//bool HasScaleKey() const;
 	std::map<double, float3>::const_iterator GetPrevScaleKey(double currentKey) const;
@@ -46,7 +46,7 @@ struct Animation {
 
 	bool loop = true;
 
-	std::vector<Channel> channels, bakedChannels;
+	std::map<std::string, Channel> channels, bakedChannels;
 
 };
 
@@ -69,12 +69,12 @@ public:
 
 	// Save each type of Channel (float3 / Quaternion)
 	void SaveChannelKeys(const std::map<double, float3>& map, char** cursor);
-	void SaveChannelKeys(const std::map<double, Quat>& map, char** cursor);
+	//void SaveChannelKeys(const std::map<double, Quat>& map, char** cursor);
 
 	// Load Channels
 	void LoadChannel(Channel& ch, const char** cursor);
 
 	// Load each type of Channel (float3 / Quaternion)
 	void LoadChannelKeys(std::map<double, float3>& map, const char** cursor, uint size);
-	void LoadChannelKeys(std::map<double, Quat>& map, const char** cursor, uint size);
+	//void LoadChannelKeys(std::map<double, Quat>& map, const char** cursor, uint size);
 };

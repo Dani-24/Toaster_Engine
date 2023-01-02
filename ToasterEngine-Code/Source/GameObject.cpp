@@ -634,7 +634,7 @@ void GameObject::AddAnimation(std::vector<Animation*> animations)
 void GameObject::StartAnimation() {
 	if (rootBone == nullptr) {
 		if (!bones.empty()) {
-			rootBone == bones[0];
+			rootBone == bones.begin()->first;
 		}
 		else {
 			return;
@@ -710,17 +710,107 @@ void GameObject::DrawBones(GameObject* p)
 }
 
 void GameObject::UpdateChannelsTransform(const Animation* settings, const Animation* blend, float blendRatio) {
+	uint currentFrame = currentAnimationT;
+	uint prevBlendFrame = 0;
 
+	if (blend != nullptr) {
+		prevBlendFrame = blend->ticksPerSec * prevAnimationT;
+	}
+
+	std::map<GameObject*, Channel*>::iterator boneIt;
+	for (boneIt = bones.begin(); boneIt != bones.end(); ++boneIt)
+	{
+		Channel& channel = *boneIt->second;
+
+		float3 position = GetChannelPosition(channel, currentFrame, float3(boneIt->first->GetPos().x, boneIt->first->GetPos().y, boneIt->first->GetPos().z));
+		float3 rotation = GetChannelRotation(channel, currentFrame, float3(boneIt->first->GetRot().x, boneIt->first->GetRot().y, boneIt->first->GetRot().z));
+		float3 scale = GetChannelScale(channel, currentFrame, float3(boneIt->first->GetScale().x, boneIt->first->GetScale().y, boneIt->first->GetScale().z));
+
+		// BLEND S
+		if (blend != nullptr)
+		{
+			std::map<GameObject*, Channel*>::iterator foundChannel = bones.find(boneIt->first);
+			if (foundChannel != bones.end()) {
+				const Channel& blendChannel = *foundChannel->second;
+
+				position = float3::Lerp(GetChannelPosition(blendChannel, prevBlendFrame, float3(boneIt->first->GetPos().x, boneIt->first->GetPos().y, boneIt->first->GetPos().z)), position, blendRatio);
+				rotation = float3::Lerp(GetChannelRotation(blendChannel, prevBlendFrame, float3(boneIt->first->GetRot().x, boneIt->first->GetRot().y, boneIt->first->GetRot().z)), rotation, blendRatio);
+				scale = float3::Lerp(GetChannelScale(blendChannel, prevBlendFrame, float3(boneIt->first->GetScale().x, boneIt->first->GetScale().y, boneIt->first->GetScale().z)), scale, blendRatio);
+			}
+		}
+
+		boneIt->first->SetTransform(vec3(position.x, position.y, position.z), vec3(rotation.x, rotation.y, rotation.z), vec3(scale.x, scale.y, scale.z));
+	}
 }
 
-float3	GameObject::GetChannelPosition(const Channel& ch, float currentKey, float3 default) const {
+float3	GameObject::GetChannelPosition(const Channel& ch, float currentKey, float3 defPos) const {
+	if (ch.posKeys.size() > 0)
+	{
+		std::map<double, float3>::const_iterator previous = ch.GetPrevPosKey(currentKey);
+		std::map<double, float3>::const_iterator next = ch.GetNextPosKey(currentKey);
 
+		if (ch.posKeys.begin()->first == -1) {
+			return defPos;
+		}
+
+		// Check Blending Ratio between Keys
+		if (previous == next) {
+			defPos = previous->second;
+		}
+		else
+		{
+			float ratio = (currentKey - previous->first) / (next->first - previous->first);
+			defPos = previous->second.Lerp(next->second, ratio);
+		}
+	}
+
+	return defPos;
 }
 
-Quat	GameObject::GetChannelRotation(const Channel& ch, float currentKey, Quat default) const {
+float3	GameObject::GetChannelRotation(const Channel& ch, float currentKey, float3 defRot) const {
+	if (ch.posKeys.size() > 0)
+	{
+		std::map<double, float3>::const_iterator previous = ch.GetPrevRotKey(currentKey);
+		std::map<double, float3>::const_iterator next = ch.GetNextRotKey(currentKey);
 
+		if (ch.posKeys.begin()->first == -1) {
+			return defRot;
+		}
+
+		// Check Blending Ratio between Keys
+		if (previous == next) {
+			defRot = previous->second;
+		}
+		else
+		{
+			float ratio = (currentKey - previous->first) / (next->first - previous->first);
+			defRot = previous->second.Lerp(next->second, ratio);
+		}
+	}
+
+	return defRot;
 }
 
-float3	GameObject::GetChannelScale(const Channel& ch, float currentKey, float3 default) const {
+float3	GameObject::GetChannelScale(const Channel& ch, float currentKey, float3 defScale) const {
+	if (ch.scaleKeys.size() > 0)
+	{
+		std::map<double, float3>::const_iterator previous = ch.GetPrevScaleKey(currentKey);
+		std::map<double, float3>::const_iterator next = ch.GetPrevScaleKey(currentKey);
 
+		if (ch.scaleKeys.begin()->first == -1) {
+			return defScale;
+		}
+
+		// Check Blending Ratio between Keys
+		if (previous == next)
+		{
+			defScale = previous->second;
+		}
+		else
+		{
+			float ratio = (currentKey - previous->first) / (next->first - previous->first);
+			defScale = previous->second.Lerp(next->second, ratio);
+		}
+	}
+	return defScale;
 }
