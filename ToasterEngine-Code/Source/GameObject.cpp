@@ -536,7 +536,7 @@ void GameObject::DeleteTextures() {
 	GO_allTextures.clear();
 }
 
-// Bounding Boxes
+// Bounding Boxes (idk what the AA means)
 void GameObject::CreateAABB()
 {
 	if (GO_mesh != nullptr) {
@@ -623,7 +623,15 @@ void GameObject::DrawAABB() {
 	}
 }
 
+// ANIMATIONS
+
+void GameObject::AddAnimation(Animation* animation) {
+	this->animations.push_back(animation);
+}
+
 void GameObject::AddAnimation(std::vector<Animation*> animations)
 {
-	this->animations = animations;
+	for (int i = 0; i < animations.size(); i++) {
+		this->animations.push_back(animations[i]);
+	}
 }

@@ -8,6 +8,7 @@ ModuleAnimation::ModuleAnimation(Application* app, bool start_enabled) : Module(
 {
 }
 
+// Loading from Assimp
 Animation* ModuleAnimation::LoadAnimation(aiAnimation* anim) {
 		
 	std::string animationName = anim->mName.C_Str();
@@ -59,4 +60,168 @@ Animation* ModuleAnimation::LoadAnimation(aiAnimation* anim) {
 	LOG("MESH 3D: Loaded %s Animation with %.2f duration.", animation->name.c_str(), animation->duration);
 
 	return animation;
+}
+
+// Position
+std::map<double, float3>::const_iterator Channel::GetPrevPosKey(double currentKey) const {
+	std::map<double, float3>::const_iterator ret = posKeys.lower_bound(currentKey);
+	if (ret != posKeys.begin())
+		ret--;
+
+	return ret;
+}
+
+std::map<double, float3>::const_iterator Channel::GetNextPosKey(double currentKey) const
+{
+	return posKeys.upper_bound(currentKey);
+}
+
+// Rotation
+std::map<double, Quat>::const_iterator Channel::GetPrevRotKey(double currentKey) const
+{
+	std::map<double, Quat>::const_iterator ret = rotKeys.lower_bound(currentKey);
+	if (ret != rotKeys.begin())
+		ret--;
+	return ret;
+}
+
+std::map<double, Quat>::const_iterator Channel::GetNextRotKey(double currentKey) const
+{
+	return rotKeys.upper_bound(currentKey);
+}
+
+// Scale
+std::map<double, float3>::const_iterator Channel::GetPrevScaleKey(double currentKey) const
+{
+	std::map<double, float3>::const_iterator ret = scaleKeys.lower_bound(currentKey);
+	if (ret != scaleKeys.begin())
+		ret--;
+	return ret;
+}
+
+std::map<double, float3>::const_iterator Channel::GetNextScaleKey(double currentKey) const
+{
+	return scaleKeys.upper_bound(currentKey);
+}
+
+// CHANNELS
+
+uint ModuleAnimation::ChannelSize(const Channel& ch) {
+	
+	uint ret = sizeof(uint) + ch.name.size() + sizeof(uint) * 3;
+
+	ret += sizeof(double) * ch.posKeys.size() + sizeof(float) * ch.posKeys.size() * 3;
+	ret += sizeof(double) * ch.rotKeys.size() + sizeof(float) * ch.rotKeys.size() * 4;
+	ret += sizeof(double) * ch.scaleKeys.size() + sizeof(float) * ch.scaleKeys.size() * 3;
+
+	return ret;
+}
+
+void ModuleAnimation::SaveChannel(const Channel& ch, char** cursor) {
+	
+	// Set Name
+	uint nameSize = ch.name.size();
+	memcpy(*cursor, &nameSize, sizeof(uint));
+	*cursor += sizeof(uint);
+
+	memcpy(*cursor, ch.name.c_str(), ch.name.size());
+	*cursor += ch.name.size();
+
+	// Set Range
+	uint range[3] = { ch.posKeys.size(), ch.rotKeys.size(), ch.scaleKeys.size() };
+	memcpy(*cursor, range, sizeof(uint) * 3);
+	*cursor += sizeof(uint) * 3;
+
+	// Save Channels
+	SaveChannelKeys(ch.posKeys, cursor);
+	SaveChannelKeys(ch.rotKeys, cursor);
+	SaveChannelKeys(ch.scaleKeys, cursor);
+}
+
+void ModuleAnimation::SaveChannelKeys(const std::map<double, float3>& map, char** cursor) {
+	std::map<double, float3>::const_iterator it = map.begin();
+
+	for (it = map.begin(); it != map.end(); it++)
+	{
+		memcpy(*cursor, &it->first, sizeof(double));
+		*cursor += sizeof(double);
+
+		memcpy(*cursor, &it->second, sizeof(float) * 3);
+		*cursor += sizeof(float) * 3;
+	}
+}
+
+void ModuleAnimation::SaveChannelKeys(const std::map<double, Quat>& map, char** cursor) {
+	std::map<double, Quat>::const_iterator it = map.begin();
+
+	for (it = map.begin(); it != map.end(); it++)
+	{
+		memcpy(*cursor, &it->first, sizeof(double));
+		*cursor += sizeof(double);
+
+		memcpy(*cursor, &it->second, sizeof(float) * 4);
+		*cursor += sizeof(float) * 4;
+	}
+}
+
+void ModuleAnimation::LoadChannel(Channel& ch, const char** cursor) 
+{
+	uint bytes = 0;
+
+	// Get Name Size
+	uint nameSize = 0;
+	memcpy(&nameSize, *cursor, sizeof(uint));
+	*cursor += sizeof(uint);
+
+	// Get Name
+	if (nameSize > 0)
+	{
+		char* string = new char[nameSize + 1];
+		bytes = sizeof(char) * nameSize;
+
+		memcpy(string, *cursor, bytes);
+		*cursor += bytes;
+		string[nameSize] = '\0';
+
+		ch.name = string;
+
+		RELEASE_ARRAY(string);
+	}
+
+	// Load Range
+	uint range[3];
+	memcpy(&range, *cursor, sizeof(uint) * 3);
+	*cursor += sizeof(uint) * 3;
+
+	LoadChannelKeys(ch.posKeys, cursor, range[0]);
+	LoadChannelKeys(ch.rotKeys, cursor, range[1]);
+	LoadChannelKeys(ch.scaleKeys, cursor, range[2]);
+}
+
+void ModuleAnimation::LoadChannelKeys(std::map<double, float3>& map, const char** cursor, uint size) {
+	for (uint i = 0; i < size; i++)
+	{
+		double time;
+		memcpy(&time, *cursor, sizeof(double));
+		*cursor += sizeof(double);
+		float data[3];
+		memcpy(&data, *cursor, sizeof(float) * 3);
+		*cursor += sizeof(float) * 3;
+
+		map[time] = float3(data);
+	}
+}
+
+void ModuleAnimation::LoadChannelKeys(std::map<double, Quat>& map, const char** cursor, uint size) {
+	for (uint i = 0; i < size; i++)
+	{
+		double time;
+		memcpy(&time, *cursor, sizeof(double));
+		*cursor += sizeof(double);
+		float data[4];
+		memcpy(&data, *cursor, sizeof(float) * 4);
+		*cursor += sizeof(float) * 4;
+
+		map[time] = Quat(data);
+	}
 }

@@ -138,6 +138,8 @@ public:
 
 	// ANIMATIONS
 public:
+	void AddAnimation(Animation* animation);
+
 	void AddAnimation(std::vector<Animation*> animations);
 
 	std::vector<Animation*> animations;
