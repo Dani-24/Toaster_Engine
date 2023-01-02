@@ -28,7 +28,6 @@ GameObject::GameObject(std::string name, GameObject* parent, Camera* camera)
 
 	app->editor->SetSelectedGameObject(this);
 }
-
 GameObject::~GameObject()
 {
 	for (size_t i = 0; i < childs.size(); i++)
@@ -62,6 +61,11 @@ void GameObject::DeleteThisGameObject() {
 		GO_camera = nullptr;
 	}
 
+	// Delete animations
+	if (!GO_animations.empty()) {
+		GO_animations.clear();
+	}
+
 	// Delete childs / hierarchy
 	if (!childs.empty()) {
 		for (uint i = 0; i < childs.size(); i++)
@@ -74,7 +78,6 @@ void GameObject::DeleteThisGameObject() {
 		parent->DeleteChild(this);
 	}
 }
-
 void GameObject::DeleteChild(GameObject* chi) {
 
 	for (size_t i = 0; i < childs.size(); i++)
@@ -96,7 +99,6 @@ void GameObject::AddChild(GameObject* chi) {
 
 	childs.push_back(chi);
 }
-
 void GameObject::SetParent(GameObject* par) {
 	parent = par;
 	GO_parentOriginalTrans = par->GetGlobalTransform();
@@ -275,7 +277,6 @@ void GameObject::SetPos(vec3 pos) {
 		UpdatePosition();
 	}
 }
-
 void GameObject::SetRot(vec3 rot) {
 	if (app->editor->paused == false) {
 		this->GO_trans.rotation = rot;
@@ -283,7 +284,6 @@ void GameObject::SetRot(vec3 rot) {
 		UpdateRotation();
 	}
 }
-
 void GameObject::SetScale(vec3 scale) {
 	if (app->editor->paused == false) {
 		this->GO_trans.scale = scale;
@@ -316,7 +316,6 @@ void GameObject::UpdatePosition() {
 
 	SetGlobalMatrix();
 }
-
 void GameObject::UpdateRotation() {
 
 	vec3 globalRotation = GO_parentTrans.rotation - GO_parentOriginalTrans.rotation + GO_trans.rotation;
@@ -354,7 +353,6 @@ void GameObject::UpdateRotation() {
 
 	SetGlobalMatrix();
 }
-
 void GameObject::UpdateScale() {
 
 	vec3 globalScale = GO_parentTrans.scale * GO_trans.scale;
@@ -442,7 +440,6 @@ void GameObject::SetTransformMatrix(vec3 _position, vec3 _rotation, vec3 _scale)
 
 	aabb.SetPos(float3(_position.x, _position.y, _position.z));
 }
-
 void GameObject::SetGlobalMatrix() {
 
 	Transform gTrans = GetGlobalTransform();
@@ -459,17 +456,15 @@ Transform GameObject::GetGlobalTransform() {
 	return global_transform;
 }
 
-// SugarDaddy
+// PADRE
 void GameObject::ParentPositionUpdate(vec3 pos) {
 	GO_parentTrans.position = pos;
 	UpdatePosition();
 }
-
 void GameObject::ParentRotationUpdate(vec3 rot) {
 	GO_parentTrans.rotation = rot;
 	UpdateRotation();
 }
-
 void GameObject::ParentScaleUpdate(vec3 scale) {
 	GO_parentTrans.scale = scale;
 	UpdateScale();
@@ -626,12 +621,106 @@ void GameObject::DrawAABB() {
 // ANIMATIONS
 
 void GameObject::AddAnimation(Animation* animation) {
-	this->animations.push_back(animation);
+	this->GO_animations.push_back(animation);
 }
 
 void GameObject::AddAnimation(std::vector<Animation*> animations)
 {
 	for (int i = 0; i < animations.size(); i++) {
-		this->animations.push_back(animations[i]);
+		this->GO_animations.push_back(animations[i]);
 	}
+}
+
+void GameObject::StartAnimation() {
+	if (rootBone == nullptr) {
+		if (!bones.empty()) {
+			rootBone == bones[0];
+		}
+		else {
+			return;
+		}
+	}
+}
+
+void GameObject::UpdateAnimation(float dt, bool playing) {
+
+	// Update Current Animation
+	if (playing) {
+		if (!started) { StartAnimation(); }
+		else {
+
+			if (currentAnimation != nullptr) {
+				
+				//Updating animation blend // Este comentario tiene ya 3 generaciones
+				float blendRatio = 0.0f;
+				if (blendTimeDuration > 0.0f)
+				{
+					prevAnimationT += dt;
+					blendTime += dt;
+
+					if (blendTime >= blendTimeDuration)
+					{
+						blendTimeDuration = 0.0f;
+					}
+					else if (prevAnimation && prevAnimationT >= prevAnimation->duration)
+					{
+						if (prevAnimation->loop == true)
+						{
+							prevAnimationT = 0.0f;
+						}
+					}
+
+					if (blendTimeDuration > 0.0f)
+						blendRatio = blendTime / blendTimeDuration;
+				}
+				//Endof Updating animation blend // Este comentario tiene ya 3 generaciones
+
+				time += dt;
+
+				currentAnimationT = dt * currentAnimation->ticksPerSec;
+				//currentAnimationT += currentAnimation.initTimeAnim;			// Mirar esto mas adelante
+
+				UpdateChannelsTransform(currentAnimation, blendRatio > 0.0f ? prevAnimation : nullptr, blendRatio);
+			}
+		}
+	}
+
+	// Draw bones if needed
+	if (drawBones) {
+		DrawBones(rootBone);
+	}
+}
+
+void GameObject::DrawBones(GameObject* p) 
+{
+	if (!p->childs.empty()) {
+		for (int i = 0; i < p->childs.size(); i++) {
+			p->childs[i]->DrawBones(p->childs[i]);
+
+			std::vector<float3> line;
+
+			line.push_back(float3(p->GetPos().x, p->GetPos().y, p->GetPos().z));
+			line.push_back(float3(p->childs[i]->GetPos().x, p->childs[i]->GetPos().y, p->childs[i]->GetPos().z));
+
+			for (int j = 0; j < line.size(); j++) {
+				app->scene->AddLines(line[j], Red);
+			}
+		}
+	}
+}
+
+void GameObject::UpdateChannelsTransform(const Animation* settings, const Animation* blend, float blendRatio) {
+
+}
+
+float3	GameObject::GetChannelPosition(const Channel& ch, float currentKey, float3 default) const {
+
+}
+
+Quat	GameObject::GetChannelRotation(const Channel& ch, float currentKey, Quat default) const {
+
+}
+
+float3	GameObject::GetChannelScale(const Channel& ch, float currentKey, float3 default) const {
+
 }

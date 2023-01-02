@@ -76,6 +76,14 @@ update_status ModuleEditor::Update(float dt) {
 		}
 	}
 
+	// GameObjects Animations
+
+	for (int i = 0; i < gameObjects.size(); i++) {
+		if (!gameObjects[i]->GO_animations.empty()) {
+			gameObjects[i]->UpdateAnimation(dt, playing);
+		}
+	}
+
 	return UPDATE_CONTINUE;
 }
 

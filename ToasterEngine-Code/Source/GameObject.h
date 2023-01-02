@@ -138,9 +138,44 @@ public:
 
 	// ANIMATIONS
 public:
-	void AddAnimation(Animation* animation);
 
+	bool playing = false;
+	bool started = false;
+	float time = 0.f;
+
+	bool channelsLinked = false;
+	bool bonesLinked = false;
+	bool drawBones = false;
+
+	// Blending
+	float blendTime = 0.f;
+	float blendTimeDuration = 0.f;
+
+	uint prevAnimationT = 0;
+	uint currentAnimationT = 0;
+
+	Animation* prevAnimation = nullptr;
+	Animation* currentAnimation = nullptr;
+
+	// Load Animations
+	void AddAnimation(Animation* animation);
 	void AddAnimation(std::vector<Animation*> animations);
 
-	std::vector<Animation*> animations;
+	std::vector<Animation*> GO_animations;
+
+	// Bones
+	GameObject* rootBone = nullptr;
+	std::vector <GameObject*> bones;
+
+	void DrawBones(GameObject* p);
+
+	// Channels
+	void UpdateChannelsTransform(const Animation* settings, const Animation* blend, float blendRatio);
+
+	float3	GetChannelPosition(const Channel& ch, float currentKey, float3 default) const;
+	Quat	GetChannelRotation(const Channel& ch, float currentKey, Quat default) const;
+	float3	GetChannelScale(const Channel& ch, float currentKey, float3 default) const;
+
+	void StartAnimation();
+	void UpdateAnimation(float dt, bool playing);
 };
