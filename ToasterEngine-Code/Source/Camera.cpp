@@ -338,3 +338,10 @@ void Camera::CalculateMousePicking()
 		break;
 	}
 }
+
+void Camera::RegenBuffer(int w, int h) {
+	cameraBuffer.SetBufferDimensions(w, h);
+
+	float ar = cameraBuffer.width / cameraBuffer.height;
+	camFrustum.horizontalFov = 2 * atanf(camFrustum.verticalFov * 0.5f) * ar;
+}

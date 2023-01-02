@@ -39,6 +39,17 @@ bool ModuleCamera3D::CleanUp()
 // -----------------------------------------------------------------
 update_status ModuleCamera3D::Update(float dt)
 {
+	if (renewBuffer == true) 
+	{
+		editorCamera->RegenBuffer(renewW, renewH);
+
+		for (int i = 0; i < cameras.size(); i++) {
+			cameras[i]->RegenBuffer(renewW, renewH);
+		}
+
+		renewBuffer = false;
+	}
+	
 	if (moveEditCam) {
 		editorCamera->EditorCameraControl(dt);
 	}
@@ -75,4 +86,10 @@ void ModuleCamera3D::DeleteCamera(Camera* cam) {
 Camera* ModuleCamera3D::CreateCamera() {
 	Camera* newCam = new Camera();
 	return newCam;
+}
+
+void ModuleCamera3D::RenewCameraBuffers(int w, int h) {
+	renewBuffer = true;
+	renewW = w;
+	renewH = h;
 }

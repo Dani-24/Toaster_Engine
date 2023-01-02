@@ -150,7 +150,7 @@ bool ModuleRenderer3D::Init()
 	}
 
 	// Projection matrix for
-	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
+	OnResize(app->window->width, app->window->height);
 
 	IMGUI_CHECKVERSION();
 
@@ -264,6 +264,8 @@ bool ModuleRenderer3D::CleanUp()
 void ModuleRenderer3D::OnResize(int width, int height)
 {
 	glViewport(0, 0, width, height);
+
+	app->camera->RenewCameraBuffers(width, height);
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();

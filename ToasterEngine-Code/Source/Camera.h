@@ -41,6 +41,8 @@ public:
 	// Mouse Picking
 	void CalculateMousePicking();
 
+	void RegenBuffer(int w, int h);
+
 public:
 
 	Frustum camFrustum;
