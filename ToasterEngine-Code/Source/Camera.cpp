@@ -298,6 +298,8 @@ void Camera::CalculateMousePicking()
 	float mouseX = (((float)app->input->GetMouseX() - app->editor->editorPos.x) / app->editor->editorSize.x) - 0.5f;
 	float mouseY = (((float)app->input->GetMouseY() - app->editor->editorPos.y) / app->editor->editorSize.y) - 0.5f;
 
+	//LOG("%.2f %.2f", mouseX * 2, mouseY * 2);
+
 	LineSegment raycast = camFrustum.UnProjectLineSegment(mouseX * 2, -mouseY * 2);
 
 	std::vector<GO_Hitted> go_hits;
@@ -309,6 +311,7 @@ void Camera::CalculateMousePicking()
 			GO_Hitted go;
 
 			go.gameObject = app->editor->gameObjects[i];
+
 			go.distance = Sqrt((this->GetPos().x - app->editor->gameObjects[i]->GetPos().x) * (this->GetPos().x - app->editor->gameObjects[i]->GetPos().x) +
 				(this->GetPos().y - app->editor->gameObjects[i]->GetPos().y) * (this->GetPos().y - app->editor->gameObjects[i]->GetPos().y) +
 				(this->GetPos().z - app->editor->gameObjects[i]->GetPos().z) * (this->GetPos().z - app->editor->gameObjects[i]->GetPos().z));
@@ -341,7 +344,4 @@ void Camera::CalculateMousePicking()
 
 void Camera::RegenBuffer(int w, int h) {
 	cameraBuffer.SetBufferDimensions(w, h);
-
-	float ar = cameraBuffer.width / cameraBuffer.height;
-	camFrustum.horizontalFov = 2 * atanf(camFrustum.verticalFov * 0.5f) * ar;
 }
