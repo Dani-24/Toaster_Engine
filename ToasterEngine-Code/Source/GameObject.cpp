@@ -835,6 +835,14 @@ void GameObject::StartAnimation() {
 			return;
 		}
 	}
+
+	if (GO_animations.size() > 0)
+	{
+		if (currentAnimation == nullptr)
+		{
+			PlayAnim(GO_animations[0]);
+		}
+	}
 }
 
 void GameObject::UpdateAnimation(float dt) {
@@ -843,7 +851,6 @@ void GameObject::UpdateAnimation(float dt) {
 	if (this->playing) {
 		if (!started) { StartAnimation(); }
 		else {
-
 			if (currentAnimation != nullptr) {
 				
 				//Updating animation blend // Este comentario tiene ya 3 generaciones
@@ -938,7 +945,7 @@ bool GameObject::FindRootBone()
 }
 
 void GameObject::StoreBoneMapping(GameObject* go) {
-	bones.push_back(go);
+	bones[go->name] = go;
 
 	for (int i = 0; i < go->childs.size(); i++)
 	{
@@ -967,8 +974,8 @@ void GameObject::UpdateChannelsTransform(const Animation* animationPlaying, cons
 		// BLEND S
 		if (blend != nullptr)
 		{
-			std::map<GameObject*, Channel*>::iterator foundChannel = bonesPreviousAnim.find(boneIt->first);
-			if (foundChannel != bonesPreviousAnim.end()) {
+			std::map<GameObject*, Channel*>::iterator foundChannel = bonesPrevAnim.find(boneIt->first);
+			if (foundChannel != bonesPrevAnim.end()) {
 				const Channel& blendChannel = *foundChannel->second;
 
 				position = float3::Lerp(GetChannelPosition(blendChannel, prevBlendFrame, float3(boneIt->first->GetPos().x, boneIt->first->GetPos().y, boneIt->first->GetPos().z)), position, blendRatio);
@@ -1063,14 +1070,24 @@ void GameObject::DeleteAnimation(Animation* anim) {
 
 void GameObject::PlayAnim(Animation* anim, float blendDuration, float Speed){
 
+	prevAnimation = currentAnimation;
+	prevAnimationT = time;
+	currentAnimation = anim;
+	blendTimeDuration = blendDuration;
+	blendTime = 0.0f;
+	time = 0;
+	this->speed = speed;
+
+	SetAnimationChannelToBones(currentAnimation, bonesCurrentAnim);
+	SetAnimationChannelToBones(prevAnimation, bonesPrevAnim);
 }
 
 void GameObject::PauseAnim() {
-
+	playing = false;
 }
 
 void GameObject::ResumeAnim() {
-
+	playing = true;
 }
 
 AnimationClip::AnimationClip() : name("Namen't"), startFrame(0), endFrame(0), originalAnimation(nullptr), loop(false) {
@@ -1085,4 +1102,23 @@ Animation* GameObject::ClipToAnim(AnimationClip clip)
 	animation->loop = clip.loop;
 
 	return animation;
+}
+
+void GameObject::SetAnimationChannelToBones(Animation* animation, std::map<GameObject*, Channel*>& lookUpTable)
+{
+	if (animation == nullptr)
+		return;
+
+	lookUpTable.clear();
+
+	std::map<std::string, GameObject*>::iterator boneIt = bones.begin();
+	for (boneIt; boneIt != bones.end(); ++boneIt)
+	{
+		std::map<std::string, Channel>::iterator channelIt = animation->channels.find(boneIt->first);
+
+		if (channelIt != animation->channels.end())
+		{
+			lookUpTable[boneIt->second] = &channelIt->second;
+		}
+	}
 }

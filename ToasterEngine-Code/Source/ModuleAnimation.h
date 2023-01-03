@@ -46,7 +46,7 @@ struct Animation {
 
 	bool loop = true;
 
-	std::map<std::string, Channel> channels, bakedChannels;
+	std::map<std::string, Channel> channels;
 
 };
 

@@ -182,14 +182,14 @@ public:
 
 	// Bones
 	GameObject* rootBone = nullptr;
-	std::vector<GameObject*> bones;
+	std::map<std::string, GameObject*> bones;
 
 	uint rootBoneID;
 
 	Channel*  bone;
 
 	std::map <GameObject*, Channel*> bonesCurrentAnim;
-	std::map <GameObject*, Channel*> bonesPreviousAnim;
+	std::map <GameObject*, Channel*> bonesPrevAnim;
 
 	void DrawBones(GameObject* p);
 	void StoreBoneMapping(GameObject* go);
@@ -210,4 +210,6 @@ public:
 	void PlayAnim(Animation* anim, float blendDuration = 0.2f, float Speed = 1.0f);
 	void PauseAnim();
 	void ResumeAnim();
+
+	void SetAnimationChannelToBones(Animation* animation, std::map<GameObject*, Channel*>& lookUpTable);
 };
