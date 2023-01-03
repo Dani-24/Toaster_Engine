@@ -41,8 +41,8 @@ struct Animation {
 
 	float duration;
 	float ticksPerSec; 
-
-	float currentFrame = 0;
+	uint initTimeAnim = 0;
+	float time;
 
 	bool loop = true;
 

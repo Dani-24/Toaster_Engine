@@ -29,6 +29,7 @@ Animation* ModuleAnimation::LoadAnimation(aiAnimation* anim) {
 		{
 			channel.name = channel.name.substr(0, pos);
 		}
+
 		for (int j = 0; j < anim->mChannels[i]->mNumPositionKeys; j++)
 		{
 			aiVector3D aiValue = anim->mChannels[i]->mPositionKeys[j].mValue;
@@ -43,22 +44,22 @@ Animation* ModuleAnimation::LoadAnimation(aiAnimation* anim) {
 			Quat q = Quat(aiValue.x, aiValue.y, aiValue.z, aiValue.w);
 
 			float3 rotationKey;
+			{
+				// X
+				double sinr_cosp = 2 * (q.w * q.x + q.y * q.z);
+				double cosr_cosp = 1 - 2 * (q.x * q.x + q.y * q.y);
+				rotationKey.x = std::atan2(sinr_cosp, cosr_cosp);
 
-			// X
-			double sinr_cosp = 2 * (q.w * q.x + q.y * q.z);
-			double cosr_cosp = 1 - 2 * (q.x * q.x + q.y * q.y);
-			rotationKey.x = std::atan2(sinr_cosp, cosr_cosp);
+				// Y
+				double sinp = std::sqrt(1 + 2 * (q.w * q.x - q.y * q.z));
+				double cosp = std::sqrt(1 - 2 * (q.w * q.x - q.y * q.z));
+				rotationKey.y = 2 * std::atan2(sinp, cosp) - M_PI / 2;
 
-			// Y
-			double sinp = std::sqrt(1 + 2 * (q.w * q.x - q.y * q.z));
-			double cosp = std::sqrt(1 - 2 * (q.w * q.x - q.y * q.z));
-			rotationKey.y = 2 * std::atan2(sinp, cosp) - M_PI / 2;
-
-			// Z
-			double siny_cosp = 2 * (q.w * q.z + q.x * q.y);
-			double cosy_cosp = 1 - 2 * (q.y * q.y + q.z * q.z);
-			rotationKey.z = std::atan2(siny_cosp, cosy_cosp);
-
+				// Z
+				double siny_cosp = 2 * (q.w * q.z + q.x * q.y);
+				double cosy_cosp = 1 - 2 * (q.y * q.y + q.z * q.z);
+				rotationKey.z = std::atan2(siny_cosp, cosy_cosp);
+			}
 			// Thank you Wikipedia
 
 			channel.rotKeys[anim->mChannels[i]->mRotationKeys[j].mTime] = rotationKey;
@@ -71,8 +72,6 @@ Animation* ModuleAnimation::LoadAnimation(aiAnimation* anim) {
 
 			channel.scaleKeys[anim->mChannels[i]->mScalingKeys[j].mTime] = scaleKey;
 		}
-		
-		//animation->channels[channel.name] = channel;
 		animation->channels[channel.name] = channel;
 	}
 

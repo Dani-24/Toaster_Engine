@@ -78,7 +78,6 @@ Mesh* ModuleMesh3D::LoadFile(string file_path, GameObject* go)
 			Import(sceneMesh, meshData);
 			meshes.push_back(meshData);
 		}
-		aiReleaseImport(scene);
 	}
 	else {
 		LOG("MESH : This has no meshes or it's cursed -> %s", file_path.c_str());
@@ -94,9 +93,13 @@ Mesh* ModuleMesh3D::LoadFile(string file_path, GameObject* go)
 		}
 	}
 
+	aiReleaseImport(scene);
 	//
 
 	if (meshes.size() < 2) {
+		if (!animations.empty()) {
+			go->AddAnimation(animations);
+		}
 		return meshes[0];
 	}
 	else {
@@ -107,7 +110,6 @@ Mesh* ModuleMesh3D::LoadFile(string file_path, GameObject* go)
 			GameObject* meshChild = new GameObject(meshes[i]->name.c_str(), go);
 			meshChild->AddTexture(go->GetTexture());
 			meshChild->AddMesh(meshes[i]);
-			meshChild->AddAnimation(animations);
 		}
 		go->DeleteTextures();
 		return nullptr;
@@ -212,6 +214,8 @@ Mesh::~Mesh() {
 
 void Mesh::Render(uint texture, mat4x4 matrix)
 {
+	TryCalculateBones();
+
 	if (texture != NULL) {
 		glBindTexture(GL_TEXTURE_2D, texture);
 	}
@@ -233,6 +237,15 @@ void Mesh::Render(uint texture, mat4x4 matrix)
 	glPushMatrix();
 	glMultMatrixf(&matrix);
 
+
+	if (calculatedBonesThisFrame && !boneTransforms.empty()) {
+
+		glUniformMatrix4fv(GL_FLOAT, boneTransforms.size(), GL_FALSE, (GLfloat*)&boneTransforms[0]);
+		calculatedBonesThisFrame = false;
+
+		LOG("SUS");
+	}
+
 	glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, NULL);
 	glPopMatrix();
 
@@ -243,4 +256,59 @@ void Mesh::Render(uint texture, mat4x4 matrix)
 	glDisableClientState(GL_VERTEX_ARRAY);
 
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+
+	boneTransforms.clear();
+}
+
+void Mesh::SetRootBone(GameObject* go) {
+	if (go == nullptr) {
+		LOG("Trying to assign null root bone");
+		return;
+	}
+
+	rootBone = go;
+
+	GetBoneMapping();
+
+	boneTransforms.resize(bonesOffsets.size());
+
+}
+
+void Mesh::GetBoneMapping()
+{
+	bonesMap = rootBone->childs;
+}
+
+void Mesh::TryCalculateBones() {
+	if (rootBone == nullptr) {
+		return;
+	}
+
+	//Mesh array with transform matrix of each bone
+	if (calculatedBonesThisFrame == false)
+	{
+		//float4x4 invertedMatrix = dynamic_cast<C_Transform*>(gameObject->GetComponent(Component::TYPE::TRANSFORM))->globalTransform.Inverted();
+		mat4x4 invertedMatrix = inverse(asignedGo->GO_matrix);
+
+		boneTransforms.reserve(bonesMap.size());
+
+		//Get each bone
+		for (int i = 0; i < bonesMap.size(); ++i)
+		{
+			GameObject* bone = bonesMap[i];
+
+			if (bone != nullptr)
+			{
+				//Calcule of Delta Matrix
+				
+				mat4x4 Delta = bone->GO_matrix * invertedMatrix;
+				Delta = Delta * bonesOffsets[i];
+
+				//Storage of Delta Matrix (Transformation applied to each bone)
+				//_mesh->boneTransforms[i] = Delta.Transposed();
+				boneTransforms.push_back(transpose(Delta));
+			}
+		}
+		calculatedBonesThisFrame = true;
+	}
 }

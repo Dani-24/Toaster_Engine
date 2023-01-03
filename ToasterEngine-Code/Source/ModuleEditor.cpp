@@ -80,7 +80,7 @@ update_status ModuleEditor::Update(float dt) {
 
 	for (int i = 0; i < gameObjects.size(); i++) {
 		if (!gameObjects[i]->GO_animations.empty()) {
-			gameObjects[i]->UpdateAnimation(dt, playing);
+			gameObjects[i]->UpdateAnimation(dt);
 		}
 	}
 

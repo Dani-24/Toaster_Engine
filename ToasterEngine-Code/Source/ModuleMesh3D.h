@@ -37,7 +37,21 @@ struct Mesh {
 	string name;
 	string path;
 
+	GameObject* asignedGo = nullptr;
+	GameObject* rootBone = nullptr;
+
+	std::vector<GameObject*> bonesMap;
+	std::vector<mat4x4> boneTransforms;
+	std::vector<mat4x4> bonesOffsets;
+
 	void Render(uint texture, mat4x4 matrix);
+
+	void SetRootBone(GameObject* bone);
+
+	void GetBoneMapping();
+
+	void TryCalculateBones();
+	bool calculatedBonesThisFrame = false;
 };
 
 class ModuleMesh3D : public Module

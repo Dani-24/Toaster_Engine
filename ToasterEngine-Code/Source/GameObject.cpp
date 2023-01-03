@@ -267,6 +267,183 @@ void GameObject::OnEditor() {
 			GO_camera->LookAt(camLookAt);
 		}
 	}
+
+	// ANIMATION COMPONENT
+	if (!GO_animations.empty()) {
+		app->editor->Space();
+
+		ImGui::TextWrapped("Component : ANIMATION"); ImGui::NewLine();
+		
+		ImGui::Checkbox("Show Bones", &drawBones);
+		
+		if (rootBone == nullptr)
+		{
+			ImGui::TextWrapped("Root Bone not set'nt");
+		}
+		else {
+			ImGui::Text("Root Bone: ");
+			ImGui::SameLine();
+			ImGui::Button(rootBone->name.c_str());
+		}
+
+		ImGui::Spacing();
+
+		if (currentAnimation == nullptr) {
+			ImGui::Text("Current Animation: "); ImGui::SameLine(); ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), "None");
+		}
+		else {
+			ImGui::Text("Current Animation: "); ImGui::SameLine(); ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), "%s", currentAnimation->name);
+			ImGui::Text("Duration: "); ImGui::SameLine(); ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), "%.2f", currentAnimation->duration);
+			ImGui::Text("Ticks per second: "); ImGui::SameLine(); ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), "%.2f", currentAnimation->ticksPerSec);
+		}
+
+		//List of existing animations
+		static char newName[64];
+
+		ImGui::Text("Select a new animation");
+		for (int i = 0; i < GO_animations.size(); i++)
+		{
+			string animName = GO_animations[i]->name;
+
+			if (currentAnimation == GO_animations[i]) {
+				animName += " (Current)";
+			}
+
+			if (ImGui::Button(animName.c_str())) {
+
+				for (int i = 0; i < GO_animations.size(); i++)
+				{
+					if (GO_animations[i]->name == animName) {
+						PlayAnim(GO_animations[i]);
+						time = 0.f;
+						sprintf_s(newName, animName.c_str());
+						break;
+					}
+				}
+			}
+
+			ImGui::SameLine();
+
+			if (ImGui::Button("Remove Animation"))
+			{
+				DeleteAnimation(GO_animations[i]);
+			}
+		}
+
+		if (currentAnimation != nullptr)
+		{
+			ImGui::InputText("Name", newName, IM_ARRAYSIZE(newName));
+			ImGui::Checkbox("Loop", &currentAnimation->loop);
+
+			ImGui::Separator();
+		}
+
+		ImGui::Text("Previous Animation Time: "); ImGui::SameLine(); ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), "%.2f", prevAnimationT);
+		ImGui::Text("Current Animation Time: "); ImGui::SameLine(); ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), "%i", currentAnimationT);
+		ImGui::Text("Blend Time: "); ImGui::SameLine(); ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), "%.2f", blendTime);
+
+		ImGui::Spacing();
+		if (playing)
+		{
+			ImGui::Text("Playing: "); ImGui::SameLine(); ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), "true");
+		}
+		else
+		{
+			ImGui::Text("Playing: "); ImGui::SameLine(); ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), "false");
+		}
+
+		ImGui::Spacing();
+
+		//Table header
+		ImGui::Columns(3, "Clips");
+		ImGui::Separator();
+		ImGui::Text("Clips");
+		ImGui::NextColumn();
+		ImGui::Text("Start");
+		ImGui::NextColumn();
+		ImGui::Text("End");
+		ImGui::NextColumn();
+		ImGui::Separator();
+
+		for (size_t i = 0; i < clips.size(); i++)
+		{
+			if (ImGui::Button(GO_animations[i]->name.c_str())) {
+				currentAnimation = GO_animations[i];
+			}
+			ImGui::NextColumn();
+			ImGui::InputFloat("##start", &clips[i].startFrame, 0.0f, 0.0f, 0);
+			ImGui::NextColumn();
+			ImGui::InputFloat("##end", &clips[i].endFrame, 0.0f, 0.0f, 0);
+			ImGui::NextColumn();
+		}
+
+		ImGui::Separator();
+		ImGui::Columns(1);
+		ImGui::Spacing();
+
+		if (ImGui::Button("+"))
+		{
+			if (currentAnimation != nullptr) {
+				AddClip(currentAnimation);
+			}
+		}
+
+		ImGui::SameLine();
+		if (ImGui::Button("-"))
+		{
+			if (selectedClip != nullptr)
+			{
+				std::vector<AnimationClip> remainingClips;
+				for (size_t i = 0; i < clips.size(); i++)
+				{
+					if (selectedClip != &clips[i])
+						remainingClips.push_back(clips[i]);
+				}
+
+				selectedClip = nullptr;
+				clips = remainingClips;
+				remainingClips.clear();
+			}
+		}
+
+		ImGui::Spacing();
+
+		if (selectedClip != nullptr)
+		{
+			ImGui::Spacing();
+			ImGui::Separator();
+			ImGui::Text("Selected Clip");
+			ImGui::InputText("Name", selectedClip->name, IM_ARRAYSIZE(selectedClip->name));
+			ImGui::InputFloat("Start Frame", &selectedClip->startFrame, 1.0f, 0.0f);
+			ImGui::InputFloat("End Frame", &selectedClip->endFrame, 1.0f, 0.0f);
+			ImGui::Checkbox("Loop", &selectedClip->loop);
+		}
+
+		ImGui::Spacing();
+
+		if (ImGui::Button("Apply")) {
+			for (size_t i = 0; i < clips.size(); i++) {
+				Animation* animation = ClipToAnim(clips[i]);
+				AddAnimation(animation);
+			}
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Cancel")) {
+			selectedClip = nullptr;
+			clips.clear();
+		}
+
+		ImGui::Spacing();
+
+		// Delete ANIMATION Component
+
+		bool deleteAnims = false;
+		ImGui::Selectable("Delete Component", &deleteAnims);
+
+		if (deleteAnims) {
+			GO_animations.clear();
+		}
+	}
 }
 
 // TRANSFORM
@@ -480,6 +657,11 @@ void GameObject::ParentTransformUpdate(vec3 pos, vec3 rot, vec3 scale) {
 // MESH
 void GameObject::AddMesh(Mesh* m) {
 	GO_mesh = m;
+
+	if (GO_mesh != nullptr) {
+		GO_mesh->asignedGo = this;
+	}
+
 	CreateAABB();
 }
 
@@ -623,7 +805,6 @@ void GameObject::DrawAABB() {
 void GameObject::AddAnimation(Animation* animation) {
 	this->GO_animations.push_back(animation);
 }
-
 void GameObject::AddAnimation(std::vector<Animation*> animations)
 {
 	for (int i = 0; i < animations.size(); i++) {
@@ -631,21 +812,35 @@ void GameObject::AddAnimation(std::vector<Animation*> animations)
 	}
 }
 
+void GameObject::AddClip(Animation* animation) {
+	if (animation != nullptr) {
+		AnimationClip clip;
+
+		strcpy(clip.name, animation->name.c_str());
+		clip.startFrame = animation->initTimeAnim;
+		clip.endFrame = animation->initTimeAnim + animation->duration;
+		clip.originalAnimation = animation;
+
+		clips.push_back(clip);
+	}
+}
+
 void GameObject::StartAnimation() {
 	if (rootBone == nullptr) {
 		if (!bones.empty()) {
-			rootBone == bones.begin()->first;
+			rootBone == bones[0];
 		}
 		else {
+			FindRootBone();
 			return;
 		}
 	}
 }
 
-void GameObject::UpdateAnimation(float dt, bool playing) {
+void GameObject::UpdateAnimation(float dt) {
 
 	// Update Current Animation
-	if (playing) {
+	if (this->playing) {
 		if (!started) { StartAnimation(); }
 		else {
 
@@ -678,7 +873,10 @@ void GameObject::UpdateAnimation(float dt, bool playing) {
 				time += dt;
 
 				currentAnimationT = dt * currentAnimation->ticksPerSec;
-				//currentAnimationT += currentAnimation.initTimeAnim;			// Mirar esto mas adelante
+				currentAnimationT += currentAnimation->initTimeAnim;
+				if (currentAnimation->loop == true) {
+					time = 0.0f;
+				}
 
 				UpdateChannelsTransform(currentAnimation, blendRatio > 0.0f ? prevAnimation : nullptr, blendRatio);
 			}
@@ -686,7 +884,7 @@ void GameObject::UpdateAnimation(float dt, bool playing) {
 	}
 
 	// Draw bones if needed
-	if (drawBones) {
+	if (drawBones && rootBone != nullptr) {
 		DrawBones(rootBone);
 	}
 }
@@ -709,16 +907,56 @@ void GameObject::DrawBones(GameObject* p)
 	}
 }
 
-void GameObject::UpdateChannelsTransform(const Animation* settings, const Animation* blend, float blendRatio) {
+bool GameObject::FindRootBone()
+{
+	bool ret = true;
+	if (rootBoneID != 0)
+	{
+		for (int i = 0; i < app->editor->gameObjects.size(); i++) {
+			if (app->editor->gameObjects[i]->ID = rootBoneID) {
+				rootBone = app->editor->gameObjects[i];
+			}
+		}
+
+		if (rootBone == nullptr)
+		{
+			rootBoneID = 0;
+			ret = false;
+		}
+		else
+		{
+			bones.clear();
+			StoreBoneMapping(rootBone);
+		}
+
+		if (GO_mesh != nullptr) {
+			GO_mesh->SetRootBone(rootBone); // ?¿
+		}
+	}
+
+	return ret;
+}
+
+void GameObject::StoreBoneMapping(GameObject* go) {
+	bones.push_back(go);
+
+	for (int i = 0; i < go->childs.size(); i++)
+	{
+		StoreBoneMapping(go->childs[i]);
+	}
+}
+
+void GameObject::UpdateChannelsTransform(const Animation* animationPlaying, const Animation* blend, float blendRatio) 
+{
 	uint currentFrame = currentAnimationT;
 	uint prevBlendFrame = 0;
 
 	if (blend != nullptr) {
-		prevBlendFrame = blend->ticksPerSec * prevAnimationT;
+		prevBlendFrame = (blend->ticksPerSec * prevAnimationT) + blend->initTimeAnim;
 	}
 
 	std::map<GameObject*, Channel*>::iterator boneIt;
-	for (boneIt = bones.begin(); boneIt != bones.end(); ++boneIt)
+	for (boneIt = bonesCurrentAnim.begin(); boneIt != bonesCurrentAnim.end(); ++boneIt)
 	{
 		Channel& channel = *boneIt->second;
 
@@ -729,8 +967,8 @@ void GameObject::UpdateChannelsTransform(const Animation* settings, const Animat
 		// BLEND S
 		if (blend != nullptr)
 		{
-			std::map<GameObject*, Channel*>::iterator foundChannel = bones.find(boneIt->first);
-			if (foundChannel != bones.end()) {
+			std::map<GameObject*, Channel*>::iterator foundChannel = bonesPreviousAnim.find(boneIt->first);
+			if (foundChannel != bonesPreviousAnim.end()) {
 				const Channel& blendChannel = *foundChannel->second;
 
 				position = float3::Lerp(GetChannelPosition(blendChannel, prevBlendFrame, float3(boneIt->first->GetPos().x, boneIt->first->GetPos().y, boneIt->first->GetPos().z)), position, blendRatio);
@@ -813,4 +1051,38 @@ float3	GameObject::GetChannelScale(const Channel& ch, float currentKey, float3 d
 		}
 	}
 	return defScale;
+}
+
+void GameObject::DeleteAnimation(Animation* anim) {
+	for (int i = 0; i < GO_animations.size(); i++) {
+		if (GO_animations[i] == anim) {
+			GO_animations.erase(GO_animations.begin() + i);
+		}
+	}
+}
+
+void GameObject::PlayAnim(Animation* anim, float blendDuration, float Speed){
+
+}
+
+void GameObject::PauseAnim() {
+
+}
+
+void GameObject::ResumeAnim() {
+
+}
+
+AnimationClip::AnimationClip() : name("Namen't"), startFrame(0), endFrame(0), originalAnimation(nullptr), loop(false) {
+
+}
+
+Animation* GameObject::ClipToAnim(AnimationClip clip)
+{
+	Animation* animation = new Animation(clip.name, clip.endFrame - clip.startFrame, clip.originalAnimation->ticksPerSec);
+
+	animation->initTimeAnim = clip.startFrame;
+	animation->loop = clip.loop;
+
+	return animation;
 }

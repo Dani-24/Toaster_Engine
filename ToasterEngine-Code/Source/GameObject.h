@@ -16,6 +16,15 @@ struct Transform {
 		scale = vec3(1.0f, 1.0f, 1.0f);
 };
 
+struct AnimationClip
+{
+	AnimationClip();
+	char name[32];
+	float startFrame, endFrame;
+	bool loop;
+	Animation* originalAnimation;
+};
+
 class GameObject
 {
 public:
@@ -139,9 +148,10 @@ public:
 	// ANIMATIONS
 public:
 
-	bool playing = false;
+	bool playing = true;
 	bool started = false;
 	float time = 0.f;
+	float speed = 1.f;
 
 	bool channelsLinked = false;
 	bool bonesLinked = false;
@@ -163,11 +173,27 @@ public:
 
 	std::vector<Animation*> GO_animations;
 
+	void AddClip(Animation* anim);
+
+	std::vector<AnimationClip> clips;
+	AnimationClip* selectedClip = nullptr;
+
+	Animation* ClipToAnim(AnimationClip clip);
+
 	// Bones
 	GameObject* rootBone = nullptr;
-	std::map <GameObject*, Channel*> bones;
+	std::vector<GameObject*> bones;
+
+	uint rootBoneID;
+
+	Channel*  bone;
+
+	std::map <GameObject*, Channel*> bonesCurrentAnim;
+	std::map <GameObject*, Channel*> bonesPreviousAnim;
 
 	void DrawBones(GameObject* p);
+	void StoreBoneMapping(GameObject* go);
+	bool FindRootBone();
 
 	// Channels
 	void UpdateChannelsTransform(const Animation* settings, const Animation* blend, float blendRatio);
@@ -177,5 +203,11 @@ public:
 	float3	GetChannelScale(const Channel& ch, float currentKey, float3 defScale) const;
 
 	void StartAnimation();
-	void UpdateAnimation(float dt, bool playing);
+	void UpdateAnimation(float dt);
+
+	void DeleteAnimation(Animation* anim);
+
+	void PlayAnim(Animation* anim, float blendDuration = 0.2f, float Speed = 1.0f);
+	void PauseAnim();
+	void ResumeAnim();
 };
