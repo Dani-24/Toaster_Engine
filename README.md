@@ -2,6 +2,24 @@
 
 <div id="header" align="center">
   <img src="https://user-images.githubusercontent.com/79161140/192161224-a374e6b4-c0f1-47d2-9202-6a044b5bb32f.png" width="300"/>
+  
+  <p>
+  <a href="https://github.com/Dani-24/Toaster_Engine/graphs/contributors">
+    <img src="https://img.shields.io/github/contributors/Dani-24/Toaster_Engine" alt="contributors" />
+  </a>
+  <a href="">
+    <img src="https://img.shields.io/github/last-commit/Dani-24/Toaster_Engine" alt="last update" />
+  </a>
+  <a href="https://github.com/Dani-24/Toaster_Engine/network/members">
+    <img src="https://img.shields.io/github/forks/Dani-24/Toaster_Engine" alt="forks" />
+  </a>
+  <a href="https://github.com/Dani-24/Toaster_Engine/stargazers">
+    <img src="https://img.shields.io/github/stars/Dani-24/Toaster_Engine" alt="stars" />
+  </a>
+  <a href="https://github.com/Dani-24/Toaster_Engine/issues/">
+    <img src="https://img.shields.io/github/issues/Dani-24/Toaster_Engine" alt="open issues" />
+  </a>
+</p>
 </div>
 
 ## Information
