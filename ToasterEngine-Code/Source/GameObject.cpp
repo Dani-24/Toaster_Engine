@@ -455,6 +455,28 @@ void GameObject::SetPos(vec3 pos) {
 	}
 }
 void GameObject::SetRot(vec3 rot) {
+
+	if (rot.x > 360) {
+		rot.x = 0;
+	}
+	else if (rot.x < 0) {
+		rot.x = 360;
+	}
+
+	if (rot.y > 360) {
+		rot.y = 0;
+	}
+	else if (rot.y < 0) {
+		rot.y = 360;
+	}
+
+	if (rot.z > 360) {
+		rot.z = 0;
+	}
+	else if (rot.z < 0) {
+		rot.z = 360;
+	}
+
 	if (app->editor->paused == false) {
 		this->GO_trans.rotation = rot;
 
@@ -508,23 +530,11 @@ void GameObject::UpdateRotation() {
 
 		GO_camera->camFrustum.WorldMatrix().Decompose(float3(), dir, float3());
 
-		Quat X = Quat::identity;
-		X.SetFromAxisAngle(float3(1, 0, 0), globalRotation.x * DEGTORAD);
-
-		dir = dir * X;
-
-		Quat Y = Quat::identity;
-		Y.SetFromAxisAngle(float3(0, 1, 0), globalRotation.y * DEGTORAD);
-
-		dir = dir * Y;
-
-		Quat Z = Quat::identity;
-		Z.SetFromAxisAngle(float3(0, 0, 1), globalRotation.z * DEGTORAD);
-
-		dir = dir * Z;
+		dir = dir.FromEulerXYZ(math::DegToRad(globalRotation.x), math::DegToRad(globalRotation.y + 95), math::DegToRad(globalRotation.z));
 
 		float4x4 mat = GO_camera->camFrustum.WorldMatrix();
 		mat.SetRotatePart(dir.Normalized());
+
 		GO_camera->camFrustum.SetWorldMatrix(mat.Float3x4Part());
 	}
 
@@ -585,35 +595,37 @@ void GameObject::UpdateTransform() {
 // Matrix
 void GameObject::SetTransformMatrix(vec3 _position, vec3 _rotation, vec3 _scale)
 {
+	mat4x4 translationMatrix, rotationMatrix, scaleMatrix;
+
+	translationMatrix.translate(_position.x, _position.y, _position.z);
+
 	float x = _rotation.x * DEGTORAD;
 	float y = _rotation.y * DEGTORAD;
 	float z = _rotation.z * DEGTORAD;
 
-	GO_matrix[0] = cos(y) * cos(z);
-	GO_matrix[1] = -cos(x) * sin(z) + sin(y) * cos(z) * sin(x);
-	GO_matrix[2] = sin(x) * sin(z) + sin(y) * cos(z) * cos(x);
-	GO_matrix[3] = _position.x;
+	rotationMatrix[0] = cos(y) * cos(z);
+	rotationMatrix[1] = -cos(x) * sin(z) + sin(y) * cos(z) * sin(x);
+	rotationMatrix[2] = sin(x) * sin(z) + sin(y) * cos(z) * cos(x);
+	rotationMatrix[3] = 0;
 
-	GO_matrix[4] = cos(y) * sin(z);
-	GO_matrix[5] = cos(x) * cos(z) + sin(y) * sin(z) * sin(z);
-	GO_matrix[6] = -sin(x) * cos(z) + sin(y) * sin(z) * cos(x);
-	GO_matrix[7] = _position.y;
+	rotationMatrix[4] = cos(y) * sin(z);
+	rotationMatrix[5] = cos(x) * cos(z) + sin(y) * sin(z) * sin(z);
+	rotationMatrix[6] = -sin(x) * cos(z) + sin(y) * sin(z) * cos(x);
+	rotationMatrix[7] = 0;
 
-	GO_matrix[8] = -sin(y);
-	GO_matrix[9] = cos(y) * sin(x);
-	GO_matrix[10] = cos(x) * cos(y);
-	GO_matrix[11] = _position.z;
+	rotationMatrix[8] = -sin(y);
+	rotationMatrix[9] = cos(y) * sin(x);
+	rotationMatrix[10] = cos(x) * cos(y);
+	rotationMatrix[11] = 0;
 
-	GO_matrix[12] = 0;
-	GO_matrix[13] = 0;
-	GO_matrix[14] = 0;
-	GO_matrix[15] = 1;
+	rotationMatrix[12] = 0;
+	rotationMatrix[13] = 0;
+	rotationMatrix[14] = 0;
+	rotationMatrix[15] = 1;
 
-	GO_matrix[0] *= _scale.x;
-	GO_matrix[5] *= _scale.y;
-	GO_matrix[10] *= _scale.z;
+	scaleMatrix.scale(_scale.x, _scale.y, _scale.z);
 
-	GO_matrix = transpose(GO_matrix);
+	GO_matrix = translationMatrix * rotationMatrix * scaleMatrix;
 
 	aabb.SetPos(float3(_position.x, _position.y, _position.z));
 }

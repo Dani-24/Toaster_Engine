@@ -26,6 +26,12 @@ bool ModuleScene::Start()
 	openGameObject->AddTexture(app->textures->LoadTexture("Assets/street_text2.png"));
 	openGameObject->AddMesh(app->mesh3d->LoadFile("Assets/street.fbx", openGameObject));
 
+	GameObject* skybox = new GameObject("skybox", nullptr);
+	skybox->AddTexture(app->textures->LoadTexture("Assets/skybox.png"));
+	skybox->AddMesh(app->mesh3d->LoadFile("Assets/skybox.fbx", openGameObject));
+	skybox->SetScale(vec3(100, 100, 100));
+	skybox->SetRot(vec3(90, 0, 0));
+
 	return ret;
 }
 
