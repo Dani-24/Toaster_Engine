@@ -21,16 +21,16 @@ bool ModuleScene::Start()
 	LOG("TOASTER: Preparing Default Scene");
 	bool ret = true;
 
-	GameObject* skybox = new GameObject("skybox", nullptr);
-	skybox->AddTexture(app->textures->LoadTexture("Assets/skybox.png"));
-	skybox->AddMesh(app->mesh3d->LoadFile("Assets/skybox.fbx", skybox));
-	skybox->SetScale(vec3(100, 100, 100));
-	skybox->SetRot(vec3(90, 0, 0));
-
 	GameObject* openGameObject = new GameObject("Demo Street Environment", app->editor->root);
 	openGameObject->AddTexture(app->textures->LoadTexture("Assets/street_text1.png"));
 	openGameObject->AddTexture(app->textures->LoadTexture("Assets/street_text2.png"));
 	openGameObject->AddMesh(app->mesh3d->LoadFile("Assets/street.fbx", openGameObject));
+
+	GameObject* skybox = new GameObject("skybox", nullptr);
+	skybox->AddTexture(app->textures->LoadTexture("Assets/skybox.png"));
+	skybox->AddMesh(app->mesh3d->LoadFile("Assets/skybox.fbx", openGameObject));
+	skybox->SetScale(vec3(100, 100, 100));
+	skybox->SetRot(vec3(90, 0, 0));
 
 	return ret;
 }

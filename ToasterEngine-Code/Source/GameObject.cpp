@@ -12,6 +12,7 @@ GameObject::GameObject(std::string name, GameObject* parent, Camera* camera)
 
 	if (parent != nullptr) {
 		parent->AddChild(this);
+		GO_parentTrans = parent->GO_trans;
 	}
 
 	GO_camera = camera;
@@ -100,6 +101,7 @@ void GameObject::AddChild(GameObject* chi) {
 }
 void GameObject::SetParent(GameObject* par) {
 	parent = par;
+	GO_parentOriginalTrans = par->GetGlobalTransform();
 }
 
 // ImGUI
@@ -133,15 +135,6 @@ void GameObject::OnEditor() {
 			SetScale(vec3(scale.x, scale.y, scale.z));
 		}
 	}
-
-	ImGui::NewLine();
-
-	if (ImGui::Button("Reset Transform", ImVec2(ImGui::GetWindowSize().x, 20))) {
-		SetPos(vec3(0, 0, 0));
-		SetRot(vec3(0, 0, 0));
-		SetScale(vec3(1, 1, 1));
-	}
-
 	// MESH COMPONENT
 	if (GO_mesh != nullptr) {
 
@@ -508,14 +501,28 @@ void GameObject::SetTransform(vec3 pos, vec3 rot, vec3 scale) {
 // Apply Transformations
 void GameObject::UpdatePosition() {
 
+	vec3 globalPosition = GO_parentTrans.position - GO_parentOriginalTrans.position + GO_trans.position;
+
+	for (size_t i = 0; i < childs.size(); i++)
+	{
+		childs[i]->ParentPositionUpdate(globalPosition);
+	}
+
 	// Camera
 	if (GO_camera != nullptr) {
-		GO_camera->camFrustum.pos = float3(GO_trans.position.x, GO_trans.position.y, GO_trans.position.z);
+		GO_camera->camFrustum.pos = float3(globalPosition.x, globalPosition.y, globalPosition.z);
 	}
 
 	SetGlobalMatrix();
 }
 void GameObject::UpdateRotation() {
+
+	vec3 globalRotation = GO_parentTrans.rotation - GO_parentOriginalTrans.rotation + GO_trans.rotation;
+
+	for (size_t i = 0; i < childs.size(); i++)
+	{
+		childs.at(i)->ParentRotationUpdate(globalRotation);
+	}
 
 	//Camera
 	if (GO_camera != nullptr) {
@@ -523,7 +530,7 @@ void GameObject::UpdateRotation() {
 
 		GO_camera->camFrustum.WorldMatrix().Decompose(float3(), dir, float3());
 
-		dir = dir.FromEulerXYZ(math::DegToRad(GO_trans.rotation.x), math::DegToRad(GO_trans.rotation.y + 95), math::DegToRad(GO_trans.rotation.z));
+		dir = dir.FromEulerXYZ(math::DegToRad(globalRotation.x), math::DegToRad(globalRotation.y + 95), math::DegToRad(globalRotation.z));
 
 		float4x4 mat = GO_camera->camFrustum.WorldMatrix();
 		mat.SetRotatePart(dir.Normalized());
@@ -534,12 +541,25 @@ void GameObject::UpdateRotation() {
 	SetGlobalMatrix();
 }
 void GameObject::UpdateScale() {
+
+	vec3 globalScale = GO_parentTrans.scale * GO_trans.scale;
+
+	for (size_t i = 0; i < childs.size(); i++)
+	{
+		childs.at(i)->ParentScaleUpdate(globalScale);
+	}
+
 	SetGlobalMatrix();
 }
 
 void GameObject::UpdateTransform() {
 
 	Transform globalTransform = GetGlobalTransform();
+
+	for (size_t i = 0; i < childs.size(); i++)
+	{
+		childs.at(i)->ParentTransformUpdate(globalTransform.position, globalTransform.scale, globalTransform.rotation);
+	}
 
 	// Camera
 	if (GO_camera != nullptr) {
@@ -607,14 +627,6 @@ void GameObject::SetTransformMatrix(vec3 _position, vec3 _rotation, vec3 _scale)
 
 	GO_matrix = translationMatrix * rotationMatrix * scaleMatrix;
 
-	if (parent != nullptr) {
-		GO_matrix = GO_matrix * parent->GO_matrix;
-	}
-
-	for(int i = 0; i < childs.size(); i++){
-		childs[i]->SetGlobalMatrix();
-	}
-
 	aabb.SetPos(float3(_position.x, _position.y, _position.z));
 }
 void GameObject::SetGlobalMatrix() {
@@ -626,11 +638,32 @@ void GameObject::SetGlobalMatrix() {
 Transform GameObject::GetGlobalTransform() {
 	if (GetParent() == nullptr) return GO_trans;
 
-	global_transform.position = GO_trans.position;
-	global_transform.rotation = GO_trans.rotation;
-	global_transform.scale = GO_trans.scale;
+	global_transform.position = GO_parentTrans.position - GO_parentOriginalTrans.position + GO_trans.position;
+	global_transform.rotation = GO_parentTrans.rotation - GO_parentOriginalTrans.rotation + GO_trans.rotation;
+	global_transform.scale = GO_parentTrans.scale * GO_trans.scale;
 
 	return global_transform;
+}
+
+// PADRE
+void GameObject::ParentPositionUpdate(vec3 pos) {
+	GO_parentTrans.position = pos;
+	UpdatePosition();
+}
+void GameObject::ParentRotationUpdate(vec3 rot) {
+	GO_parentTrans.rotation = rot;
+	UpdateRotation();
+}
+void GameObject::ParentScaleUpdate(vec3 scale) {
+	GO_parentTrans.scale = scale;
+	UpdateScale();
+}
+
+void GameObject::ParentTransformUpdate(vec3 pos, vec3 rot, vec3 scale) {
+	GO_parentTrans.position = pos;
+	GO_parentTrans.rotation = rot;
+	GO_parentTrans.scale = scale;
+	UpdateTransform();
 }
 
 // MESH
