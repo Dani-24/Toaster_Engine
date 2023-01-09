@@ -73,6 +73,8 @@ Animation* ModuleAnimation::LoadAnimation(aiAnimation* anim) {
 			channel.scaleKeys[anim->mChannels[i]->mScalingKeys[j].mTime] = scaleKey;
 		}
 		animation->channels[channel.name] = channel;
+
+		GameObject* bone = new GameObject(channel.name.c_str(), app->editor->root);
 	}
 
 	LOG("MESH 3D: Loaded %s Animation with %.2f duration.", animation->name.c_str(), animation->duration);

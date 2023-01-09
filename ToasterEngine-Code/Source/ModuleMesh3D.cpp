@@ -243,7 +243,7 @@ void Mesh::Render(uint texture, mat4x4 matrix)
 		glUniformMatrix4fv(GL_FLOAT, boneTransforms.size(), GL_FALSE, (GLfloat*)&boneTransforms[0]);
 		calculatedBonesThisFrame = false;
 
-		LOG("SUS");
+		LOG("Huesos?");
 	}
 
 	glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, NULL);
