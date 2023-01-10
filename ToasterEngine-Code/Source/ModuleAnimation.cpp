@@ -74,8 +74,8 @@ Animation* ModuleAnimation::LoadAnimation(aiAnimation* anim) {
 		}
 		animation->channels[channel.name] = channel;
 
-		GameObject* bone = new GameObject(channel.name.c_str(), app->editor->selectedGameObj);
-		bone->SetPos(vec3(channel.posKeys[0].x, channel.posKeys[0].y, channel.posKeys[0].z));
+		/*GameObject* bone = new GameObject(channel.name.c_str(), app->editor->selectedGameObj);
+		bone->SetPos(vec3(channel.posKeys[0].x, channel.posKeys[0].y, channel.posKeys[0].z));*/
 	}
 
 	LOG("MESH 3D: Loaded %s Animation with %.2f duration.", animation->name.c_str(), animation->duration);

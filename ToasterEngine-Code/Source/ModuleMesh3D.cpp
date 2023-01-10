@@ -125,6 +125,8 @@ void ModuleMesh3D::LoadMesh(Mesh* mesh)
 	glGenBuffers(1, (GLuint*)&(mesh->id_indices));
 	glGenBuffers(1, (GLuint*)&(mesh->id_normals));
 	glGenBuffers(1, (GLuint*)&(mesh->id_textureCoords));
+	glGenBuffers(1, (GLuint*)&(mesh->id_bonesIDs));
+	glGenBuffers(1, (GLuint*)&(mesh->id_bonesWeights));
 
 	//Bind and fill buffers
 	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_vertices);
@@ -138,6 +140,12 @@ void ModuleMesh3D::LoadMesh(Mesh* mesh)
 
 	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_textureCoords);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->num_textureCoords * 2, mesh->textureCoords, GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_bonesIDs);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(int) * mesh->num_bonesIDs * 4, mesh->bonesIDs, GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_bonesWeights);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->num_bonesWeights * 5, mesh->bonesWeights, GL_STATIC_DRAW);
 
 	//Unbind buffers
 	glDisableClientState(GL_VERTEX_ARRAY);
@@ -186,6 +194,51 @@ void ModuleMesh3D::Import(const aiMesh* sceneMesh, Mesh* meshData) {
 		for (unsigned int i = 0; i < meshData->num_textureCoords; i++) {
 			meshData->textureCoords[i * 2] = sceneMesh->mTextureCoords[0][i].x;
 			meshData->textureCoords[i * 2 + 1] = sceneMesh->mTextureCoords[0][i].y;
+		}
+	}
+
+	if (sceneMesh->HasBones())
+	{
+		LOG("Loading Mesh Bones");
+		meshData->num_bonesIDs = sceneMesh->mNumVertices;
+		meshData->num_bonesWeights = sceneMesh->mNumVertices;
+
+		meshData->bonesIDs = new int[4];
+		meshData->bonesWeights = new float[5];
+
+		meshData->boneTransforms.resize(sceneMesh->mNumBones);
+
+		//iterate all bones
+		for (uint boneId = 0; boneId < sceneMesh->mNumBones; boneId++)
+		{
+			aiBone* aibone = sceneMesh->mBones[boneId];
+			meshData->bonesMap[aibone->mName.C_Str()] = boneId;
+
+			//Load offsets
+			float4x4 offset = float4x4(aibone->mOffsetMatrix.a1, aibone->mOffsetMatrix.a2, aibone->mOffsetMatrix.a3, aibone->mOffsetMatrix.a4,
+				aibone->mOffsetMatrix.b1, aibone->mOffsetMatrix.b2, aibone->mOffsetMatrix.b3, aibone->mOffsetMatrix.b4,
+				aibone->mOffsetMatrix.c1, aibone->mOffsetMatrix.c2, aibone->mOffsetMatrix.c3, aibone->mOffsetMatrix.c4,
+				aibone->mOffsetMatrix.d1, aibone->mOffsetMatrix.d2, aibone->mOffsetMatrix.d3, aibone->mOffsetMatrix.d4);
+
+			meshData->bonesOffsets.push_back(offset);
+
+			//iterate all bone weights
+			for (uint weights = 0; weights < aibone->mNumWeights; weights++) {
+
+				int vertexId = aibone->mWeights[weights].mVertexId; // *4;
+
+				for (int w = 0; w < 4; w++)
+				{
+					if (meshData->bonesIDs[vertexId * 4 + w] == -1)
+					{
+						//bone ids
+						meshData->bonesIDs[vertexId * 4 + w] = boneId;
+						//weights
+						meshData->bonesWeights[vertexId * 4 + w] = aibone->mWeights[weights].mWeight;
+						break;
+					}
+				}
+			}
 		}
 	}
 
@@ -276,7 +329,7 @@ void Mesh::SetRootBone(GameObject* go) {
 
 void Mesh::GetBoneMapping()
 {
-	bonesMap = rootBone->childs;
+	/*bonesMap = rootBone->childs;*/
 }
 
 void Mesh::TryCalculateBones() {
@@ -295,19 +348,19 @@ void Mesh::TryCalculateBones() {
 		//Get each bone
 		for (int i = 0; i < bonesMap.size(); ++i)
 		{
-			GameObject* bone = bonesMap[i];
+			//GameObject* bone = bonesMap[i];
 
-			if (bone != nullptr)
-			{
-				//Calcule of Delta Matrix
-				
-				mat4x4 Delta = bone->GO_matrix * invertedMatrix;
-				Delta = Delta * bonesOffsets[i];
+			//if (bone != nullptr)
+			//{
+			//	//Calcule of Delta Matrix
+			//	
+			//	mat4x4 Delta = bone->GO_matrix * invertedMatrix;
+			//	Delta = Delta * bonesOffsets[i];
 
-				//Storage of Delta Matrix (Transformation applied to each bone)
-				//_mesh->boneTransforms[i] = Delta.Transposed();
-				boneTransforms.push_back(transpose(Delta));
-			}
+			//	//Storage of Delta Matrix (Transformation applied to each bone)
+			//	//_mesh->boneTransforms[i] = Delta.Transposed();
+			//	boneTransforms.push_back(transpose(Delta));
+			//}
 		}
 		calculatedBonesThisFrame = true;
 	}
