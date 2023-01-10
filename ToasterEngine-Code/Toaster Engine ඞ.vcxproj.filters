@@ -703,51 +703,6 @@
     <ClInclude Include="Source\ModuleAnimation.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="Source\R_Animation.h">
-      <Filter>Sources\Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\R_Material.h">
-      <Filter>Sources\Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\R_Mesh.h">
-      <Filter>Sources\Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\R_Texture.h">
-      <Filter>Sources\Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Module_AnimationImporter.h">
-      <Filter>Sources\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Module_MaterialImporter.h">
-      <Filter>Sources\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Module_MeshLoader.h">
-      <Filter>Sources\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Module_ModelImporter.h">
-      <Filter>Sources\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Module_TextureImporter.h">
-      <Filter>Sources\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\C_Animator.h">
-      <Filter>Sources\Engine\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\C_Camera.h">
-      <Filter>Sources\Engine\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\C_Material.h">
-      <Filter>Sources\Engine\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\C_MeshRenderer.h">
-      <Filter>Sources\Engine\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\C_Transform.h">
-      <Filter>Sources\Engine\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Component.h">
-      <Filter>Sources\Engine\GameObject</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Sources">
@@ -830,12 +785,6 @@
     </Filter>
     <Filter Include="Sources\Modules\Camera">
       <UniqueIdentifier>{4a1a0866-fc88-499e-873d-f44db34bd554}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Sources\Resources">
-      <UniqueIdentifier>{4be5fb86-c150-432b-985d-f94742b95f7b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Sources\Engine\Components">
-      <UniqueIdentifier>{9482ca9f-e96e-4e98-95ad-20ba1d306ebf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1043,51 +992,6 @@
     </ClCompile>
     <ClCompile Include="Source\ModuleAnimation.cpp">
       <Filter>Sources\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\R_Animation.cpp">
-      <Filter>Sources\Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\R_Material.cpp">
-      <Filter>Sources\Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\R_Mesh.cpp">
-      <Filter>Sources\Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\R_Texture.cpp">
-      <Filter>Sources\Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Module_AnimationImporter.cpp">
-      <Filter>Sources\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Module_MaterialImporter.cpp">
-      <Filter>Sources\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Module_MeshLoader.cpp">
-      <Filter>Sources\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Module_ModelImporter.cpp">
-      <Filter>Sources\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Module_TextureImporter.cpp">
-      <Filter>Sources\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\C_Animator.cpp">
-      <Filter>Sources\Engine\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\C_Camera.cpp">
-      <Filter>Sources\Engine\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\C_Material.cpp">
-      <Filter>Sources\Engine\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\C_MeshRenderer.cpp">
-      <Filter>Sources\Engine\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\C_Transform.cpp">
-      <Filter>Sources\Engine\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Component.cpp">
-      <Filter>Sources\Engine\GameObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
