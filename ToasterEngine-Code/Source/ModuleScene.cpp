@@ -24,7 +24,7 @@ bool ModuleScene::Start()
 	GameObject* skybox = new GameObject("skybox", nullptr);
 	skybox->AddTexture(app->textures->LoadTexture("Assets/skybox.png"));
 	skybox->AddMesh(app->mesh3d->LoadFile("Assets/skybox.fbx", skybox));
-	skybox->SetScale(vec3(100, 100, 100));
+	skybox->SetScale(vec3(200, 200, 200));
 	skybox->SetRot(vec3(90, 0, 0));
 
 	GameObject* openGameObject = new GameObject("Demo Street Environment", app->editor->root);
