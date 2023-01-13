@@ -1,80 +1,33 @@
 #pragma once
+#include <vector>
+#include <map>
+#include "R_Animation.h"
+#include "../External/MathGeoLib/include/Math/Quat.h"
+#include "../External/MathGeoLib/include/Math/float3.h"
 
-#include "Module.h"
-#include "Globals.h"
+class ResourceAnimation;
+class aiNode;
+class aiAnimation;
+class GameObject;
 
-#include <string>
+typedef unsigned int uint;
 
-struct aiAnimation;
-
-struct /*Disney*/Channel {
-
-	std::string name;
-
-	std::map<double, float3> posKeys;
-	std::map<double, float3> rotKeys;
-	std::map<double, float3> scaleKeys;
-
-	//bool HasPosKey() const;
-	std::map<double, float3>::const_iterator GetPrevPosKey(double currentKey) const;
-	std::map<double, float3>::const_iterator GetNextPosKey(double currentKey) const;
-
-	//bool HasRotKey() const;
-	std::map<double, float3>::const_iterator GetPrevRotKey(double currentKey) const;
-	std::map<double, float3>::const_iterator GetNextRotKey(double currentKey) const;
-
-	//bool HasScaleKey() const;
-	std::map<double, float3>::const_iterator GetPrevScaleKey(double currentKey) const;
-	std::map<double, float3>::const_iterator GetNextScaleKey(double currentKey) const;
-};
-
-struct Animation {
-	
-	Animation(std::string name, float duration, float ticksPerSec) 
-	{
-		this->name = name;
-		this->duration = duration;
-		this->ticksPerSec = ticksPerSec;
-	};
-
-	std::string name;
-
-	float duration;
-	float ticksPerSec; 
-	uint initTimeAnim = 0;
-	float time;
-
-	bool loop = true;
-
-	std::map<std::string, Channel> channels;
-
-};
-
-class ModuleAnimation : public Module 
+class ModuleAnimation : public Module
 {
 public:
 	ModuleAnimation(Application* app, bool start_enabled = true);
 	~ModuleAnimation() {};
 
-	// Load Animations from meshes (Using Assimp)
-	Animation* LoadAnimation(aiAnimation* anim);
+	ResourceAnimation* ImportAnimation(aiAnimation* importedAnimation, uint oldUID = 0);
+	uint GetChannelsSize(const Channel& channel);
 
-	// Animation Channels Stuff //
+	void SaveChannels(const Channel& channel, char** cursor);
+	void SaveChanKeys(const std::map<double, float3>& map, char** cursor);
+	void SaveChanKeys(const std::map<double, Quat>& map, char** cursor);
 
-	// Name, Pos, Rot, Scale to uint
-	uint ChannelSize(const Channel& ch);
+	void LoadChannels(Channel& channel, const char** cursor);
+	void LoadChanKeys(std::map<double, float3>& map, const char** cursor, uint size);
+	void LoadChanKeys(std::map<double, Quat>& map, const char** cursor, uint size);
 
-	// Save Channels
-	void SaveChannel(const Channel& ch, char** cursor);
-
-	// Save each type of Channel (float3 / Quaternion)
-	void SaveChannelKeys(const std::map<double, float3>& map, char** cursor);
-	//void SaveChannelKeys(const std::map<double, Quat>& map, char** cursor);
-
-	// Load Channels
-	void LoadChannel(Channel& ch, const char** cursor);
-
-	// Load each type of Channel (float3 / Quaternion)
-	void LoadChannelKeys(std::map<double, float3>& map, const char** cursor, uint size);
-	//void LoadChannelKeys(std::map<double, Quat>& map, const char** cursor, uint size);
+	void SetAnimationOnGameObjectRoot(aiAnimation** animArray, std::vector<ResourceAnimation*>& _sceneAnimations, GameObject* gmRoot);
 };

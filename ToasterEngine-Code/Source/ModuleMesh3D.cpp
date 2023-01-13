@@ -1,218 +1,222 @@
-#include "Globals.h"
-#include "Application.h"
 #include "ModuleMesh3D.h"
-
-#pragma comment (lib, "External/Assimp/libx86/assimp.lib")
-
-#include "OpenGL.h"
-
-#pragma comment( lib, "External/DevIL/libx86/DevIL.lib" )
-#pragma comment( lib, "External/DevIL/libx86/ILU.lib" )
-#pragma comment( lib, "External/DevIL/libx86/ILUT.lib" )
-
-#include "../External/DevIL/include/ilu.h"
-#include "../External/DevIL/include/ilut.h"
-#include "../External/DevIL/include/il.h"
+#include "Application.h"
+#include "ModuleEditor.h"
 
 #include "GameObject.h"
+#include "C_Transform.h"
+#include "C_Mesh.h"
+#include "C_Material.h"
 
-#include "ModuleAnimation.h"
+#include "R_Mesh.h"
+#include "R_Texture.h"
 
-ModuleMesh3D::ModuleMesh3D(Application* app, bool start_enabled) : Module(app, start_enabled){}
-ModuleMesh3D::~ModuleMesh3D(){}
+//#include "IM_FileSystem.h"
+#include "ModuleTexture.h"
+#include "ModuleModelImporter.h"
 
-bool ModuleMesh3D::Start()
+//#include "MO_Scene.h"
+//#include "MO_ResourceManager.h"
+
+#include "../External/Assimp/include/cimport.h"
+#include "../External/Assimp/include/scene.h"
+#include "../External/Assimp/include/postprocess.h"
+#include "../External/Assimp/include/cfileio.h"
+
+#pragma comment (lib, "Assimp/libx86/assimp-vc142-mt.lib")
+
+ModuleMesh3D::ModuleMesh3D(Application* app, bool start_enabled) : Module(app, start_enabled) 
 {
-	LOG("TOASTER: Setting up mesh loader");
-	bool ret = true;
 
-	struct aiLogStream stream;
-	stream = aiGetPredefinedLogStream(aiDefaultLogStream_DEBUGGER, nullptr);
-	aiAttachLogStream(&stream);
-
-	ilInit();
-	iluInit();
-	ilutInit();
-
-	return ret;
 }
+ModuleMesh3D::~ModuleMesh3D() {}
 
-bool ModuleMesh3D::CleanUp()
+void ModuleMesh3D::NodeToGameObject(aiMesh** meshArray, std::vector<ResourceTexture*>& sceneTextures, std::vector<ResourceMesh*>& _sceneMeshes, aiNode* node, GameObject* gmParent, const char* holderName)
 {
-	aiDetachAllLogStreams();
+	aiVector3D		aiTranslation, aiScale;
+	aiQuaternion	aiRotation;
 
-	return true;
-}
+	//Decomposing transform matrix into translation rotation and scale
+	node->mTransformation.Decompose(aiScale, aiRotation, aiTranslation);
 
-update_status ModuleMesh3D::PostUpdate(float dt)
-{
-	// Check Wireframe options
-	if (app->renderer3D->wireframe) {
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	}
-	else {
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	}
+	float3 pos(aiTranslation.x, aiTranslation.y, aiTranslation.z);
+	float3 scale(aiScale.x, aiScale.y, aiScale.z);
+	Quat rot(aiRotation.x, aiRotation.y, aiRotation.z, aiRotation.w);
 
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-	return UPDATE_CONTINUE;
-}
-
-Mesh* ModuleMesh3D::LoadFile(string file_path, GameObject* go)
-{
-	const aiScene* scene = aiImportFile(file_path.c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
-
-	std::vector<Mesh*> meshes;
-
-	if (scene != nullptr && scene->HasMeshes())
+	std::string nodeName = node->mName.C_Str();
+	bool dummyFound = true;
+	while (dummyFound)
 	{
-		for (int i = 0; i < scene->mNumMeshes; i++) {
-			aiMesh* sceneMesh = new aiMesh();
-			sceneMesh = scene->mMeshes[i];
+		dummyFound = false;
 
-			Mesh* meshData = new Mesh();
-			meshData->path = file_path;
-			meshData->name = sceneMesh->mName.C_Str();
-
-			Import(sceneMesh, meshData);
-			meshes.push_back(meshData);
-		}
-	}
-	else {
-		LOG("MESH : This has no meshes or it's cursed -> %s", file_path.c_str());
-	}
-	
-	// Loading Animations
-
-	std::vector<Animation*> animations;
-
-	if (scene != nullptr && scene->HasAnimations()) {
-		for (uint i = 0; i < scene->mNumAnimations; i++) {
-			animations.push_back(app->anim3d->LoadAnimation(scene->mAnimations[i]));
-		}
-	}
-
-	aiReleaseImport(scene);
-	//
-
-	if (meshes.size() < 2) {
-		if (!animations.empty()) {
-			go->AddAnimation(animations);
-		}
-		return meshes[0];
-	}
-	else {
-		for (int i = 0; i < meshes.size(); i++) {
-			if (go == nullptr) {
-				go = app->editor->root;
-			}
-			GameObject* meshChild = new GameObject(meshes[i]->name.c_str(), go);
-			meshChild->AddTexture(go->GetTexture());
-			meshChild->AddMesh(meshes[i]);
-		}
-		go->DeleteTextures();
-		return nullptr;
-	}
-}
-
-void ModuleMesh3D::LoadMesh(Mesh* mesh)
-{
-	glEnableClientState(GL_VERTEX_ARRAY);
-
-	//Create vertices and indices buffers
-	glGenBuffers(1, (GLuint*)&(mesh->id_vertices));
-	glGenBuffers(1, (GLuint*)&(mesh->id_indices));
-	glGenBuffers(1, (GLuint*)&(mesh->id_normals));
-	glGenBuffers(1, (GLuint*)&(mesh->id_textureCoords));
-	glGenBuffers(1, (GLuint*)&(mesh->id_bonesIDs));
-	glGenBuffers(1, (GLuint*)&(mesh->id_bonesWeights));
-
-	//Bind and fill buffers
-	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_vertices);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->num_vertices * VERTEX_ARG, mesh->vertices, GL_STATIC_DRAW);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_indices);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * mesh->num_indices, mesh->indices, GL_STATIC_DRAW);
-
-	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_normals);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->num_normals * 3, mesh->normals, GL_STATIC_DRAW);
-
-	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_textureCoords);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->num_textureCoords * 2, mesh->textureCoords, GL_STATIC_DRAW);
-
-	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_bonesIDs);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(int) * mesh->num_bonesIDs * 4, mesh->bonesIDs, GL_STATIC_DRAW);
-
-	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_bonesWeights);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->num_bonesWeights * 5, mesh->bonesWeights, GL_STATIC_DRAW);
-
-	//Unbind buffers
-	glDisableClientState(GL_VERTEX_ARRAY);
-
-}
-
-void ModuleMesh3D::Import(const aiMesh* sceneMesh, Mesh* meshData) {
-	//copy vertices
-	meshData->num_vertices = sceneMesh->mNumVertices;
-	meshData->vertices = new float[meshData->num_vertices * VERTEX_ARG];
-
-	memcpy(meshData->vertices, sceneMesh->mVertices, sizeof(float) * meshData->num_vertices * VERTEX_ARG);
-
-	LOG("MESH : New mesh with %d vertices", meshData->num_vertices);
-
-	//copy faces
-	if (sceneMesh->HasFaces())
-	{
-		meshData->num_indices = sceneMesh->mNumFaces * 3;
-		meshData->indices = new uint[meshData->num_indices]; // assume each face is a triangle
-		for (uint i = 0; i < sceneMesh->mNumFaces; ++i)
+		//All dummy modules have one children (next dummy module or last module containing the mesh)
+		if (nodeName.find("_$AssimpFbx$_") != std::string::npos && node->mNumChildren == 1)
 		{
-			if (sceneMesh->mFaces[i].mNumIndices != 3) {
-				LOG("WARNING, geometry face with != 3 indices!");
+			//Dummy module have only one child node, so we use that one as our next node
+			node = node->mChildren[0];
+
+			// Accumulate transform 
+			node->mTransformation.Decompose(aiScale, aiRotation, aiTranslation);
+			pos += float3(aiTranslation.x, aiTranslation.y, aiTranslation.z);
+			scale = float3(scale.x * aiScale.x, scale.y * aiScale.y, scale.z * aiScale.z);
+			rot = rot * Quat(aiRotation.x, aiRotation.y, aiRotation.z, aiRotation.w);
+
+			nodeName = node->mName.C_Str();
+			dummyFound = true;
+		}
+	}
+
+
+	for (unsigned int i = 0; i < node->mNumMeshes; i++)
+	{
+		ResourceMesh* meshPointer = _sceneMeshes[node->mMeshes[i]];
+
+		GameObject* gmNode = new GameObject(node->mName.C_Str(), gmParent); //Name should be scene->mMeshes[node->mMeshes[i]]
+
+		//Load mesh to GameObject
+		C_Mesh* gmMeshRenderer = dynamic_cast<C_Mesh*>(gmNode->AddComponent(Component::TYPE::MESH));
+
+		gmMeshRenderer->SetRenderMesh(meshPointer);
+
+		aiMesh* importedMesh = meshArray[node->mMeshes[i]];
+		if (importedMesh->mMaterialIndex < sceneTextures.size() && sceneTextures[importedMesh->mMaterialIndex] != nullptr)
+		{
+			C_Material* material = dynamic_cast<C_Material*>(gmNode->AddComponent(Component::TYPE::MATERIAL));
+			material->matTexture = sceneTextures[importedMesh->mMaterialIndex];
+		}
+
+		PopulateTransform(gmNode, pos, rot, scale);
+	}
+
+	if (node->mNumChildren > 0)
+	{
+		GameObject* rootGO = gmParent;
+
+		//WARNING: This could break the code if the gameobject that we are ignoring has some other components
+		if (node->mNumChildren == 1 && node->mParent == nullptr && node->mChildren[0]->mNumChildren == 0)
+		{
+			LOG("This is a 1 child gameObject, you could ignore the root node parent creation");
+			node->mChildren[0]->mName = holderName;
+		}
+		else
+		{
+			std::string finalString = std::string(holderName);
+			size_t index = finalString.find("_$AssimpFbx$_");
+			if (index != std::string::npos) {
+				finalString = finalString.erase(index, std::string::npos);
+				holderName = finalString.c_str();
 			}
-			else
+			rootGO = new GameObject(holderName, gmParent);
+			PopulateTransform(rootGO, pos, rot, scale);
+		}
+
+
+		for (unsigned int i = 0; i < node->mNumChildren; i++)
+		{
+			NodeToGameObject(meshArray, sceneTextures, _sceneMeshes, node->mChildren[i], rootGO, node->mChildren[i]->mName.C_Str());
+		}
+	}
+	else if (node->mNumMeshes == 0)
+	{
+		std::string finalString = std::string(holderName);
+		size_t index = finalString.find("_$AssimpFbx$_");
+		if (index != std::string::npos) {
+			finalString = finalString.erase(index, std::string::npos);
+			holderName = finalString.c_str();
+		}
+		GameObject* noChildrenGO = new GameObject(holderName, gmParent);
+		PopulateTransform(noChildrenGO, pos, rot, scale);
+	}
+
+}
+
+ResourceMesh* ModuleMesh3D::LoadMesh(aiMesh* importedMesh, uint oldUID)
+{
+	uint UID = oldUID;
+	if (UID == 0)
+		UID = EngineExternal->moduleResources->GenerateNewUID();
+
+	LOG(LogType::L_NORMAL, "%s", importedMesh->mName.C_Str());
+	std::string file = MESHES_PATH;
+	file += std::to_string(UID);
+	file += ".mmh";
+
+	ResourceMesh* _mesh = dynamic_cast<ResourceMesh*>(EngineExternal->moduleResources->CreateNewResource("", UID, Resource::Type::MESH));
+
+	// copy vertices
+	_mesh->vertices_count = importedMesh->mNumVertices;
+	_mesh->vertices = new float[_mesh->vertices_count * VERTEX_ATTRIBUTES];
+
+	for (size_t i = 0; i < _mesh->vertices_count; i++)
+	{
+		_mesh->vertices[i * VERTEX_ATTRIBUTES] = importedMesh->mVertices[i].x;
+		_mesh->vertices[i * VERTEX_ATTRIBUTES + 1] = importedMesh->mVertices[i].y;
+		_mesh->vertices[i * VERTEX_ATTRIBUTES + 2] = importedMesh->mVertices[i].z;
+
+		if (importedMesh->HasTextureCoords(0))
+		{
+			_mesh->vertices[i * VERTEX_ATTRIBUTES + TEXCOORD_OFFSET] = importedMesh->mTextureCoords[0][i].x;
+			_mesh->vertices[i * VERTEX_ATTRIBUTES + TEXCOORD_OFFSET + 1] = importedMesh->mTextureCoords[0][i].y;
+
+			if (importedMesh->mTangents != nullptr)
 			{
-				memcpy(&meshData->indices[i * 3], sceneMesh->mFaces[i].mIndices, 3 * sizeof(uint));
+				_mesh->vertices[i * VERTEX_ATTRIBUTES + TANGENTS_OFFSET] = importedMesh->mTangents[i].x;
+				_mesh->vertices[i * VERTEX_ATTRIBUTES + TANGENTS_OFFSET + 1] = importedMesh->mTangents[i].y;
+				_mesh->vertices[i * VERTEX_ATTRIBUTES + TANGENTS_OFFSET + 2] = importedMesh->mTangents[i].z;
 			}
 		}
-	}
-
-	//copy normals
-	if (sceneMesh->HasNormals()) {
-		meshData->num_normals = sceneMesh->mNumVertices;
-		meshData->normals = new float[meshData->num_normals * 3];
-
-		memcpy(meshData->normals, sceneMesh->mNormals, sizeof(float) * meshData->num_normals * 3);
-	}
-
-	//copy texture coords
-	if (sceneMesh->HasTextureCoords(0)) {
-		meshData->num_textureCoords = sceneMesh->mNumVertices;
-		meshData->textureCoords = new float[sceneMesh->mNumVertices * 2];
-
-		for (unsigned int i = 0; i < meshData->num_textureCoords; i++) {
-			meshData->textureCoords[i * 2] = sceneMesh->mTextureCoords[0][i].x;
-			meshData->textureCoords[i * 2 + 1] = sceneMesh->mTextureCoords[0][i].y;
-		}
-	}
-
-	if (sceneMesh->HasBones())
-	{
-		LOG("Loading Mesh Bones");
-		meshData->num_bonesIDs = sceneMesh->mNumVertices;
-		meshData->num_bonesWeights = sceneMesh->mNumVertices;
-
-		meshData->bonesIDs = new int[4];
-		meshData->bonesWeights = new float[5];
-
-		meshData->boneTransforms.resize(sceneMesh->mNumBones);
-
-		//iterate all bones
-		for (uint boneId = 0; boneId < sceneMesh->mNumBones; boneId++)
+		else
 		{
-			aiBone* aibone = sceneMesh->mBones[boneId];
-			meshData->bonesMap[aibone->mName.C_Str()] = boneId;
+			_mesh->vertices[i * VERTEX_ATTRIBUTES + TEXCOORD_OFFSET] = 0.0f;
+			_mesh->vertices[i * VERTEX_ATTRIBUTES + TEXCOORD_OFFSET + 1] = 0.0f;
+
+			_mesh->vertices[i * VERTEX_ATTRIBUTES + TANGENTS_OFFSET] = 0.0f;
+			_mesh->vertices[i * VERTEX_ATTRIBUTES + TANGENTS_OFFSET + 1] = 0.0f;
+			_mesh->vertices[i * VERTEX_ATTRIBUTES + TANGENTS_OFFSET + 2] = 0.0f;
+		}
+
+		//Normals
+		if (importedMesh->HasNormals())
+		{
+			_mesh->vertices[i * VERTEX_ATTRIBUTES + NORMALS_OFFSET] = importedMesh->mNormals[i].x;
+			_mesh->vertices[i * VERTEX_ATTRIBUTES + NORMALS_OFFSET + 1] = importedMesh->mNormals[i].y;
+			_mesh->vertices[i * VERTEX_ATTRIBUTES + NORMALS_OFFSET + 2] = importedMesh->mNormals[i].z;
+			//LOG(LogType::L_NORMAL, "New mesh with %d normals", _mesh->normals_count);
+		}
+		else
+		{
+			_mesh->vertices[i * VERTEX_ATTRIBUTES + NORMALS_OFFSET] = 0.0f;
+			_mesh->vertices[i * VERTEX_ATTRIBUTES + NORMALS_OFFSET + 1] = 0.0f;
+			_mesh->vertices[i * VERTEX_ATTRIBUTES + NORMALS_OFFSET + 2] = 0.0f;
+		}
+
+
+		//boneIDs
+		_mesh->vertices[i * VERTEX_ATTRIBUTES + BONES_ID_OFFSET] = -1.0f;
+		_mesh->vertices[i * VERTEX_ATTRIBUTES + BONES_ID_OFFSET + 1] = -1.0f;
+		_mesh->vertices[i * VERTEX_ATTRIBUTES + BONES_ID_OFFSET + 2] = -1.0f;
+		_mesh->vertices[i * VERTEX_ATTRIBUTES + BONES_ID_OFFSET + 3] = -1.0f;
+
+		//weights
+		_mesh->vertices[i * VERTEX_ATTRIBUTES + WEIGHTS_OFFSET] = 0.0f;
+		_mesh->vertices[i * VERTEX_ATTRIBUTES + WEIGHTS_OFFSET + 1] = 0.0f;
+		_mesh->vertices[i * VERTEX_ATTRIBUTES + WEIGHTS_OFFSET + 2] = 0.0f;
+		_mesh->vertices[i * VERTEX_ATTRIBUTES + WEIGHTS_OFFSET + 3] = 0.0f;
+
+		//Empty Colors
+		_mesh->vertices[i * VERTEX_ATTRIBUTES + COLORS_OFFSET] = 0.0f;
+		_mesh->vertices[i * VERTEX_ATTRIBUTES + COLORS_OFFSET + 1] = 0.0f;
+		_mesh->vertices[i * VERTEX_ATTRIBUTES + COLORS_OFFSET + 2] = 0.0f;
+
+	}
+
+
+	if (importedMesh->HasBones())
+	{
+		//iterate all bones
+		for (size_t boneId = 0; boneId < importedMesh->mNumBones; boneId++)
+		{
+			aiBone* aibone = importedMesh->mBones[boneId];
+			_mesh->bonesMap[aibone->mName.C_Str()] = boneId;
 
 			//Load offsets
 			float4x4 offset = float4x4(aibone->mOffsetMatrix.a1, aibone->mOffsetMatrix.a2, aibone->mOffsetMatrix.a3, aibone->mOffsetMatrix.a4,
@@ -220,21 +224,21 @@ void ModuleMesh3D::Import(const aiMesh* sceneMesh, Mesh* meshData) {
 				aibone->mOffsetMatrix.c1, aibone->mOffsetMatrix.c2, aibone->mOffsetMatrix.c3, aibone->mOffsetMatrix.c4,
 				aibone->mOffsetMatrix.d1, aibone->mOffsetMatrix.d2, aibone->mOffsetMatrix.d3, aibone->mOffsetMatrix.d4);
 
-			meshData->bonesOffsets.push_back(offset);
+			_mesh->bonesOffsets.push_back(offset);
 
 			//iterate all bone weights
-			for (uint weights = 0; weights < aibone->mNumWeights; weights++) {
+			for (int weights = 0; weights < aibone->mNumWeights; weights++) {
 
 				int vertexId = aibone->mWeights[weights].mVertexId; // *4;
 
 				for (int w = 0; w < 4; w++)
 				{
-					if (meshData->bonesIDs[vertexId * 4 + w] == -1)
+					if (_mesh->vertices[vertexId * VERTEX_ATTRIBUTES + BONES_ID_OFFSET + w] == -1.0f)
 					{
 						//bone ids
-						meshData->bonesIDs[vertexId * 4 + w] = boneId;
+						_mesh->vertices[vertexId * VERTEX_ATTRIBUTES + BONES_ID_OFFSET + w] = boneId;
 						//weights
-						meshData->bonesWeights[vertexId * 4 + w] = aibone->mWeights[weights].mWeight;
+						_mesh->vertices[vertexId * VERTEX_ATTRIBUTES + WEIGHTS_OFFSET + w] = aibone->mWeights[weights].mWeight;
 						break;
 					}
 				}
@@ -242,126 +246,52 @@ void ModuleMesh3D::Import(const aiMesh* sceneMesh, Mesh* meshData) {
 		}
 	}
 
-	LoadMesh(meshData);
-}
-
-// === MESH === 
-Mesh::~Mesh() {
-	delete[] vertices;
-	delete[] indices;
-	delete[] normals;
-	delete[] textureCoords;
-	vertices = nullptr;
-	indices = nullptr;
-	normals = nullptr;
-	textureCoords = nullptr;
-	glDeleteBuffers(1, &id_vertices);
-	glDeleteBuffers(1, &id_indices);
-	glDeleteBuffers(1, &id_normals);
-	glDeleteBuffers(1, &id_textureCoords);
-	id_vertices = 0;
-	id_indices = 0;
-	id_normals = 0;
-	id_textureCoords = 0;
-}
-
-void Mesh::Render(uint texture, mat4x4 matrix)
-{
-	TryCalculateBones();
-
-	if (texture != NULL) {
-		glBindTexture(GL_TEXTURE_2D, texture);
-	}
-		
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glBindBuffer(GL_ARRAY_BUFFER, id_vertices);
-	glVertexPointer(3, GL_FLOAT, 0, NULL);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_indices);
-
-	glEnableClientState(GL_NORMAL_ARRAY);
-	glBindBuffer(GL_ARRAY_BUFFER, id_normals);
-	glNormalPointer(GL_FLOAT, 0, NULL);
-
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-	glBindBuffer(GL_ARRAY_BUFFER, id_textureCoords);
-	glTexCoordPointer(2, GL_FLOAT, 0, NULL);
-
-	glPushMatrix();
-	glMultMatrixf(&matrix);
-
-
-	if (calculatedBonesThisFrame && !boneTransforms.empty()) {
-
-		glUniformMatrix4fv(GL_FLOAT, boneTransforms.size(), GL_FALSE, (GLfloat*)&boneTransforms[0]);
-		calculatedBonesThisFrame = false;
-
-		LOG("Huesos?");
-	}
-
-	glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, NULL);
-	glPopMatrix();
-
-	glBindTexture(GL_TEXTURE_2D, 0);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glDisableClientState(GL_VERTEX_ARRAY);
-
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-
-	boneTransforms.clear();
-}
-
-void Mesh::SetRootBone(GameObject* go) {
-	if (go == nullptr) {
-		LOG("Trying to assign null root bone");
-		return;
-	}
-
-	rootBone = go;
-
-	GetBoneMapping();
-
-	boneTransforms.resize(bonesOffsets.size());
-
-}
-
-void Mesh::GetBoneMapping()
-{
-	/*bonesMap = rootBone->childs;*/
-}
-
-void Mesh::TryCalculateBones() {
-	if (rootBone == nullptr) {
-		return;
-	}
-
-	//Mesh array with transform matrix of each bone
-	if (calculatedBonesThisFrame == false)
+	//Load Colors
+	//for (size_t c = 0; c < AI_MAX_NUMBER_OF_COLOR_SETS; c++)
+	//{
+	if (importedMesh->HasVertexColors(0))
 	{
-		//float4x4 invertedMatrix = dynamic_cast<C_Transform*>(gameObject->GetComponent(Component::TYPE::TRANSFORM))->globalTransform.Inverted();
-		mat4x4 invertedMatrix = inverse(asignedGo->GO_matrix);
-
-		boneTransforms.reserve(bonesMap.size());
-
-		//Get each bone
-		for (int i = 0; i < bonesMap.size(); ++i)
+		for (size_t v = 0; v < _mesh->vertices_count; v++)
 		{
-			//GameObject* bone = bonesMap[i];
-
-			//if (bone != nullptr)
-			//{
-			//	//Calcule of Delta Matrix
-			//	
-			//	mat4x4 Delta = bone->GO_matrix * invertedMatrix;
-			//	Delta = Delta * bonesOffsets[i];
-
-			//	//Storage of Delta Matrix (Transformation applied to each bone)
-			//	//_mesh->boneTransforms[i] = Delta.Transposed();
-			//	boneTransforms.push_back(transpose(Delta));
-			//}
+			_mesh->vertices[v * VERTEX_ATTRIBUTES + COLORS_OFFSET] = importedMesh->mColors[0][v].r;
+			_mesh->vertices[v * VERTEX_ATTRIBUTES + COLORS_OFFSET + 1] = importedMesh->mColors[0][v].g;
+			_mesh->vertices[v * VERTEX_ATTRIBUTES + COLORS_OFFSET + 2] = importedMesh->mColors[0][v].b;
 		}
-		calculatedBonesThisFrame = true;
 	}
+	//}
+
+	// Generate indices
+	if (importedMesh->HasFaces())
+	{
+		_mesh->indices_count = importedMesh->mNumFaces * 3;
+		_mesh->indices = new uint[_mesh->indices_count]; // assume each face is a triangle
+		for (uint j = 0; j < importedMesh->mNumFaces; ++j)
+		{
+			if (importedMesh->mFaces[j].mNumIndices != 3)
+			{
+				LOG(LogType::L_WARNING, "WARNING, geometry face with != 3 indices!");
+			}
+			else
+			{
+				memcpy(&_mesh->indices[j * 3], importedMesh->mFaces[j].mIndices, 3 * sizeof(uint));
+			}
+		}
+	}
+
+	_mesh->generalWireframe = &EngineExternal->moduleRenderer3D->wireframe;
+
+	//TODO: Save on own file format
+	uint size = 0;
+	char* buffer = (char*)_mesh->SaveCustomFormat(size);
+
+	FileSystem::Save(file.c_str(), buffer, size, false);
+
+	RELEASE_ARRAY(buffer);
+
+	return _mesh;
+}
+
+void ModuleMesh3D::PopulateTransform(GameObject* child, float3 position, Quat rotationQuat, float3 size)
+{
+	child->transform->SetTransformMatrix(position, rotationQuat, size);
 }

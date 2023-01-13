@@ -367,6 +367,14 @@
     <ClInclude Include="Source\Buffer.h" />
     <ClInclude Include="Source\Camera.h" />
     <ClInclude Include="Source\Color.h" />
+    <ClInclude Include="Source\Component.h" />
+    <ClInclude Include="Source\C_Animator.h" />
+    <ClInclude Include="Source\C_Camera.h" />
+    <ClInclude Include="Source\C_Material.h" />
+    <ClInclude Include="Source\C_Mesh.h" />
+    <ClInclude Include="Source\C_Texture.h" />
+    <ClInclude Include="Source\C_Transform.h" />
+    <ClInclude Include="Source\DtTimer.h" />
     <ClInclude Include="Source\GameObject.h" />
     <ClInclude Include="Source\glmath.h" />
     <ClInclude Include="Source\Globals.h" />
@@ -377,13 +385,23 @@
     <ClInclude Include="Source\ModuleEditor.h" />
     <ClInclude Include="Source\ModuleImporter.h" />
     <ClInclude Include="Source\ModuleInput.h" />
+    <ClInclude Include="Source\ModuleMaterialImporter.h" />
     <ClInclude Include="Source\ModuleMesh3D.h" />
+    <ClInclude Include="Source\ModuleModelImporter.h" />
     <ClInclude Include="Source\ModuleRenderer3D.h" />
     <ClInclude Include="Source\ModuleScene.h" />
+    <ClInclude Include="Source\ModuleShaderImporter.h" />
     <ClInclude Include="Source\ModuleTexture.h" />
     <ClInclude Include="Source\ModuleWindow.h" />
     <ClInclude Include="Source\OpenGL.h" />
     <ClInclude Include="Source\Primitive.h" />
+    <ClInclude Include="Source\Resource.h" />
+    <ClInclude Include="Source\ResourceManager.h" />
+    <ClInclude Include="Source\R_Animation.h" />
+    <ClInclude Include="Source\R_Material.h" />
+    <ClInclude Include="Source\R_Mesh.h" />
+    <ClInclude Include="Source\R_Shader.h" />
+    <ClInclude Include="Source\R_Texture.h" />
     <ClInclude Include="Source\Timer.h" />
   </ItemGroup>
   <ItemGroup>
@@ -440,6 +458,14 @@
     <ClCompile Include="Source\Buffer.cpp" />
     <ClCompile Include="Source\Camera.cpp" />
     <ClCompile Include="Source\Color.cpp" />
+    <ClCompile Include="Source\Component.cpp" />
+    <ClCompile Include="Source\C_Animator.cpp" />
+    <ClCompile Include="Source\C_Camera.cpp" />
+    <ClCompile Include="Source\C_Material.cpp" />
+    <ClCompile Include="Source\C_Mesh.cpp" />
+    <ClCompile Include="Source\C_Texture.cpp" />
+    <ClCompile Include="Source\C_Transform.cpp" />
+    <ClCompile Include="Source\DtTimer.cpp" />
     <ClCompile Include="Source\FileTree.cpp" />
     <ClCompile Include="Source\GameObject.cpp" />
     <ClCompile Include="Source\glmath.cpp" />
@@ -451,12 +477,22 @@
     <ClCompile Include="Source\ModuleEditor.cpp" />
     <ClCompile Include="Source\ModuleImporter.cpp" />
     <ClCompile Include="Source\ModuleInput.cpp" />
+    <ClCompile Include="Source\ModuleMaterialImporter.cpp" />
     <ClCompile Include="Source\ModuleMesh3D.cpp" />
+    <ClCompile Include="Source\ModuleModelImporter.cpp" />
     <ClCompile Include="Source\ModuleRenderer3D.cpp" />
     <ClCompile Include="Source\ModuleScene.cpp" />
+    <ClCompile Include="Source\ModuleShaderImporter.cpp" />
     <ClCompile Include="Source\ModuleTexture.cpp" />
     <ClCompile Include="Source\ModuleWindow.cpp" />
     <ClCompile Include="Source\Primitive.cpp" />
+    <ClCompile Include="Source\Resource.cpp" />
+    <ClCompile Include="Source\ResourceManager.cpp" />
+    <ClCompile Include="Source\R_Animation.cpp" />
+    <ClCompile Include="Source\R_Material.cpp" />
+    <ClCompile Include="Source\R_Mesh.cpp" />
+    <ClCompile Include="Source\R_Shader.cpp" />
+    <ClCompile Include="Source\R_Texture.cpp" />
     <ClCompile Include="Source\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -1,167 +1,130 @@
-#include "Application.h"
-
 #include "ModuleAnimation.h"
+#include "Application.h"
+#include "ModuleEditor.h"
 
-#include "ModuleMesh3D.h"
+#include "GameObject.h"
+#include "C_Transform.h"
+#include "C_Animator.h"
 
-ModuleAnimation::ModuleAnimation(Application* app, bool start_enabled) : Module(app, start_enabled) 
+#include "R_Animation.h"
+
+#include "ModuleScene.h"
+
+//#include "IM_FileSystem.h"
+#include "IM_ModelImporter.h"
+
+//#include "MO_ResourceManager.h"
+
+#include "../External/Assimp/include/cimport.h"
+#include "../External/Assimp/include/scene.h"
+#include "../External/Assimp/include/postprocess.h"
+#include "../External/Assimp/include/cfileio.h"
+#include "../External/Assimp/include/vector3.h"
+
+#include "../External/MathGeoLib/include/Math/float3.h"
+
+#pragma comment (lib, "Assimp/libx86/assimp-vc142-mt.lib")
+
+ResourceAnimation* ModuleAnimation::ImportAnimation(aiAnimation* importedAnimation, uint oldUID)
 {
-}
+	uint UID = oldUID;
+	if (UID == 0)
+		UID = app->resourceManager->GenerateNewUID();
 
-// Loading from Assimp
-Animation* ModuleAnimation::LoadAnimation(aiAnimation* anim) {
-		
-	std::string animationName = anim->mName.C_Str();
-		
-	if (animationName.size() > 32) {
+	ResourceAnimation* animation = dynamic_cast<ResourceAnimation*>(EngineExternal->moduleResources->CreateNewResource("", UID, Resource::Type::ANIMATION));
+
+	std::string animationName = importedAnimation->mName.C_Str();
+	if (animationName.size() > 32)
 		animationName.resize(32);
-	}
 
-	Animation* animation = new Animation(animationName, anim->mDuration, anim->mTicksPerSecond);
+	strcpy(animation->animationName, animationName.c_str());
+	animation->ticksPerSecond = importedAnimation->mTicksPerSecond;
+	animation->duration = importedAnimation->mDuration;
 
-	for (int i = 0; i < anim->mNumChannels; i++) {
+	//Import from Assimp
+	for (int i = 0; i < importedAnimation->mNumChannels; i++)
+	{
 		Channel channel;
 
-		channel.name = anim->mChannels[i]->mNodeName.C_Str();
+		channel.boneName = importedAnimation->mChannels[i]->mNodeName.C_Str();
 
-		uint pos = channel.name.find("_$AssimpFbx$_");
+		uint pos = channel.boneName.find("_$AssimpFbx$_");
 		if (pos != std::string::npos)
 		{
-			channel.name = channel.name.substr(0, pos);
+			channel.boneName = channel.boneName.substr(0, pos);
 		}
-
-		for (int j = 0; j < anim->mChannels[i]->mNumPositionKeys; j++)
+		for (int j = 0; j < importedAnimation->mChannels[i]->mNumPositionKeys; j++)
 		{
-			aiVector3D aiValue = anim->mChannels[i]->mPositionKeys[j].mValue;
+			aiVector3D aiValue = importedAnimation->mChannels[i]->mPositionKeys[j].mValue;
 			float3 positionKey = float3(aiValue.x, aiValue.y, aiValue.z);
 
-			channel.posKeys[anim->mChannels[i]->mPositionKeys[j].mTime] = positionKey;
+			channel.positionKeys[importedAnimation->mChannels[i]->mPositionKeys[j].mTime] = positionKey;
 		}
 
-		for (int j = 0; j < anim->mChannels[i]->mNumRotationKeys; j++)
+		for (int j = 0; j < importedAnimation->mChannels[i]->mNumRotationKeys; j++)
 		{
-			aiQuaternion aiValue = anim->mChannels[i]->mRotationKeys[j].mValue;
-			Quat q = Quat(aiValue.x, aiValue.y, aiValue.z, aiValue.w);
+			aiQuaternion aiValue = importedAnimation->mChannels[i]->mRotationKeys[j].mValue;
+			Quat rotationKey = Quat(aiValue.x, aiValue.y, aiValue.z, aiValue.w);
 
-			float3 rotationKey;
-			{
-				// X
-				double sinr_cosp = 2 * (q.w * q.x + q.y * q.z);
-				double cosr_cosp = 1 - 2 * (q.x * q.x + q.y * q.y);
-				rotationKey.x = std::atan2(sinr_cosp, cosr_cosp);
-
-				// Y
-				double sinp = std::sqrt(1 + 2 * (q.w * q.x - q.y * q.z));
-				double cosp = std::sqrt(1 - 2 * (q.w * q.x - q.y * q.z));
-				rotationKey.y = 2 * std::atan2(sinp, cosp) - M_PI / 2;
-
-				// Z
-				double siny_cosp = 2 * (q.w * q.z + q.x * q.y);
-				double cosy_cosp = 1 - 2 * (q.y * q.y + q.z * q.z);
-				rotationKey.z = std::atan2(siny_cosp, cosy_cosp);
-			}
-			// Thank you Wikipedia
-
-			channel.rotKeys[anim->mChannels[i]->mRotationKeys[j].mTime] = rotationKey;
+			channel.rotationKeys[importedAnimation->mChannels[i]->mRotationKeys[j].mTime] = rotationKey;
 		}
 
-		for (int j = 0; j < anim->mChannels[i]->mNumScalingKeys; j++)
+		for (int j = 0; j < importedAnimation->mChannels[i]->mNumScalingKeys; j++)
 		{
-			aiVector3D aiValue = anim->mChannels[i]->mScalingKeys[j].mValue;
+			aiVector3D aiValue = importedAnimation->mChannels[i]->mScalingKeys[j].mValue;
 			float3 scaleKey = float3(aiValue.x, aiValue.y, aiValue.z);
 
-			channel.scaleKeys[anim->mChannels[i]->mScalingKeys[j].mTime] = scaleKey;
+			channel.scaleKeys[importedAnimation->mChannels[i]->mScalingKeys[j].mTime] = scaleKey;
 		}
-		animation->channels[channel.name] = channel;
-
-		/*GameObject* bone = new GameObject(channel.name.c_str(), app->editor->selectedGameObj);
-		bone->SetPos(vec3(channel.posKeys[0].x, channel.posKeys[0].y, channel.posKeys[0].z));*/
+		animation->channels[channel.boneName] = channel;
+		//animation->channels.push_back(channel);
 	}
 
-	LOG("MESH 3D: Loaded %s Animation with %.2f duration.", animation->name.c_str(), animation->duration);
+	//Save animation own format
+	char* buffer;
+	uint size = animation->SaveCustomFormat(animation, &buffer);
+
+	RELEASE_ARRAY(buffer);
 
 	return animation;
 }
 
-// Position
-std::map<double, float3>::const_iterator Channel::GetPrevPosKey(double currentKey) const {
-	std::map<double, float3>::const_iterator ret = posKeys.lower_bound(currentKey);
-	if (ret != posKeys.begin())
-		ret--;
+uint ModuleAnimation::GetChannelsSize(const Channel& channel)
+{
+	uint ret = sizeof(uint) + channel.boneName.size() + sizeof(uint) * 3;
+	//Translation
+	ret += sizeof(double) * channel.positionKeys.size() + sizeof(float) * channel.positionKeys.size() * 3;
+	//Rotation
+	ret += sizeof(double) * channel.rotationKeys.size() + sizeof(float) * channel.rotationKeys.size() * 4;
+	//Scale
+	ret += sizeof(double) * channel.scaleKeys.size() + sizeof(float) * channel.scaleKeys.size() * 3;
 
 	return ret;
 }
 
-std::map<double, float3>::const_iterator Channel::GetNextPosKey(double currentKey) const
+void ModuleAnimation::SaveChannels(const Channel& channel, char** cursor)
 {
-	return posKeys.upper_bound(currentKey);
-}
-
-// Rotation
-std::map<double, float3>::const_iterator Channel::GetPrevRotKey(double currentKey) const
-{
-	std::map<double, float3>::const_iterator ret = rotKeys.lower_bound(currentKey);
-	if (ret != rotKeys.begin())
-		ret--;
-	return ret;
-}
-
-std::map<double, float3>::const_iterator Channel::GetNextRotKey(double currentKey) const
-{
-	return rotKeys.upper_bound(currentKey);
-}
-
-// Scale
-std::map<double, float3>::const_iterator Channel::GetPrevScaleKey(double currentKey) const
-{
-	std::map<double, float3>::const_iterator ret = scaleKeys.lower_bound(currentKey);
-	if (ret != scaleKeys.begin())
-		ret--;
-	return ret;
-}
-
-std::map<double, float3>::const_iterator Channel::GetNextScaleKey(double currentKey) const
-{
-	return scaleKeys.upper_bound(currentKey);
-}
-
-// CHANNELS
-
-uint ModuleAnimation::ChannelSize(const Channel& ch) {
-	
-	uint ret = sizeof(uint) + ch.name.size() + sizeof(uint) * 3;
-
-	ret += sizeof(double) * ch.posKeys.size() + sizeof(float) * ch.posKeys.size() * 3;
-	ret += sizeof(double) * ch.rotKeys.size() + sizeof(float) * ch.rotKeys.size() * 4;
-	ret += sizeof(double) * ch.scaleKeys.size() + sizeof(float) * ch.scaleKeys.size() * 3;
-
-	return ret;
-}
-
-void ModuleAnimation::SaveChannel(const Channel& ch, char** cursor) {
-	
-	// Set Name
-	uint nameSize = ch.name.size();
+	uint nameSize = channel.boneName.size();
 	memcpy(*cursor, &nameSize, sizeof(uint));
 	*cursor += sizeof(uint);
 
-	memcpy(*cursor, ch.name.c_str(), ch.name.size());
-	*cursor += ch.name.size();
+	memcpy(*cursor, channel.boneName.c_str(), channel.boneName.size());
+	*cursor += channel.boneName.size();
 
-	// Set Range
-	uint range[3] = { ch.posKeys.size(), ch.rotKeys.size(), ch.scaleKeys.size() };
-	memcpy(*cursor, range, sizeof(uint) * 3);
+	//Ranges
+	uint ranges[3] = { channel.positionKeys.size(), channel.rotationKeys.size(), channel.scaleKeys.size() };
+	memcpy(*cursor, ranges, sizeof(uint) * 3);
 	*cursor += sizeof(uint) * 3;
 
-	// Save Channels
-	SaveChannelKeys(ch.posKeys, cursor);
-	SaveChannelKeys(ch.rotKeys, cursor);
-	SaveChannelKeys(ch.scaleKeys, cursor);
+	//Save each channel, depending on float or quat based
+	SaveChanKeys(channel.positionKeys, cursor);
+	SaveChanKeys(channel.rotationKeys, cursor);
+	SaveChanKeys(channel.scaleKeys, cursor);
 }
 
-void ModuleAnimation::SaveChannelKeys(const std::map<double, float3>& map, char** cursor) {
+void ModuleAnimation::SaveChanKeys(const std::map<double, float3>& map, char** cursor)
+{
 	std::map<double, float3>::const_iterator it = map.begin();
-
 	for (it = map.begin(); it != map.end(); it++)
 	{
 		memcpy(*cursor, &it->first, sizeof(double));
@@ -172,54 +135,50 @@ void ModuleAnimation::SaveChannelKeys(const std::map<double, float3>& map, char*
 	}
 }
 
-//void ModuleAnimation::SaveChannelKeys(const std::map<double, Quat>& map, char** cursor) {
-//	std::map<double, Quat>::const_iterator it = map.begin();
-//
-//	for (it = map.begin(); it != map.end(); it++)
-//	{
-//		memcpy(*cursor, &it->first, sizeof(double));
-//		*cursor += sizeof(double);
-//
-//		memcpy(*cursor, &it->second, sizeof(float) * 4);
-//		*cursor += sizeof(float) * 4;
-//	}
-//}
+void ModuleAnimation::SaveChanKeys(const std::map<double, Quat>& map, char** cursor)
+{
+	std::map<double, Quat>::const_iterator it = map.begin();
+	for (it = map.begin(); it != map.end(); it++)
+	{
+		memcpy(*cursor, &it->first, sizeof(double));
+		*cursor += sizeof(double);
 
-void ModuleAnimation::LoadChannel(Channel& ch, const char** cursor) 
+		memcpy(*cursor, &it->second, sizeof(float) * 4);
+		*cursor += sizeof(float) * 4;
+	}
+}
+
+void ModuleAnimation::LoadChannels(Channel& channel, const char** cursor)
 {
 	uint bytes = 0;
 
-	// Get Name Size
 	uint nameSize = 0;
 	memcpy(&nameSize, *cursor, sizeof(uint));
 	*cursor += sizeof(uint);
 
-	// Get Name
 	if (nameSize > 0)
 	{
 		char* string = new char[nameSize + 1];
 		bytes = sizeof(char) * nameSize;
-
 		memcpy(string, *cursor, bytes);
 		*cursor += bytes;
 		string[nameSize] = '\0';
-
-		ch.name = string;
-
+		channel.boneName = string;
 		RELEASE_ARRAY(string);
 	}
 
-	// Load Range
-	uint range[3];
-	memcpy(&range, *cursor, sizeof(uint) * 3);
+	//Ranges
+	uint ranges[3] = { 0,0,0 };
+	memcpy(&ranges, *cursor, sizeof(uint) * 3);
 	*cursor += sizeof(uint) * 3;
 
-	LoadChannelKeys(ch.posKeys, cursor, range[0]);
-	LoadChannelKeys(ch.rotKeys, cursor, range[1]);
-	LoadChannelKeys(ch.scaleKeys, cursor, range[2]);
+	LoadChanKeys(channel.positionKeys, cursor, ranges[0]);
+	LoadChanKeys(channel.rotationKeys, cursor, ranges[1]);
+	LoadChanKeys(channel.scaleKeys, cursor, ranges[2]);
 }
 
-void ModuleAnimation::LoadChannelKeys(std::map<double, float3>& map, const char** cursor, uint size) {
+void ModuleAnimation::LoadChanKeys(std::map<double, float3>& map, const char** cursor, uint size)
+{
 	for (uint i = 0; i < size; i++)
 	{
 		double time;
@@ -233,16 +192,30 @@ void ModuleAnimation::LoadChannelKeys(std::map<double, float3>& map, const char*
 	}
 }
 
-//void ModuleAnimation::LoadChannelKeys(std::map<double, Quat>& map, const char** cursor, uint size) {
-//	for (uint i = 0; i < size; i++)
-//	{
-//		double time;
-//		memcpy(&time, *cursor, sizeof(double));
-//		*cursor += sizeof(double);
-//		float data[4];
-//		memcpy(&data, *cursor, sizeof(float) * 4);
-//		*cursor += sizeof(float) * 4;
-//
-//		map[time] = Quat(data);
-//	}
-//}
+void ModuleAnimation::LoadChanKeys(std::map<double, Quat>& map, const char** cursor, uint size)
+{
+	for (uint i = 0; i < size; i++)
+	{
+		double time;
+		memcpy(&time, *cursor, sizeof(double));
+		*cursor += sizeof(double);
+		float data[4];
+		memcpy(&data, *cursor, sizeof(float) * 4);
+		*cursor += sizeof(float) * 4;
+
+		map[time] = Quat(data);
+	}
+}
+
+void ModuleAnimation::SetAnimationOnGameObjectRoot(aiAnimation** animArray, std::vector<ResourceAnimation*>& _sceneAnimations, GameObject* gmRoot)
+{
+	for (int i = 0; i < _sceneAnimations.size(); i++)
+	{
+		aiAnimation* importedAnim = animArray[i];
+
+		if (importedAnim->mDuration != 0)
+		{
+			C_Animator* animator = dynamic_cast<C_Animator*>(gmRoot->AddComponent(Component::TYPE::ANIMATOR));
+		}
+	}
+}

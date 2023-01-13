@@ -1,0 +1,75 @@
+#pragma once
+
+#include "Resource.h"
+
+#include "Globals.h"
+
+#include "../External/MathGeoLib/include/Math/float4x4.h"
+#include "../External/MathGeoLib/include/Math/float2.h"
+#include "../External/MathGeoLib/include/Math/float3.h"
+#include "../External/MathGeoLib/include/Math/float4.h"
+
+typedef unsigned int GLuint;
+typedef unsigned int GLenum;
+typedef int GLint;
+typedef int GLsizei;
+
+class ResourceShader;
+class ResourceTexture;
+
+struct ShaderVariable
+{
+	ShaderVariable();
+	~ShaderVariable();
+
+	GLuint vIndex;
+	GLenum vType;
+	GLint vSize;
+
+	GLsizei nameLength;
+	char name[25];
+
+	union ShdrValue {
+		ShdrValue();
+		int intValue;
+		float floatValue;
+		float2 vector2Value;
+		float3 vector3Value;
+		float4 vector4Value;
+		ResourceTexture* textureValue;
+		float4x4* matrixValue;
+	} data;
+};
+
+static const char* defaultUniforms[] = { "position", "tangents", "texCoord", "normals",
+										 "model_matrix", "view", "projection", "normalMatrix",
+										 "cameraPosition", "time", "ourTexture","altColor", "hasTexture",
+										 "lightPos", "lightPosition", "viewPos", "lightColor", "lightSpaceMatrix",
+										 "ambientLightColor", "lightIntensity", "specularValue", "shadowMap",
+										 "normalMap", "specularMap", "bumpDepth", "farPlaneDistance", "uiFadeValue",
+										 "uiBlendTexture", "uiBlendTextureValue", "uiHasBlendTexture" };
+
+static const char* defaultUniformStructures[] = { "lightInfo", "areaLightInfo", "cubeShadowMap" };
+
+class ResourceMaterial : public Resource {
+public:
+	ResourceMaterial(unsigned int _uid);
+	~ResourceMaterial();
+
+	bool UnloadFromMemory() override;
+
+	void FillVariables();
+	void UnloadTextures();
+
+	void PushUniforms();
+	bool IsDefaultUniform(const char* uniform_name);
+
+	void SetShader(ResourceShader* res);
+
+public:
+
+	std::vector<ShaderVariable> attributes;
+	std::vector<ShaderVariable> uniforms;
+
+	ResourceShader* shader;
+};

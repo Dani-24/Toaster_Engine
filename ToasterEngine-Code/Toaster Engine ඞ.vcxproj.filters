@@ -703,6 +703,60 @@
     <ClInclude Include="Source\ModuleAnimation.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Component.h">
+      <Filter>Sources\Engine\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\C_Transform.h">
+      <Filter>Sources\Engine\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\C_Camera.h">
+      <Filter>Sources\Engine\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\C_Mesh.h">
+      <Filter>Sources\Engine\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\C_Texture.h">
+      <Filter>Sources\Engine\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\C_Animator.h">
+      <Filter>Sources\Engine\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Resource.h">
+      <Filter>Sources\Tools\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\R_Mesh.h">
+      <Filter>Sources\Tools\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\R_Texture.h">
+      <Filter>Sources\Tools\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\R_Animation.h">
+      <Filter>Sources\Tools\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DtTimer.h">
+      <Filter>Sources\Tools\Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\R_Material.h">
+      <Filter>Sources\Tools\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\R_Shader.h">
+      <Filter>Sources\Tools\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ModuleShaderImporter.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ModuleModelImporter.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ModuleMaterialImporter.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\C_Material.h">
+      <Filter>Sources\Engine\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ResourceManager.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Sources">
@@ -785,6 +839,12 @@
     </Filter>
     <Filter Include="Sources\Modules\Camera">
       <UniqueIdentifier>{4a1a0866-fc88-499e-873d-f44db34bd554}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Engine\Components">
+      <UniqueIdentifier>{0bb0d068-6b83-4551-9899-5d4627c64dcc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Tools\Resources">
+      <UniqueIdentifier>{589095dc-e9f0-4fb5-ab28-05b9a5f8acc3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -991,6 +1051,60 @@
       <Filter>Sources\Tools</Filter>
     </ClCompile>
     <ClCompile Include="Source\ModuleAnimation.cpp">
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Component.cpp">
+      <Filter>Sources\Engine\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\C_Transform.cpp">
+      <Filter>Sources\Engine\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\C_Camera.cpp">
+      <Filter>Sources\Engine\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\C_Mesh.cpp">
+      <Filter>Sources\Engine\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\C_Texture.cpp">
+      <Filter>Sources\Engine\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\C_Animator.cpp">
+      <Filter>Sources\Engine\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Resource.cpp">
+      <Filter>Sources\Tools\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\R_Mesh.cpp">
+      <Filter>Sources\Tools\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\R_Texture.cpp">
+      <Filter>Sources\Tools\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\R_Animation.cpp">
+      <Filter>Sources\Tools\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DtTimer.cpp">
+      <Filter>Sources\Tools\Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\R_Material.cpp">
+      <Filter>Sources\Tools\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\R_Shader.cpp">
+      <Filter>Sources\Tools\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ModuleShaderImporter.cpp">
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ModuleModelImporter.cpp">
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ModuleMaterialImporter.cpp">
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\C_Material.cpp">
+      <Filter>Sources\Engine\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ResourceManager.cpp">
       <Filter>Sources\Modules</Filter>
     </ClCompile>
   </ItemGroup>
