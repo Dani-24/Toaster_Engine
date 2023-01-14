@@ -76,13 +76,13 @@ update_status ModuleEditor::Update(float dt) {
 		}
 	}
 
-	// GameObjects Animations
+	//// GameObjects Animations
 
-	for (int i = 0; i < gameObjects.size(); i++) {
-		if (!gameObjects[i]->GO_animations.empty()) {
-			gameObjects[i]->UpdateAnimation(dt);
-		}
-	}
+	//for (int i = 0; i < gameObjects.size(); i++) {
+	//	if (!gameObjects[i]->GO_animations.empty()) {
+	//		gameObjects[i]->UpdateAnimation(dt);
+	//	}
+	//}
 
 	return UPDATE_CONTINUE;
 }
@@ -91,44 +91,35 @@ update_status ModuleEditor::PostUpdate(float dt) {
 
 	// Delete GameObjects
 	for (int i = 0; i < gameObjects.size(); i++) {
-		if (gameObjects[i]->pendindToDelete) {
-			gameObjects[i]->DeleteThisGameObject();
+		if (gameObjects[i]->toDelete) {
+			gameObjects[i]->Destroy();
 			gameObjects.erase(gameObjects.begin() + i);
 		}
 	}
 
-	// New Scene
-	if (!root->childs.empty() && newScene == true) {
-		for (int i = 0; i < root->childs.size(); i++) {
-			root->childs[i]->DeleteThisGameObject();
-			app->camera->activeCamera = nullptr;
-		}
-		if (root->childs.empty()) {
-			newScene = false;
-			goID = 1;
-			Hnaming.clear();
-		}
-	}
-
 	// Render GO Meshes
-	for (int i = 0; i < gameObjects.size(); i++) {
-		if (app->camera->activeCamera != nullptr) {
-			if (app->camera->activeCamera->FrustumCulling(gameObjects[i])) {
-				gameObjects[i]->RenderMesh();
-			}
-		}
-		else {
-			// If no active camera just render all on editor
-			gameObjects[i]->RenderMesh();
-			gameObjects[i]->DrawAABB();
-		}
+	if (app->camera->activeCamera != nullptr) {
 
-		if (showAllAABB) {
-			gameObjects[i]->DrawAABB();
+		std::vector<C_Mesh*> copy = renderQueue;
+		renderQueue.clear();
+		for (size_t i = 0; i < copy.size(); i++)
+		{
+			if (app->camera->activeCamera->FrustumCulling(copy[i]->globalAABB))
+					renderQueue.push_back(copy[i]);
 		}
+		copy.clear();
 	}
+	//else {
+	//	// If no active camera just render all on editor
+	//	gameObjects[i]->RenderMesh();
+	//	gameObjects[i]->DrawAABB();
+	//}
 
-	if (selectedGameObj != nullptr) {
+	//if (showAllAABB) {
+	//	gameObjects[i]->DrawAABB();
+	//}
+
+	if (selectedGameObj != nullptr && selectedGameObj->GetComponent(Component::TYPE::MESH) != nullptr) {
 		selectedGameObj->DrawAABB();
 	}
 
@@ -187,21 +178,6 @@ void ModuleEditor::Draw(){
 	if (ImGui::BeginMainMenuBar()) {
 
 		if (ImGui::BeginMenu("File")) {
-			if (ImGui::MenuItem("New Toast", "New Scene")) {
-
-				newScene = true;
-
-				root->name = "New Scene";
-			}
-			if (ImGui::MenuItem("Open Toast", "WIP")) {
-
-			}
-			if (ImGui::MenuItem("Save your Toast", "WIP")) {
-
-			}
-			if (ImGui::MenuItem("Save and Close the fridge", "WIP")) {
-
-			}
 			if (ImGui::MenuItem("Close Butter", "Ctrl+Alt+F4", &closeOpenClose)) {
 
 			}
@@ -209,12 +185,6 @@ void ModuleEditor::Draw(){
 		}
 
 		if (ImGui::BeginMenu("Edit")) {
-			if (ImGui::MenuItem("Undo", "WIP")) {
-
-			}
-			if (ImGui::MenuItem("Redo", "WIP")) {
-
-			}
 			if (ImGui::MenuItem("Toaster Mode", "Just work at toaster speed", &toasterMode)) {
 			
 			}
@@ -236,33 +206,34 @@ void ModuleEditor::Draw(){
 				if (ImGui::MenuItem("Cube")) {
 
 					GameObject* cube = new GameObject("Cube", root);
-					cube->AddMesh(app->mesh3d->LoadFile("Assets/default_Meshes/cube.fbx"));
+					cube->AddComponent(Component::TYPE::MESH, "Assets/default_Meshes/cube.fbx");
+					//cube->AddMesh(app->mesh3d->LoadFile());
 				}
 				if (ImGui::MenuItem("Sphere")) {
 
 					GameObject* sphere = new GameObject("Sphere", root);
-					sphere->AddMesh(app->mesh3d->LoadFile("Assets/default_Meshes/sphere.fbx"));
+					sphere->AddComponent(Component::TYPE::MESH, "Assets/default_Meshes/sphere.fbx");
 				}
 				if (ImGui::MenuItem("Cylinder")) {
 
 					GameObject* cylinder = new GameObject("Cylinder", root);
-					cylinder->AddMesh(app->mesh3d->LoadFile("Assets/default_Meshes/cylinder.fbx"));
+					cylinder->AddComponent(Component::TYPE::MESH, "Assets/default_Meshes/cylinder.fbx");
 				}
 				if (ImGui::MenuItem("Cone")) {
 
 					GameObject* cone = new GameObject("Cone", root);
-					cone->AddMesh(app->mesh3d->LoadFile("Assets/default_Meshes/cone.fbx"));
+					cone->AddComponent(Component::TYPE::MESH, "Assets/default_Meshes/cone.fbx");
 				}
 				if (ImGui::MenuItem("Plane")) {
 
 					GameObject* plane = new GameObject("Plane", root);
-					plane->AddMesh(app->mesh3d->LoadFile("Assets/default_Meshes/plane.fbx"));
+					plane->AddComponent(Component::TYPE::MESH, "Assets/default_Meshes/plane.fbx");
 				}
 				if (ImGui::MenuItem("Demo: Baker House")) {
 
 					GameObject* house = new GameObject("Baker House", root);
-					house->AddTexture(app->textures->LoadTexture("Assets/Baker_house.png"));
-					house->AddMesh(app->mesh3d->LoadFile("Assets/BakerHouse.fbx", house));
+					house->AddComponent(Component::TYPE::MATERIAL, "Assets/Baker_house.png");
+					house->AddComponent(Component::TYPE::MESH, "Assets/BakerHouse.fbx");
 				}
 
 				ImGui::EndMenu();
@@ -528,13 +499,13 @@ void ModuleEditor::ShowAssetManager(bool* open) {
 	}
 	if (dd_file_name != "") {
 		if (dd_file_type == ResourceType::MESH) {
-			GameObject* ddFile = new GameObject(ddname, root);
+			GameObject* ddFile = new GameObject(ddname.c_str(), root);
 			//ddFile->AddTexture(app->textures->LoadTexture(dd_file_name));
-			ddFile->AddMesh(app->mesh3d->LoadFile(dd_file_name, ddFile));
+			ddFile->AddComponent(Component::TYPE::MESH, dd_file_name.c_str());
 		}
 		else if (dd_file_type == ResourceType::TEXTURE) {
 			if (selectedGameObj != nullptr) {
-				selectedGameObj->AddTexture(app->textures->LoadTexture(dd_file_name));
+				selectedGameObj->AddComponent(Component::TYPE::MESH, dd_file_name.c_str());
 			}
 		}
 		dd_file_name = "";
@@ -564,34 +535,15 @@ void ModuleEditor::ShowInspectorMenu(bool* open) {
 	}
 	else {
 
-		if (selectedGameObj != nullptr) {
+		if (selectedGameObj != nullptr && selectedGameObj != root) {
 			
-			ImGui::InputText(" ", (char*)selectedGameObj->name.c_str(), 50);
+			selectedGameObj->OnEditor();
 
-			ImGui::SameLine();
+			Space();
 
-			ImGui::TextWrapped("ID: %d", selectedGameObj->GetID());
-
-			if (selectedGameObj != root) { // Don't allow to delete or edit the root
-				
-				ImGui::NewLine();
-
-				if (selectedGameObj->GetParent() != nullptr) {
-					ImGui::TextWrapped("Child of");
-					ImGui::SameLine();
-					ImGui::TextWrapped(selectedGameObj->GetParent()->GetName().c_str());
-				}
-
-				Space();
-
-				selectedGameObj->OnEditor();
-
-				Space();
-
-				// Delete Game Object
-				if (selectedGameObj->GetParent() != nullptr) {
-					ImGui::Selectable("Delete this Game Object ", &selectedGameObj->pendindToDelete);
-				}
+			// Delete Game Object
+			if (selectedGameObj->parent != nullptr) {
+				ImGui::Selectable("Delete this Game Object ", &selectedGameObj->toDelete);
 			}
 		}
 		else {
@@ -621,9 +573,9 @@ void ModuleEditor::PrepareDrawGameObject(GameObject* gameObj, bool hasCh) {
 		DrawGameObject(gameObj, 0);
 	}
 	else {
-		for (uint i = 0; i < gameObj->childs.size(); i++)
+		for (uint i = 0; i < gameObj->children.size(); i++)
 		{
-			DrawGameObject(gameObj->childs[i], i);
+			DrawGameObject(gameObj->children[i], i);
 		}
 	}
 }
@@ -638,12 +590,12 @@ void ModuleEditor::DrawGameObject(GameObject* gameObj, int iteration) {
 
 	bool node_open;
 
-	if (gameObj->childs.empty()) // WITHOUT CHILDS
+	if (gameObj->children.empty()) // WITHOUT CHILDS
 	{
 		ImGui::AlignTextToFramePadding();
 		node_flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen | ImGuiTreeNodeFlags_AllowItemOverlap;
 
-		ImGui::TreeNodeEx((void*)(intptr_t)iteration, node_flags, gameObj->GetName().c_str(), iteration);
+		ImGui::TreeNodeEx((void*)(intptr_t)iteration, node_flags, gameObj->name.c_str(), iteration);
 
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenOverlapped))
 		{
@@ -655,7 +607,7 @@ void ModuleEditor::DrawGameObject(GameObject* gameObj, int iteration) {
 	{
 		ImGui::AlignTextToFramePadding();
 		node_flags |= ImGuiTreeNodeFlags_AllowItemOverlap;
-		node_open = ImGui::TreeNodeEx((void*)(intptr_t)iteration, node_flags, gameObj->GetName().c_str(), iteration);
+		node_open = ImGui::TreeNodeEx((void*)(intptr_t)iteration, node_flags, gameObj->name.c_str(), iteration);
 
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenOverlapped))
 		{
@@ -677,8 +629,8 @@ void ModuleEditor::DrawGameObject(GameObject* gameObj, int iteration) {
 	{
 		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GameObject"))
 		{
-			if (gameObj->GetParent() != draggingGO) { // Avoid making a parent of a child of a parent of a child of a parent of a child of a parent of a child of a parent
-				gameObj->AddChild(draggingGO);
+			if (gameObj->parent != draggingGO) { // Avoid making a parent of a child of a parent of a child of a parent of a child of a parent of a child of a parent
+				gameObj->children.push_back(draggingGO);
 				draggingGO = nullptr;
 			}
 		}
@@ -687,7 +639,7 @@ void ModuleEditor::DrawGameObject(GameObject* gameObj, int iteration) {
 
 	if (node_open)
 	{
-		if (!gameObj->childs.empty()) {
+		if (!gameObj->children.empty()) {
 			PrepareDrawGameObject(gameObj, true);
 		}
 		ImGui::TreePop();
@@ -704,8 +656,9 @@ void ModuleEditor::ShowAboutMenu(bool* open) {
 		// INFO
 		ImGui::TextWrapped(TITLE);
 
-		Texture* engineIcon = app->textures->LoadTexture("Assets/default_Meshes/icon1.png");
-		ImGui::Image((ImTextureID)engineIcon->OpenGLID, ImVec2(100, 100));
+		/*Texture* engineIcon = app->textures->LoadTexture("Assets/default_Meshes/icon1.png");
+
+		ImGui::Image((ImTextureID)engineIcon->OpenGLID, ImVec2(100, 100));*/
 		
 		Space();
 

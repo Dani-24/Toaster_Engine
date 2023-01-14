@@ -13,6 +13,8 @@ public:
 
 	bool OnEditor() override;
 
+	Camera* GetCamera();
+
 public:
 
 	Camera* GO_camera;

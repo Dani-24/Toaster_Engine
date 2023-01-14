@@ -9,6 +9,9 @@
 #include "ModuleMesh3D.h"
 #include "ModuleTexture.h"
 
+#include "GameObject.h"
+#include "C_Transform.h"
+
 ModuleScene::ModuleScene(Application* app, bool start_enabled) : Module(app, start_enabled)
 {}
 
@@ -22,15 +25,15 @@ bool ModuleScene::Start()
 	bool ret = true;
 
 	GameObject* skybox = new GameObject("skybox", nullptr);
-	skybox->AddTexture(app->textures->LoadTexture("Assets/default_Meshes/skybox.png"));
-	skybox->AddMesh(app->mesh3d->LoadFile("Assets/default_Meshes/skybox.fbx", skybox));
-	skybox->SetScale(vec3(200, 200, 200));
-	skybox->SetRot(vec3(90, 0, 0));
+	skybox->AddComponent(Component::TYPE::MATERIAL, "Assets/default_Meshes/skybox.png");
+	skybox->AddComponent(Component::TYPE::MESH, "Assets/default_Meshes/skybox.fbx");
+	skybox->transform->localScale.Set(200, 200, 200);
+	skybox->transform->eulerRotation.Set(90, 0, 0);
 
 	GameObject* openGameObject = new GameObject("Demo Street Environment", app->editor->root);
-	openGameObject->AddTexture(app->textures->LoadTexture("Assets/street_text1.png"));
-	openGameObject->AddTexture(app->textures->LoadTexture("Assets/street_text2.png"));
-	openGameObject->AddMesh(app->mesh3d->LoadFile("Assets/street.fbx", openGameObject));
+	openGameObject->AddComponent(Component::TYPE::MATERIAL, "Assets/street_text1.png");
+	openGameObject->AddComponent(Component::TYPE::MATERIAL, "Assets/street_text2.png");
+	openGameObject->AddComponent(Component::TYPE::MESH, "Assets/street.fbx");
 
 	return ret;
 }

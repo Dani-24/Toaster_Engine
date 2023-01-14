@@ -23,7 +23,7 @@ C_Material::C_Material(GameObject* _gm) : Component(_gm), viewWithCheckers(false
 material(nullptr)
 {
 	name = "Material";
-	material = ( app->scene->defaultMaterial != nullptr) ? dynamic_cast<ResourceMaterial*>(app->resourceManager->RequestResource(app->scene->defaultMaterial->GetUID())) : NULL;
+	//material = ( app->scene->defaultMaterial != nullptr) ? dynamic_cast<ResourceMaterial*>(app->resourceManager->RequestResource(app->scene->defaultMaterial->GetUID())) : NULL;
 }
 
 C_Material::~C_Material()
@@ -35,7 +35,6 @@ C_Material::~C_Material()
 		app->resourceManager->UnloadResource(material->GetUID());
 }
 
-#ifndef STANDALONE
 bool C_Material::OnEditor()
 {
 	if (Component::OnEditor() == true)
@@ -51,9 +50,9 @@ bool C_Material::OnEditor()
 			{
 				std::string* assetsPath = (std::string*)payload->Data;
 
-				ResourceMaterial* newMaterial = dynamic_cast<ResourceMaterial*>(app->resourceManager->RequestFromAssets(assetsPath->c_str()));
+				//ResourceMaterial* newMaterial = dynamic_cast<ResourceMaterial*>(app->resourceManager->RequestResource(assetsPath->c_str()));
 
-				SetMaterial(newMaterial);
+				//SetMaterial(newMaterial);
 			}
 			ImGui::EndDragDropTarget();
 		}
@@ -63,7 +62,7 @@ bool C_Material::OnEditor()
 			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "No material");
 		else
 		{
-			material->DrawEditor("##Mat");
+			//material->DrawEditor("##Mat");
 		}
 
 		if (material && material->shader)
@@ -76,7 +75,6 @@ bool C_Material::OnEditor()
 	}
 	return false;
 }
-#endif // !STANDALONE
 
 void C_Material::SetMaterial(ResourceMaterial* newMaterial)
 {
@@ -88,5 +86,5 @@ void C_Material::SetMaterial(ResourceMaterial* newMaterial)
 
 int C_Material::GetTextureID()
 {
-	return (viewWithCheckers == false && (matTexture && matTexture->textureID != 0)) ? matTexture->textureID : EngineExternal->moduleRenderer3D->checkersTexture;
+	return (viewWithCheckers == false && (matTexture && matTexture->textureID != 0)) ? matTexture->textureID : app->renderer3D->checkersTexture;
 }

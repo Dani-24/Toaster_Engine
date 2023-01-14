@@ -1,5 +1,11 @@
 #include "C_Camera.h"
 
+#include "Application.h"
+
+#include "ModuleEditor.h"
+
+#include "C_Transform.h"
+
 C_Camera::C_Camera() : Component(nullptr)
 {
 	name = "Camera";
@@ -72,4 +78,8 @@ bool C_Camera::OnEditor() {
 			GO_camera->LookAt(camLookAt);
 		}
 	}
+}
+
+Camera* C_Camera::GetCamera() {
+	return GO_camera;
 }

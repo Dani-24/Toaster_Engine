@@ -18,7 +18,7 @@
 
 #include "DtTimer.h"
 
-ResourceMesh::ResourceMesh(unsigned int _uid) : Resource(_uid, Resource::Type::MESH), indices_id(0), vertices_id(0),
+ResourceMesh::ResourceMesh(unsigned int _uid) : Resource(_uid, Resource::Type::MESH), indices_id(0), vertices_id(0), generalWireframe(nullptr),
 EBO(0), VAO(0), VBO(0)
 {
 }
@@ -312,13 +312,13 @@ void ResourceMesh::PushDefaultMeshUniforms(uint shaderID, uint textureID, C_Tran
 	if (app->renderer3D->renderOnThisCamera != nullptr)
 	{
 		modelLoc = glGetUniformLocation(shaderID, "view");
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, app->renderer3D->renderOnThisCamera->ViewMatrixOpenGL().ptr());
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, app->renderer3D->renderOnThisCamera->GetViewMatrix().ptr());
 
-		modelLoc = glGetUniformLocation(shaderID, "projection");
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, app->renderer3D->renderOnThisCamera->ProjectionMatrixOpenGL().ptr());
+		/*modelLoc = glGetUniformLocation(shaderID, "projection");
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, app->renderer3D->renderOnThisCamera->ProjectionMatrixOpenGL().ptr());*/
 
 		modelLoc = glGetUniformLocation(shaderID, "cameraPosition");
-		float3 cameraPosition = app->renderer3D->renderOnThisCamera->GetPosition();
+		float3 cameraPosition = float3(app->renderer3D->renderOnThisCamera->GetPos().x, app->renderer3D->renderOnThisCamera->GetPos().y, app->renderer3D->renderOnThisCamera->GetPos().z);
 		glUniform3fv(modelLoc, 1, &cameraPosition.x);
 	}
 

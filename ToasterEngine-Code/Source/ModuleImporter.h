@@ -9,7 +9,8 @@ enum class ResourceType
 {
 	SUSSYFILE,
 	MESH,
-	TEXTURE
+	TEXTURE,
+	ANIMATION
 };
 
 class ModuleImporter : public Module

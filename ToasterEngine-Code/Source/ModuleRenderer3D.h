@@ -8,6 +8,8 @@
 
 #include "Primitive.h"
 
+#include "C_Mesh.h"
+
 #define MAX_LIGHTS 8
 
 class Hardware {
@@ -76,4 +78,15 @@ private:
 
 public:	
 	Camera* renderOnThisCamera = nullptr;
+
+public:
+
+	GLuint checkersTexture;
+	GLubyte checkerImage[256][256][4];
+
+	GLuint defaultNormalMap;
+	GLubyte defaultNormalMapImage[256][256][4];
+
+	GLuint defaultSpecularMap;
+	GLubyte defaultSpecularMapImage[256][256][4];
 };

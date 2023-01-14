@@ -31,6 +31,11 @@ public:
 	AABB globalAABB;
 	bool faceNormals, vertexNormals, showAABB, showOBB;
 
+	float3 alternColor;
+
+	void DrawAABB();
+	AABB GetAABB();
+
 	GameObject* rootBone = nullptr;
 
 private:

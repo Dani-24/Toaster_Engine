@@ -13,7 +13,7 @@
 #include "ResourceManager.h"
 
 #include "GameObject.h"
-#include "C_Material.h"
+#include "C_Texture.h"
 #include "C_Transform.h"
 #include "C_Camera.h"
 #include "C_Mesh.h"
@@ -189,9 +189,9 @@ void C_Animator::OnRecursiveUIDChange(std::map<uint, GameObject*> gameObjects)
 				if (meshRendererObject != nullptr)
 				{
 					C_Mesh* mesh = dynamic_cast<C_Mesh*>(meshRendererObject->GetComponent(Component::TYPE::MESH));
-					if (meshRenderer != nullptr)
+					if (mesh != nullptr)
 					{
-						meshRenderer->SetRootBone(rootBone);
+						mesh->SetRootBone(rootBone);
 						meshRendererUID = meshRendererObject->UID;
 					}
 				}
@@ -360,9 +360,9 @@ bool C_Animator::OnEditor()
 			ImGui::InputText("Name", newName, IM_ARRAYSIZE(newName));
 			ImGui::Checkbox("Loop", &currentAnimation->loop);
 
-			if (ImGui::Button("Save Animation")) {
+			/*if (ImGui::Button("Save Animation")) {
 				SaveAnimation(currentAnimation, newName);
-			}
+			}*/
 			ImGui::Separator();
 		}
 
@@ -659,7 +659,7 @@ bool C_Animator::FindRootBone()
 	bool ret = true;
 	if (rootBoneUID != 0u)
 	{
-		rootBone = EngineExternal->moduleScene->GetGOFromUID(EngineExternal->moduleScene->root, rootBoneUID);
+		rootBone = app->editor->GetGOFromUID(app->editor->root, rootBoneUID);
 
 		if (rootBone == nullptr)
 		{
@@ -673,7 +673,7 @@ bool C_Animator::FindRootBone()
 
 			if (meshRendererUID != 0u)
 			{
-				GameObject* meshRendererObject = EngineExternal->moduleScene->GetGOFromUID(EngineExternal->moduleScene->root, meshRendererUID);
+				GameObject* meshRendererObject = app->editor->GetGOFromUID(app->editor->root, meshRendererUID);
 				if (meshRendererObject != nullptr)
 				{
 					dynamic_cast<C_Mesh*>(meshRendererObject->GetComponent(Component::TYPE::MESH))->SetRootBone(rootBone);

@@ -4,6 +4,7 @@
 #include "Globals.h"
 
 class GameObject;
+class Camera;
 
 class Component
 {
@@ -31,6 +32,10 @@ public:
 	virtual void OnRecursiveUIDChange(std::map < uint, GameObject*> gameObjects);
 
 	virtual bool OnEditor();
+
+	virtual void DrawAABB();
+	virtual AABB GetAABB();
+	virtual Camera* GetCamera();
 
 	inline bool IsActive() {
 		return active;

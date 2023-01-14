@@ -270,3 +270,40 @@ GameObject* GameObject::GetChild(std::string& childName)
 
 	return nullptr;
 }
+
+void GameObject::OnEditor() 
+{
+	ImGui::InputText(" ", (char*)name.c_str(), 50);
+
+	ImGui::SameLine();
+
+	ImGui::TextWrapped("ID: %d", UID);
+
+	for (int i = 0; i < components.size(); i++) {
+		components[i]->OnEditor();
+	}
+}
+
+void GameObject::DrawAABB() {
+	for (int i = 0; i < components.size(); i++) {
+		if (components[i]->type == Component::TYPE::MESH) {
+			components[i]->DrawAABB();
+		}
+	}
+}
+
+AABB GameObject::GetAABB() {
+	for (int i = 0; i < components.size(); i++) {
+		if (components[i]->type == Component::TYPE::MESH) {
+			components[i]->GetAABB();
+		}
+	}
+}
+
+Camera* GameObject::GOCamera() {
+	for (int i = 0; i < components.size(); i++) {
+		if (components[i]->type == Component::TYPE::CAMERA) {
+			components[i]->GetCamera();
+		}
+	}
+}

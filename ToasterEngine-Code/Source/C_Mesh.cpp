@@ -36,6 +36,7 @@ calculatedBonesThisFrame(false), boneTransforms()
 {
 	name = "Mesh Renderer";
 	gameObjectTransform = dynamic_cast<C_Transform*>(gameObject->GetComponent(Component::TYPE::TRANSFORM));
+	alternColor = float3::one;
 }
 
 C_Mesh::~C_Mesh()
@@ -46,7 +47,7 @@ C_Mesh::~C_Mesh()
 
 	if (_mesh != nullptr)
 	{
-		EngineExternal->moduleScene->totalTris -= _mesh->indices_count / 3;
+		app->scene->totalTris -= _mesh->indices_count / 3;
 		app->resourceManager->UnloadResource(_mesh->GetUID());
 		_mesh = nullptr;
 	}
@@ -71,14 +72,14 @@ void C_Mesh::Update()
 	calculatedBonesThisFrame = false;
 	boneTransforms.clear();
 
-	app->renderer3D->renderQueue.push_back(this);
+	app->editor->renderQueue.push_back(this);
 
-	if (showAABB == true)
+	/*if (showAABB == true)
 	{
 		float3 points[8];
 		globalAABB.GetCornerPoints(points);
 
-		ModuleRenderer3D::DrawBox(points, float3(0.2f, 1.f, 0.101f));
+		app->renderer3D->DrawBox(points, float3(0.2f, 1.f, 0.101f));
 	}
 
 	if (showOBB == true)
@@ -87,8 +88,8 @@ void C_Mesh::Update()
 		float3 points[8];
 		globalOBB.GetCornerPoints(points);
 
-		ModuleRenderer3D::DrawBox(points);
-	}
+		app->renderer3D->DrawBox(points);
+	}*/
 
 }
 
@@ -114,7 +115,7 @@ void C_Mesh::RenderMesh(bool rTex)
 	if (drawDebugVertices)
 		DrawDebugVertices();
 
-	_mesh->RenderMesh(id, alternColor, rTex, (material && material->material != nullptr) ? material->material : EngineExternal->moduleScene->defaultMaterial, transform, normalMap, specularMap, bumpDepth, stencilEmissionAmmount);
+	_mesh->RenderMesh(id, alternColor, rTex, (material && material->material != nullptr) ? material->material : app->scene->defaultMaterial, transform, normalMap, specularMap, bumpDepth);
 
 	if (vertexNormals || faceNormals)
 		_mesh->RenderMeshDebug(&vertexNormals, &faceNormals, transform->GetGlobalTransposed());
@@ -144,23 +145,23 @@ bool C_Mesh::OnEditor()
 		else
 			ImGui::Image((ImTextureID)app->renderer3D->defaultNormalMap, ImVec2(64, 64), ImVec2(0, 1), ImVec2(1, 0));
 
-		if (ImGui::BeginDragDropTarget())
-		{
-			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("_TEXTURE"))
-			{
-				//Drop asset from Asset window to scene window
-				std::string* metaFileDrop = (std::string*)payload->Data;
+		//if (ImGui::BeginDragDropTarget())
+		//{
+		//	if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("_TEXTURE"))
+		//	{
+		//		//Drop asset from Asset window to scene window
+		//		std::string* metaFileDrop = (std::string*)payload->Data;
 
-				if (normalMap != nullptr)
-					app->resourceManager->UnloadResource(normalMap->GetUID());
+		//		if (normalMap != nullptr)
+		//			app->resourceManager->UnloadResource(normalMap->GetUID());
 
-				std::string libraryName = app->resourceManager->LibraryFromMeta(metaFileDrop->c_str());
+		//		std::string libraryName = app->resourceManager->LibraryFromMeta(metaFileDrop->c_str());
 
-				normalMap = dynamic_cast<ResourceTexture*>(app->resourceManager->RequestResource(EngineExternal->moduleResources->GetMetaUID(metaFileDrop->c_str()), libraryName.c_str()));
-				LOG("File %s loaded to scene", (*metaFileDrop).c_str());
-			}
-			ImGui::EndDragDropTarget();
-		}
+		//		normalMap = dynamic_cast<ResourceTexture*>(app->resourceManager->RequestResource(EngineExternal->moduleResources->GetMetaUID(metaFileDrop->c_str()), libraryName.c_str()));
+		//		LOG("File %s loaded to scene", (*metaFileDrop).c_str());
+		//	}
+		//	ImGui::EndDragDropTarget();
+		//}
 
 		if (normalMap != nullptr)
 		{
@@ -181,23 +182,23 @@ bool C_Mesh::OnEditor()
 		else
 			ImGui::Image((ImTextureID)app->renderer3D->defaultSpecularMap, ImVec2(64, 64), ImVec2(0, 1), ImVec2(1, 0));
 
-		if (ImGui::BeginDragDropTarget())
-		{
-			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("_TEXTURE"))
-			{
-				//Drop asset from Asset window to scene window
-				std::string* metaFileDrop = (std::string*)payload->Data;
+		//if (ImGui::BeginDragDropTarget())
+		//{
+		//	if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("_TEXTURE"))
+		//	{
+		//		//Drop asset from Asset window to scene window
+		//		std::string* metaFileDrop = (std::string*)payload->Data;
 
-				if (specularMap != nullptr)
-					app->resourceManager->UnloadResource(specularMap->GetUID());
+		//		if (specularMap != nullptr)
+		//			app->resourceManager->UnloadResource(specularMap->GetUID());
 
-				std::string libraryName = app->resourceManager->LibraryFromMeta(metaFileDrop->c_str());
+		//		std::string libraryName = app->resourceManager->LibraryFromMeta(metaFileDrop->c_str());
 
-				specularMap = dynamic_cast<ResourceTexture*>(EngineExternal->moduleResources->RequestResource(EngineExternal->moduleResources->GetMetaUID(metaFileDrop->c_str()), libraryName.c_str()));
-				LOG("File %s loaded to scene", (*metaFileDrop).c_str());
-			}
-			ImGui::EndDragDropTarget();
-		}
+		//		specularMap = dynamic_cast<ResourceTexture*>(EngineExternal->moduleResources->RequestResource(EngineExternal->moduleResources->GetMetaUID(metaFileDrop->c_str()), libraryName.c_str()));
+		//		LOG("File %s loaded to scene", (*metaFileDrop).c_str());
+		//	}
+		//	ImGui::EndDragDropTarget();
+		//}
 
 		if (specularMap != nullptr)
 		{
@@ -259,7 +260,7 @@ void C_Mesh::SetRenderMesh(ResourceMesh* mesh)
 	if (mesh == nullptr)
 		return;
 
-	EngineExternal->moduleScene->totalTris += _mesh->indices_count / 3;
+	app->scene->totalTris += _mesh->indices_count / 3;
 
 	globalOBB = _mesh->localAABB;
 	globalOBB.Transform(gameObject->transform->globalTransform);
@@ -268,14 +269,13 @@ void C_Mesh::SetRenderMesh(ResourceMesh* mesh)
 	globalAABB.SetNegativeInfinity();
 	globalAABB.Enclose(globalOBB);
 
-	_mesh->generalWireframe = &EngineExternal->moduleRenderer3D->wireframe;
+	_mesh->generalWireframe = &app->renderer3D->wireframe;
 }
 
 ResourceMesh* C_Mesh::GetRenderMesh()
 {
 	return _mesh;
 }
-
 
 float4x4 C_Mesh::CalculateDeltaMatrix(float4x4 globalMat, float4x4 invertMat)
 {
@@ -387,4 +387,66 @@ void C_Mesh::TryCalculateBones()
 		_mesh->boneTransforms[i] = boneTransforms[i];
 	}
 
+}
+
+void C_Mesh::DrawAABB() {
+	if (this->gameObject != app->editor->root) {
+		float3 corners[8];
+		float3 frustum_corners[8];
+
+		AABB aabb = globalAABB;
+
+		// Get Frustum corners
+		corners[0] = aabb.CornerPoint(0);
+		corners[1] = aabb.CornerPoint(2);
+		corners[2] = aabb.CornerPoint(4);
+		corners[3] = aabb.CornerPoint(6);
+		corners[4] = aabb.CornerPoint(1);
+		corners[5] = aabb.CornerPoint(3);
+		corners[6] = aabb.CornerPoint(5);
+		corners[7] = aabb.CornerPoint(7);
+
+		std::vector<float3> frustum_lines;
+
+		frustum_lines.push_back(corners[0]);
+		frustum_lines.push_back(corners[1]);
+		frustum_lines.push_back(corners[0]);
+		frustum_lines.push_back(corners[2]);
+		frustum_lines.push_back(corners[1]);
+		frustum_lines.push_back(corners[3]);
+		frustum_lines.push_back(corners[2]);
+		frustum_lines.push_back(corners[3]);
+
+		frustum_lines.push_back(corners[4]);
+		frustum_lines.push_back(corners[5]);
+		frustum_lines.push_back(corners[4]);
+		frustum_lines.push_back(corners[6]);
+		frustum_lines.push_back(corners[5]);
+		frustum_lines.push_back(corners[7]);
+		frustum_lines.push_back(corners[6]);
+		frustum_lines.push_back(corners[7]);
+
+		frustum_lines.push_back(corners[0]);
+		frustum_lines.push_back(corners[4]);
+		frustum_lines.push_back(corners[1]);
+		frustum_lines.push_back(corners[5]);
+		frustum_lines.push_back(corners[2]);
+		frustum_lines.push_back(corners[6]);
+		frustum_lines.push_back(corners[3]);
+		frustum_lines.push_back(corners[7]);
+
+		// Add Lines to the DrawLines queue
+		for (int i = 0; i < frustum_lines.size(); i++) {
+			if (this->gameObject->GetComponent(Component::TYPE::CAMERA) == nullptr) {
+				app->scene->AddLines(frustum_lines[i], Red);
+			}
+			else {
+				app->scene->AddLines(frustum_lines[i], Green);
+			}
+		}
+	}
+}
+
+AABB C_Mesh::GetAABB() {
+	return globalAABB;
 }

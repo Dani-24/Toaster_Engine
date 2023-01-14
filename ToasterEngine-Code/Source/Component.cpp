@@ -55,3 +55,15 @@ bool Component::OnEditor()
 
 	return true;
 }
+
+void Component::DrawAABB() {
+
+}
+
+AABB Component::GetAABB() {
+
+}
+
+Camera* Component::GetCamera() {
+
+}

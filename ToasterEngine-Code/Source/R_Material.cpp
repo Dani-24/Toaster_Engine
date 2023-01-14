@@ -14,7 +14,7 @@
 //#include"DEJsonSupport.h"
 #include "R_Texture.h"
 
-#include "ModuleMaterialImporter.h"
+#include "ModuleTexture.h"
 
 ResourceMaterial::ResourceMaterial(unsigned int _uid) : Resource(_uid, Resource::Type::MATERIAL), shader(nullptr)
 {}
@@ -99,7 +99,7 @@ void ResourceMaterial::PushUniforms()
 
 			else if (used_textures == 0)
 			{
-				glBindTexture(GL_TEXTURE_2D, app->textures->CheckersImage()->OpenGLID);
+				glBindTexture(GL_TEXTURE_2D, app->renderer3D->checkersTexture);
 				//glUniform1i(glGetUniformLocation(shader->shaderProgramID, uniforms[i].name), false);
 			}
 

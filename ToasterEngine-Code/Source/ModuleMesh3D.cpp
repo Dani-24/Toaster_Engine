@@ -5,7 +5,7 @@
 #include "GameObject.h"
 #include "C_Transform.h"
 #include "C_Mesh.h"
-#include "C_Material.h"
+#include "C_Texture.h"
 
 #include "R_Mesh.h"
 #include "R_Texture.h"
@@ -133,14 +133,14 @@ ResourceMesh* ModuleMesh3D::LoadMesh(aiMesh* importedMesh, uint oldUID)
 {
 	uint UID = oldUID;
 	if (UID == 0)
-		UID = EngineExternal->moduleResources->GenerateNewUID();
+		UID = app->resourceManager->GenerateNewUID();
 
-	LOG(LogType::L_NORMAL, "%s", importedMesh->mName.C_Str());
-	std::string file = MESHES_PATH;
+	LOG("%s", importedMesh->mName.C_Str());
+	/*std::string file = MESHES_PATH;
 	file += std::to_string(UID);
-	file += ".mmh";
+	file += ".mmh";*/
 
-	ResourceMesh* _mesh = dynamic_cast<ResourceMesh*>(EngineExternal->moduleResources->CreateNewResource("", UID, Resource::Type::MESH));
+	ResourceMesh* _mesh = dynamic_cast<ResourceMesh*>(app->resourceManager->CreateNewResource("", UID, Resource::Type::MESH));
 
 	// copy vertices
 	_mesh->vertices_count = importedMesh->mNumVertices;
@@ -269,7 +269,7 @@ ResourceMesh* ModuleMesh3D::LoadMesh(aiMesh* importedMesh, uint oldUID)
 		{
 			if (importedMesh->mFaces[j].mNumIndices != 3)
 			{
-				LOG(LogType::L_WARNING, "WARNING, geometry face with != 3 indices!");
+				LOG("WARNING, geometry face with != 3 indices!");
 			}
 			else
 			{
@@ -278,15 +278,15 @@ ResourceMesh* ModuleMesh3D::LoadMesh(aiMesh* importedMesh, uint oldUID)
 		}
 	}
 
-	_mesh->generalWireframe = &EngineExternal->moduleRenderer3D->wireframe;
+	_mesh->generalWireframe = &app->renderer3D->wireframe;
 
-	//TODO: Save on own file format
-	uint size = 0;
-	char* buffer = (char*)_mesh->SaveCustomFormat(size);
+	////TODO: Save on own file format
+	//uint size = 0;
+	//char* buffer = (char*)_mesh->SaveCustomFormat(size);
 
-	FileSystem::Save(file.c_str(), buffer, size, false);
+	//FileSystem::Save(file.c_str(), buffer, size, false);
 
-	RELEASE_ARRAY(buffer);
+	//RELEASE_ARRAY(buffer);
 
 	return _mesh;
 }

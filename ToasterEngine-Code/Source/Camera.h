@@ -36,7 +36,7 @@ public:
 	void EditorCameraControl(float dt);
 
 	// Return if the GameObject is inside the camera frustum
-	bool FrustumCulling(GameObject* go);
+	bool FrustumCulling(AABB go);
 
 	// Mouse Picking
 	void CalculateMousePicking();

@@ -149,6 +149,69 @@ bool ModuleRenderer3D::Init()
 		glEnable(GL_TEXTURE_2D);
 	}
 
+	//Generate texture
+	for (int i = 0; i < 256; i++) {
+		for (int j = 0; j < 256; j++) {
+			int c = ((((i & 0x8) == 0) ^ (((j & 0x8)) == 0))) * 255;
+			checkerImage[i][j][0] = (GLubyte)c;
+			checkerImage[i][j][1] = (GLubyte)c;
+			checkerImage[i][j][2] = (GLubyte)c;
+			checkerImage[i][j][3] = (GLubyte)255;
+		}
+	}
+
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	glGenTextures(1, &checkersTexture);
+	glBindTexture(GL_TEXTURE_2D, checkersTexture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 256, 256, 0, GL_RGBA, GL_UNSIGNED_BYTE, checkerImage);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	//Generate default normal map
+
+	for (int i = 0; i < 256; i++) {
+		for (int j = 0; j < 256; j++) {
+			defaultNormalMapImage[i][j][0] = (GLubyte)127;
+			defaultNormalMapImage[i][j][1] = (GLubyte)127;
+			defaultNormalMapImage[i][j][2] = (GLubyte)255;
+			defaultNormalMapImage[i][j][3] = (GLubyte)255;
+		}
+	}
+
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	glGenTextures(1, &defaultNormalMap);
+	glBindTexture(GL_TEXTURE_2D, defaultNormalMap);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 256, 256, 0, GL_RGBA, GL_UNSIGNED_BYTE, defaultNormalMapImage);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	//Generate default specular map
+
+	for (int i = 0; i < 256; i++) {
+		for (int j = 0; j < 256; j++) {
+			defaultSpecularMapImage[i][j][0] = (GLubyte)255;
+			defaultSpecularMapImage[i][j][1] = (GLubyte)255;
+			defaultSpecularMapImage[i][j][2] = (GLubyte)255;
+			defaultSpecularMapImage[i][j][3] = (GLubyte)255;
+		}
+	}
+
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	glGenTextures(1, &defaultSpecularMap);
+	glBindTexture(GL_TEXTURE_2D, defaultSpecularMap);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 256, 256, 0, GL_RGBA, GL_UNSIGNED_BYTE, defaultSpecularMapImage);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
 	// Projection matrix for
 	OnResize(app->window->width, app->window->height);
 

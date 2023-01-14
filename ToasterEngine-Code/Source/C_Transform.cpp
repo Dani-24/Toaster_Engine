@@ -97,11 +97,11 @@ bool C_Transform::OnEditor()
 			oldTransform = GetCurrentGlobalMatrix();
 
 		//TODO: Doubli-click + enter input does not work as a command and won't we added to the shortcut manager
-		if (app->input->GetMouseButton(1) == KEY_STATE::KEY_UP && sendCommand == true)
+		/*if (app->input->GetMouseButton(1) == KEY_STATE::KEY_UP && sendCommand == true)
 		{
 			app->editor->shortcutManager.PushCommand(new COMM_Transform(gameObject->UID, GetCurrentGlobalMatrix().ptr(), oldTransform.ptr()));
 			sendCommand = false;
-		}
+		}*/
 
 		return true;
 	}
@@ -173,7 +173,7 @@ C_Transform* C_Transform::GetRecursiveTransforms(C_Transform* node, std::vector<
 void C_Transform::UpdateBoxes()
 {
 	C_Mesh* mesh = nullptr;
-	mesh = dynamic_cast<C_Mesh*>(gameObject->GetComponent(Component::TYPE::MESH_RENDERER));
+	mesh = dynamic_cast<C_Mesh*>(gameObject->GetComponent(Component::TYPE::MESH));
 	if (mesh != nullptr)
 	{
 		mesh->globalOBB = mesh->GetRenderMesh()->localAABB;

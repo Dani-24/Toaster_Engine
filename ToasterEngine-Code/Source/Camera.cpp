@@ -3,6 +3,8 @@
 
 #include "ModuleEditor.h"
 
+#include "C_Transform.h"
+
 Camera::Camera(float3 pos, float3 lookat, bool isEditor) {
 	camFrustum.pos = pos;
 
@@ -50,7 +52,7 @@ void Camera::UpdateCamera(float dt)
 	}
 
 	if (app->editor->selectedGameObj != nullptr) {
-		if (this == app->editor->selectedGameObj->GO_camera || app->editor->showAllAABB) {
+		if (this == app->editor->selectedGameObj->GOCamera() || app->editor->showAllAABB) {
 			DebugDraw();
 		}
 	}
@@ -184,10 +186,10 @@ void Camera::DebugDraw() {
 
 }
 
-bool Camera::FrustumCulling(GameObject* go) {
+bool Camera::FrustumCulling(AABB go) {
 	bool canRender = false;
 	if (frustumCulling) {
-		if (camFrustum.Contains(go->aabb)) {
+		if (camFrustum.Contains(go)) {
 			canRender = true;
 		}
 	}
@@ -201,7 +203,7 @@ bool Camera::FrustumCulling(GameObject* go) {
 void Camera::EditorCameraControl(float dt) {
 
 	if (app->editor->selectedGameObj != nullptr) {
-		camFocusPos = float3(app->editor->selectedGameObj->GetPos().x, app->editor->selectedGameObj->GetPos().y, app->editor->selectedGameObj->GetPos().z);
+		camFocusPos = app->editor->selectedGameObj->transform->position;
 	}
 	else {
 		camFocusPos = float3(0, 0, 0);
@@ -306,15 +308,15 @@ void Camera::CalculateMousePicking()
 
 	for (int i = 0; i < app->editor->gameObjects.size(); i++)
 	{
-		if (raycast.Intersects(app->editor->gameObjects[i]->aabb))
+		if (raycast.Intersects(app->editor->gameObjects[i]->GetAABB()))
 		{
 			GO_Hitted go;
 
 			go.gameObject = app->editor->gameObjects[i];
 
-			go.distance = Sqrt((this->GetPos().x - app->editor->gameObjects[i]->GetPos().x) * (this->GetPos().x - app->editor->gameObjects[i]->GetPos().x) +
-				(this->GetPos().y - app->editor->gameObjects[i]->GetPos().y) * (this->GetPos().y - app->editor->gameObjects[i]->GetPos().y) +
-				(this->GetPos().z - app->editor->gameObjects[i]->GetPos().z) * (this->GetPos().z - app->editor->gameObjects[i]->GetPos().z));
+			go.distance = Sqrt((this->GetPos().x - app->editor->gameObjects[i]->transform->position.x) * (this->GetPos().x - app->editor->gameObjects[i]->transform->position.x) +
+				(this->GetPos().y - app->editor->gameObjects[i]->transform->position.y) * (this->GetPos().y - app->editor->gameObjects[i]->transform->position.y) +
+				(this->GetPos().z - app->editor->gameObjects[i]->transform->position.z) * (this->GetPos().z - app->editor->gameObjects[i]->transform->position.z));
 
 			go_hits.push_back(go);
 		}

@@ -61,6 +61,8 @@ public:
 
 	AABB localAABB;
 
+	bool* generalWireframe;
+
 	//Bones stuff [Remember 4 max for vertices]
 	bool hasSkeleton = false;
 

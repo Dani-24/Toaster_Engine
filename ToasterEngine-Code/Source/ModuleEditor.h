@@ -45,7 +45,6 @@ public:
 private:
 
 	float cooldown = 100, maxCooldown = 100, minCooldown = 0;
-	bool newScene = false;
 	bool exit = false;
 	bool showingEditor = true;
 
@@ -136,4 +135,7 @@ public:
 
 	bool playing = false;
 	bool paused = false;
+
+	std::vector<C_Mesh*> renderQueue;
+	std::multimap<float, C_Mesh*> renderQueueMap;
 };

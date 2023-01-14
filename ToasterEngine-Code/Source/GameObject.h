@@ -36,8 +36,8 @@ public:
 	void Enable();
 	void Disable();
 
-	void EnableTopDown();
-	void DisableTopDown();
+	/*void EnableTopDown();
+	void DisableTopDown();*/
 
 	bool IsRoot();
 	void Destroy();
@@ -51,7 +51,7 @@ public:
 	void CopyObjectData(JSON_Object* jsonObject);*/
 	void GetChildrenUIDs(std::vector<uint>& UIDs);
 
-	void LoadComponents(JSON_Array* componentArray);
+	//void LoadComponents(JSON_Array* componentArray);
 	void RemoveComponent(Component* ptr);
 
 	void ChangeParent(GameObject* newParent);
@@ -61,7 +61,7 @@ public:
 	void CollectChilds(std::vector<GameObject*>& vector);
 	//void RemoveCSReference(SerializedField* fieldToRemove);
 
-	bool CompareTag(const char* _tag);
+	//bool CompareTag(const char* _tag);
 
 	GameObject* GetChild(std::string& childName);
 
@@ -70,6 +70,13 @@ public:
 	{
 		return (A*)GetComponent(A::GetType());
 	}
+
+	void OnEditor();
+
+	AABB GetAABB();
+	void DrawAABB();
+
+	Camera* GOCamera();
 
 	GameObject* parent;
 	C_Transform* transform;

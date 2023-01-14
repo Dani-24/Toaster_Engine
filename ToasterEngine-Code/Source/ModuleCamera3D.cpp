@@ -63,8 +63,10 @@ update_status ModuleCamera3D::Update(float dt)
 
 void ModuleCamera3D::AddCamera(Camera* newCam, std::string name) {
 
-	GameObject* cameraObject = new GameObject(name, app->editor->root, newCam);
+	GameObject* cameraObject = new GameObject(name.c_str(), app->editor->root);
 	app->editor->AddGameObject(cameraObject);
+
+	cameraObject->AddComponent(Component::TYPE::CAMERA); // AQUI FALTA ASIGNAR ESA CAMARA AL GO
 
 	newCam->ID = camerasID;
 	cameras.push_back(newCam);
