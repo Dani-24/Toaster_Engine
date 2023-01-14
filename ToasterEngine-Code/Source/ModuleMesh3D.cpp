@@ -61,9 +61,16 @@ update_status ModuleMesh3D::PostUpdate(float dt)
 
 Mesh* ModuleMesh3D::LoadFile(string file_path, GameObject* go)
 {
-	const aiScene* scene = aiImportFile(file_path.c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
+	uint fileSize = 0;
+	char* buffer = nullptr;
+	fileSize = app->importer->Load(file_path, &buffer);
 
-	const aiNode* node = new aiNode(file_path);
+	const aiScene* scene = aiImportFileFromMemory(buffer, fileSize, aiProcessPreset_TargetRealtime_MaxQuality, nullptr);
+
+	if (scene == NULL) {
+		LOG("MESH ERROR: Error loading %s file", file_path.c_str());
+		return nullptr;
+	}
 
 	std::vector<Mesh*> meshes;
 
@@ -96,9 +103,11 @@ Mesh* ModuleMesh3D::LoadFile(string file_path, GameObject* go)
 	}
 
 	// Bones
-	if (scene->mMeshes[0]->HasBones()) {
-		ReadNodeHierarchy(scene->mRootNode, meshes[0]);
-		NodeToHierarchy();
+	if (scene != nullptr) {
+		if (scene->mMeshes[0]->HasBones()) {
+			ReadNodeHierarchy(scene->mRootNode, meshes[0]);
+			NodeToHierarchy();
+		}
 	}
 
 	if (meshes.size() < 2) {
@@ -112,6 +121,7 @@ Mesh* ModuleMesh3D::LoadFile(string file_path, GameObject* go)
 		}
 
 		aiReleaseImport(scene);
+
 		return meshes[0];
 	}
 	else {
