@@ -138,4 +138,6 @@ public:
 
 	std::vector<C_Mesh*> renderQueue;
 	std::multimap<float, C_Mesh*> renderQueueMap;
+
+	GameObject* GetGOFromUID(GameObject* n, uint sUID);
 };

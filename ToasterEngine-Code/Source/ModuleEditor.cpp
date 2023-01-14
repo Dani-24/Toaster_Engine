@@ -12,6 +12,8 @@
 
 #include "Primitive.h"
 
+#include "GameObject.h"
+
 ModuleEditor::ModuleEditor(Application* app, bool start_enabled) : Module(app, start_enabled){
 	logs.reserve(MAX_LOGS_SIZE);
 	fpslog.reserve(MAX_LOGS_SIZE);
@@ -846,4 +848,20 @@ void ModuleEditor::AssetTree(FileTree* node) {
 		}
 		ImGui::TreePop();
 	}
+}
+
+GameObject* ModuleEditor::GetGOFromUID(GameObject* n, uint sUID)
+{
+	if (n->UID == sUID)
+		return n;
+
+	GameObject* ret = nullptr;
+	for (size_t i = 0; i < n->children.size(); i++)
+	{
+		ret = GetGOFromUID(n->children[i], sUID);
+		if (ret != nullptr)
+			return ret;
+	}
+
+	return nullptr;
 }

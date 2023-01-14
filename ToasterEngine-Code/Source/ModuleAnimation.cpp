@@ -23,7 +23,9 @@
 
 #include "../External/MathGeoLib/include/Math/float3.h"
 
-#pragma comment (lib, "Assimp/libx86/assimp-vc142-mt.lib")
+#pragma comment (lib, "External/Assimp/libx86/assimp-vc142-mt.lib")
+
+#include "GameObject.h"
 
 ResourceAnimation* ModuleAnimation::ImportAnimation(aiAnimation* importedAnimation, uint oldUID)
 {

@@ -135,7 +135,7 @@ bool C_Mesh::OnEditor()
 			ImGui::Text("Indices: "); ImGui::SameLine(); ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), "%i", _mesh->indices_count);
 
 			ImGui::Spacing();
-			ImGui::Text("Path: "); ImGui::SameLine(); ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), "%s", _mesh->GetAssetPath());
+			//ImGui::Text("Path: "); ImGui::SameLine(); ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), "%s", _mesh->GetAssetPath());
 		}
 
 		ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), "Normal map");
