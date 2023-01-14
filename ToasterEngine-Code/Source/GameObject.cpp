@@ -295,14 +295,14 @@ void GameObject::OnEditor() {
 
 		ImGui::Spacing();
 
-		if (currentAnimation == nullptr) {
+		/*if (currentAnimation == nullptr) {
 			ImGui::Text("Current Animation: "); ImGui::SameLine(); ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), "None");
 		}
 		else {
 			ImGui::Text("Current Animation: "); ImGui::SameLine(); ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), "%s", currentAnimation->name);
 			ImGui::Text("Duration: "); ImGui::SameLine(); ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), "%.2f", currentAnimation->duration);
 			ImGui::Text("Ticks per second: "); ImGui::SameLine(); ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), "%.2f", currentAnimation->ticksPerSec);
-		}
+		}*/
 
 		//List of existing animations
 		static char newName[64];
@@ -887,7 +887,7 @@ void GameObject::DrawBones(GameObject* p)
 			line.push_back(float3(p->childs[i]->GetPos().x, p->childs[i]->GetPos().y, p->childs[i]->GetPos().z));
 
 			for (int j = 0; j < line.size(); j++) {
-				app->scene->AddLines(line[j], Red);
+				app->scene->AddLines(line[j], Magenta);
 			}
 		}
 	}
@@ -916,7 +916,10 @@ bool GameObject::FindRootBone()
 		}
 
 		if (GO_mesh != nullptr) {
-			GO_mesh->SetRootBone(rootBone); // ?¿
+			if (GO_mesh->rootBone != nullptr) {
+				rootBone = GO_mesh->rootBone;
+			} 
+			/*GO_mesh->SetRootBone(rootBone);*/ // ?¿
 		}
 	}
 

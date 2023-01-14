@@ -63,6 +63,8 @@ Mesh* ModuleMesh3D::LoadFile(string file_path, GameObject* go)
 {
 	const aiScene* scene = aiImportFile(file_path.c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
 
+	const aiNode* node = new aiNode(file_path);
+
 	std::vector<Mesh*> meshes;
 
 	if (scene != nullptr && scene->HasMeshes())
@@ -93,13 +95,23 @@ Mesh* ModuleMesh3D::LoadFile(string file_path, GameObject* go)
 		}
 	}
 
-	aiReleaseImport(scene);
-	//
+	// Bones
+	if (scene->mMeshes[0]->HasBones()) {
+		ReadNodeHierarchy(scene->mRootNode, meshes[0]);
+		NodeToHierarchy();
+	}
 
 	if (meshes.size() < 2) {
 		if (!animations.empty()) {
 			go->AddAnimation(animations);
 		}
+
+		// ADD BONES AS CHILD GO
+		if (rootBoneNode != nullptr) {
+			NodeToGO(rootBoneNode, go, meshes[0]);
+		}
+
+		aiReleaseImport(scene);
 		return meshes[0];
 	}
 	else {
@@ -112,6 +124,8 @@ Mesh* ModuleMesh3D::LoadFile(string file_path, GameObject* go)
 			meshChild->AddMesh(meshes[i]);
 		}
 		go->DeleteTextures();
+
+		aiReleaseImport(scene);
 		return nullptr;
 	}
 }
@@ -125,6 +139,7 @@ void ModuleMesh3D::LoadMesh(Mesh* mesh)
 	glGenBuffers(1, (GLuint*)&(mesh->id_indices));
 	glGenBuffers(1, (GLuint*)&(mesh->id_normals));
 	glGenBuffers(1, (GLuint*)&(mesh->id_textureCoords));
+
 	glGenBuffers(1, (GLuint*)&(mesh->id_bonesIDs));
 	glGenBuffers(1, (GLuint*)&(mesh->id_bonesWeights));
 
@@ -140,6 +155,7 @@ void ModuleMesh3D::LoadMesh(Mesh* mesh)
 
 	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_textureCoords);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->num_textureCoords * 2, mesh->textureCoords, GL_STATIC_DRAW);
+
 
 	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_bonesIDs);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(int) * mesh->num_bonesIDs * 4, mesh->bonesIDs, GL_STATIC_DRAW);
@@ -204,7 +220,10 @@ void ModuleMesh3D::Import(const aiMesh* sceneMesh, Mesh* meshData) {
 		meshData->num_bonesWeights = sceneMesh->mNumVertices;
 
 		meshData->bonesIDs = new int[4];
+		for (uint i = 0; i < 4; ++i) meshData->bonesIDs[i] = -1;
+
 		meshData->bonesWeights = new float[5];
+		for (uint i = 0; i < 5; ++i) meshData->bonesWeights[i] = .0f;
 
 		meshData->boneTransforms.resize(sceneMesh->mNumBones);
 
@@ -243,6 +262,101 @@ void ModuleMesh3D::Import(const aiMesh* sceneMesh, Mesh* meshData) {
 	}
 
 	LoadMesh(meshData);
+}
+
+void ModuleMesh3D::ReadNodeHierarchy(aiNode* pnode, Mesh* meshData)
+{
+	string NodeName(pnode->mName.data);
+
+	if (meshData->bonesMap.find(NodeName) != meshData->bonesMap.end()) {
+		allBonesNodes.push_back(pnode);
+
+		LOG("Loading Bone Node %s", NodeName.c_str());
+	}
+
+	for (uint i = 0; i < pnode->mNumChildren; i++) {
+		ReadNodeHierarchy(pnode->mChildren[i], meshData);
+	}
+}
+
+void ModuleMesh3D::NodeToHierarchy() {
+	rootBoneNode = nullptr;
+
+	int cont = 0;
+
+	// Search root bone
+	for (int i = 0; i < allBonesNodes.size(); i++) 
+	{
+		// See if this node parent is not another node from the list
+		for (int j = 0; j < allBonesNodes.size(); j++) {
+			if (allBonesNodes[i]->mParent != allBonesNodes[j]) {
+				cont++;
+			}
+		}
+
+		if (cont == allBonesNodes.size()) {
+			rootBoneNode = allBonesNodes[i];
+			break;
+		}
+
+		cont = 0;
+	}
+
+	LOG("Root Bone is %s", rootBoneNode->mName.data);
+}
+
+void ModuleMesh3D::NodeToGO(aiNode* root, GameObject* parent, Mesh* parentMesh) 
+{
+	GameObject* boneGO = new GameObject(root->mName.data, parent);
+
+	if (parentMesh != nullptr) {
+		parentMesh->SetRootBone(boneGO);
+	}
+
+	vec3 position = vec3(root->mTransformation[0][3], root->mTransformation[1][3], root->mTransformation[2][3]);
+
+	vec3 scale = vec3(	sqrt(root->mTransformation[0][0] * root->mTransformation[0][0] + root->mTransformation[1][0] * root->mTransformation[1][0] + root->mTransformation[2][0] * root->mTransformation[2][0]),
+						sqrt(root->mTransformation[0][1] * root->mTransformation[0][1] + root->mTransformation[1][1] * root->mTransformation[1][1] + root->mTransformation[2][1] * root->mTransformation[2][1]),
+						sqrt(root->mTransformation[0][2] * root->mTransformation[0][2] + root->mTransformation[1][2] * root->mTransformation[1][2] + root->mTransformation[2][2] * root->mTransformation[2][2]));
+
+	mat4x4 rotation;
+
+	rotation[0] = root->mTransformation[0][0] / scale.x;
+	rotation[1] = root->mTransformation[0][1] / scale.y;
+	rotation[2] = root->mTransformation[0][2] / scale.z;
+	rotation[4] = root->mTransformation[1][0] / scale.x;
+	rotation[5] = root->mTransformation[1][1] / scale.y;
+	rotation[6] = root->mTransformation[1][2] / scale.z;
+	rotation[8] = root->mTransformation[2][0] / scale.x;
+	rotation[9] = root->mTransformation[2][1] / scale.y;
+	rotation[10] = root->mTransformation[2][2] / scale.z;
+
+	vec3 rotationEuler;
+
+	float sy = sqrt(rotation[0] * rotation[0] + rotation[4] * rotation[4]);
+
+	bool singular = sy < 1e-6; // check for gimbal lock
+	float x, y, z;
+	if (!singular)
+	{
+		x = atan2(rotation[9], rotation[10]);
+		y = atan2(-rotation[8], sy);
+		z = atan2(rotation[4], rotation[0]);
+	}
+	else
+	{
+		x = atan2(rotation[6], rotation[5]);
+		y = atan2(-rotation[8], sy);
+		z = 0;
+	}
+
+	rotationEuler = vec3(x, y, z);
+
+	boneGO->SetTransform(position,rotationEuler, scale);
+	
+	for (int i = 0; i < root->mNumChildren; i++) {
+		NodeToGO(root->mChildren[i], boneGO);
+	}
 }
 
 // === MESH === 
@@ -296,7 +410,7 @@ void Mesh::Render(uint texture, mat4x4 matrix)
 		glUniformMatrix4fv(GL_FLOAT, boneTransforms.size(), GL_FALSE, (GLfloat*)&boneTransforms[0]);
 		calculatedBonesThisFrame = false;
 
-		LOG("Huesos?");
+		LOG("Huesos Render?");
 	}
 
 	glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, NULL);

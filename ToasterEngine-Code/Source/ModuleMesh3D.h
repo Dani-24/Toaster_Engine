@@ -77,7 +77,10 @@ public:
 
 	void Import(const aiMesh* sceneMesh, Mesh* meshData);
 
-private:
+	std::vector<aiNode*> allBonesNodes;
+	aiNode* rootBoneNode = nullptr;
 
-	//vector<Mesh*> meshes;
+	void ReadNodeHierarchy(aiNode* node, Mesh* meshData);
+	void NodeToHierarchy();
+	void NodeToGO(aiNode* rootNode, GameObject* parent, Mesh* mesh = nullptr);
 };
