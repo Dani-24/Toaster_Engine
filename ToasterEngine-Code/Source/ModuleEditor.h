@@ -40,6 +40,8 @@ public:
 
 	void Draw();
 
+	int SomeRandomIntValue() { return RandomIntValue(); };
+
 private:
 
 	float cooldown = 100, maxCooldown = 100, minCooldown = 0;

@@ -18,6 +18,7 @@ Application::Application()
 	anim3d = new ModuleAnimation(this);
 	importer = new ModuleImporter(this);
 	textures = new ModuleTexture(this);
+	resourceManager = new M_ResourceManager(this);
 
 	// Main Modules
 	AddModule(window);
@@ -25,6 +26,8 @@ Application::Application()
 	AddModule(input);
 
 	AddModule(importer);
+
+	AddModule(resourceManager);
 	
 	// Scenes
 	AddModule(editor);

@@ -370,7 +370,6 @@
     <ClInclude Include="Source\Component.h" />
     <ClInclude Include="Source\C_Animator.h" />
     <ClInclude Include="Source\C_Camera.h" />
-    <ClInclude Include="Source\C_Material.h" />
     <ClInclude Include="Source\C_Mesh.h" />
     <ClInclude Include="Source\C_Texture.h" />
     <ClInclude Include="Source\C_Transform.h" />
@@ -385,7 +384,6 @@
     <ClInclude Include="Source\ModuleEditor.h" />
     <ClInclude Include="Source\ModuleImporter.h" />
     <ClInclude Include="Source\ModuleInput.h" />
-    <ClInclude Include="Source\ModuleMaterialImporter.h" />
     <ClInclude Include="Source\ModuleMesh3D.h" />
     <ClInclude Include="Source\ModuleModelImporter.h" />
     <ClInclude Include="Source\ModuleRenderer3D.h" />
@@ -461,7 +459,6 @@
     <ClCompile Include="Source\Component.cpp" />
     <ClCompile Include="Source\C_Animator.cpp" />
     <ClCompile Include="Source\C_Camera.cpp" />
-    <ClCompile Include="Source\C_Material.cpp" />
     <ClCompile Include="Source\C_Mesh.cpp" />
     <ClCompile Include="Source\C_Texture.cpp" />
     <ClCompile Include="Source\C_Transform.cpp" />
@@ -477,7 +474,6 @@
     <ClCompile Include="Source\ModuleEditor.cpp" />
     <ClCompile Include="Source\ModuleImporter.cpp" />
     <ClCompile Include="Source\ModuleInput.cpp" />
-    <ClCompile Include="Source\ModuleMaterialImporter.cpp" />
     <ClCompile Include="Source\ModuleMesh3D.cpp" />
     <ClCompile Include="Source\ModuleModelImporter.cpp" />
     <ClCompile Include="Source\ModuleRenderer3D.cpp" />

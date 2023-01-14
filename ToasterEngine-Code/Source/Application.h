@@ -14,6 +14,11 @@
 #include "ModuleTexture.h"
 #include "ModuleAnimation.h"
 
+#include "ModuleModelImporter.h"
+
+#include "ResourceManager.h"
+#include "ModuleShaderImporter.h"
+
 #include "GameObject.h"
 
 class Application
@@ -29,6 +34,10 @@ public:
 	ModuleAnimation* anim3d;
 	ModuleImporter* importer;
 	ModuleTexture* textures;
+
+	//ModuleModelImporter* modelImporter;
+	M_ResourceManager* resourceManager;
+
 
 private:
 

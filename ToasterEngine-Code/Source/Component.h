@@ -13,7 +13,7 @@ public:
 	{
 		NONE,
 		TRANSFORM,
-		MESH_RENDERER,
+		MESH,
 		MATERIAL,
 		CAMERA,
 		ANIMATOR,

@@ -748,12 +748,6 @@
     <ClInclude Include="Source\ModuleModelImporter.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="Source\ModuleMaterialImporter.h">
-      <Filter>Sources\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\C_Material.h">
-      <Filter>Sources\Engine\Components</Filter>
-    </ClInclude>
     <ClInclude Include="Source\ResourceManager.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
@@ -1097,12 +1091,6 @@
     </ClCompile>
     <ClCompile Include="Source\ModuleModelImporter.cpp">
       <Filter>Sources\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ModuleMaterialImporter.cpp">
-      <Filter>Sources\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\C_Material.cpp">
-      <Filter>Sources\Engine\Components</Filter>
     </ClCompile>
     <ClCompile Include="Source\ResourceManager.cpp">
       <Filter>Sources\Modules</Filter>

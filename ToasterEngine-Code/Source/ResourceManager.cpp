@@ -115,7 +115,7 @@ int M_ResourceManager::ImportFile(const char* assetsFile, Resource::Type type)
 		//case Resource::Type::MESH: MeshLoader::BufferToMeshes(fileBuffer, size, resource); break;
 	case Resource::Type::SHADER: app->shaders->Import(fileBuffer, size, dynamic_cast<ResourceShader*>(resource), assetsFile); break;
 	case Resource::Type::MATERIAL: app->materials->Import(fileBuffer, size, resource);/* app->importer->Save(resource->GetLibraryPath(), fileBuffer, size);*/ break;
-	case Resource::Type::ANIMATION: app->anim3d->Import(fileBuffer, size, resource);/* app->importer->Save(resource->GetLibraryPath(), fileBuffer, size); */break;
+	case Resource::Type::ANIMATION: resource = CreateNewResource(assetsFile, 0, type); /* app->importer->Save(resource->GetLibraryPath(), fileBuffer, size); */break;
 	case Resource::Type::UNKNOWN: LOG(" Unknown File error"); return 0;
 	}
 

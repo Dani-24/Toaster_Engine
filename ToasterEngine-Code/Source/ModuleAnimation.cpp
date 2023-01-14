@@ -10,8 +10,8 @@
 
 #include "ModuleScene.h"
 
-//#include "IM_FileSystem.h"
-#include "IM_ModelImporter.h"
+#include "ModuleImporter.h"
+#include "ModuleModelImporter.h"
 
 //#include "MO_ResourceManager.h"
 
@@ -31,7 +31,7 @@ ResourceAnimation* ModuleAnimation::ImportAnimation(aiAnimation* importedAnimati
 	if (UID == 0)
 		UID = app->resourceManager->GenerateNewUID();
 
-	ResourceAnimation* animation = dynamic_cast<ResourceAnimation*>(EngineExternal->moduleResources->CreateNewResource("", UID, Resource::Type::ANIMATION));
+	ResourceAnimation* animation = dynamic_cast<ResourceAnimation*>(app->resourceManager->CreateNewResource("", UID, Resource::Type::ANIMATION));
 
 	std::string animationName = importedAnimation->mName.C_Str();
 	if (animationName.size() > 32)
@@ -80,11 +80,11 @@ ResourceAnimation* ModuleAnimation::ImportAnimation(aiAnimation* importedAnimati
 		//animation->channels.push_back(channel);
 	}
 
-	//Save animation own format
-	char* buffer;
-	uint size = animation->SaveCustomFormat(animation, &buffer);
+	////Save animation own format
+	//char* buffer;
+	//uint size = animation->SaveCustomFormat(animation, &buffer);
 
-	RELEASE_ARRAY(buffer);
+	//RELEASE_ARRAY(buffer);
 
 	return animation;
 }

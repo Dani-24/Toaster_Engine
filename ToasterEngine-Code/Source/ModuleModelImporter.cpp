@@ -7,9 +7,10 @@
 #include "../External/Assimp/include/postprocess.h"
 #include "../External/Assimp/include/cfileio.h"
 
-//#include "MO_ResourceManager.h"
+#include "ResourceManager.h"
 
-//#include "IM_FileSystem.h"
+#include "ModuleImporter.h"
+
 #include "ModuleMesh3D.h"
 #include "ModuleAnimation.h"
 
@@ -54,7 +55,7 @@ void ModelImporter::Import(char* buffer, int bSize, Resource* res)
 					uint UID = EngineExternal->moduleResources->GetMetaUID(libraryPath.c_str());
 					libraryPath = EngineExternal->moduleResources->LibraryFromMeta(libraryPath.c_str());*/
 
-					ResourceTexture* texture = dynamic_cast<ResourceTexture*>(EngineExternal->moduleResources->RequestResource(UID, libraryPath.c_str()));
+					ResourceTexture* texture = dynamic_cast<ResourceTexture*>(app->resourceManager->RequestResource(UID, libraryPath.c_str()));
 
 					texturesOnModel.push_back(texture);
 
