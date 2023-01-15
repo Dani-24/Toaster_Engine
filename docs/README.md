@@ -76,7 +76,7 @@ Just select or create a GameObject and the Inspector will show you all its propi
 
 ### Fast 3d meshes import with [Assimp](https://github.com/assimp/assimp)
 
-### MousePicking and Frustum Culling features to improve the Toaster experience. Which you can improve by activating the Toaster Mode at the Edit menu from the top-bar menu. 
+### MousePicking and Frustum Culling features to improve the Toaster experience. Which you can improve EVEN MORE by activating the Toaster Mode at the Edit menu from the top-bar menu. 
 
 <p align="center">
 
