@@ -699,7 +699,7 @@ void ModuleEditor::ShowAboutMenu(bool* open) {
 			ShellExecute(0, 0, "https://github.com/Dani-24", 0, 0, SW_SHOW);
 		}
 
-		ImGui::TextWrapped("All i want for christmass ...");
+		ImGui::TextWrapped("End my suffering plz");
 
 		Space();
 
@@ -726,7 +726,7 @@ void ModuleEditor::ShowAboutMenu(bool* open) {
 
 		// LICENSE
 		ImGui::TextWrapped("MIT License");
-		ImGui::TextWrapped("Copyright(c) 2022 Dani - 24");
+		ImGui::TextWrapped("Copyright(c) 2023 Dani Toledo");
 		ImGui::TextWrapped("Permission is hereby granted, free of charge, to any person obtaining a copy of this softwareand associated documentation files(the `Software`), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and /or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions : ");
 		ImGui::TextWrapped("The above copyright noticeand this permission notice shall be included in all copies or substantial portions of the Software.");
 		ImGui::TextWrapped("THE SOFTWARE IS PROVIDED `AS IS`, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.");
@@ -748,9 +748,9 @@ void ModuleEditor::ShowConfiguration(bool* open) {
 	else {
 		if (ImGui::CollapsingHeader("Toaster Application", ImGuiTreeNodeFlags_DefaultOpen))
 		{
-			ImGui::InputText("This thing name", "Toaster Engine", 13);
+			ImGui::InputText("This thing name:", "Toaster Engine", 13);
 
-			ImGui::InputText("Creator", "Dani Toledo", 12);
+			ImGui::InputText("Creator:", "Dani Toledo", 12);
 
 			Space();
 
@@ -783,7 +783,7 @@ void ModuleEditor::ShowConfiguration(bool* open) {
 
 			ImGui::NewLine();
 
-			ImGui::TextWrapped("TOP 10 Bunch of Useless info here for memory fans :");
+			ImGui::TextWrapped("TOP info here for memory fans (not myself) :");
 
 			ImGui::NewLine();
 

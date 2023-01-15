@@ -453,7 +453,7 @@ void GameObject::SetTransform(vec3 pos, vec3 rot, vec3 scale) {
 // Apply Transformations
 void GameObject::UpdatePosition() {
 
-	vec3 globalPosition = GO_parentTrans.position - originalParentTrans.position + GO_trans.position;
+	vec3 globalPosition = /*GO_parentTrans.position - originalParentTrans.position +*/ GO_trans.position;
 
 	for (size_t i = 0; i < childs.size(); i++)
 	{
@@ -469,7 +469,7 @@ void GameObject::UpdatePosition() {
 }
 void GameObject::UpdateRotation() {
 
-	vec3 globalRotation = GO_parentTrans.rotation - originalParentTrans.rotation + GO_trans.rotation;
+	vec3 globalRotation = /*GO_parentTrans.rotation - originalParentTrans.rotation +*/ GO_trans.rotation;
 
 	for (size_t i = 0; i < childs.size(); i++)
 	{
@@ -493,7 +493,7 @@ void GameObject::UpdateRotation() {
 	SetGlobalMatrix();
 }
 void GameObject::UpdateScale() {
-	vec3 globalScale = GO_parentTrans.scale / originalParentTrans.scale * GO_trans.scale;
+	vec3 globalScale = /*GO_parentTrans.scale / originalParentTrans.scale **/ GO_trans.scale;
 
 	for (size_t i = 0; i < childs.size(); i++)
 	{
@@ -579,7 +579,7 @@ void GameObject::SetTransformMatrix(vec3 _position, vec3 _rotation, vec3 _scale)
 	GO_matrix = scaleMatrix * rotationMatrix * translationMatrix;
 
 	if (parent != nullptr) {
-		GO_matrix = GO_matrix * parent->GO_matrix;
+		GO_matrix = parent->GO_matrix * GO_matrix;
 	}
 
 	for(int i = 0; i < childs.size(); i++){
@@ -594,14 +594,16 @@ void GameObject::SetGlobalMatrix() {
 	SetTransformMatrix(gTrans.position, gTrans.rotation, gTrans.scale);
 }
 
+// HACER ALGO PARA LOCAL TRANSFORM -> PUEDE QUE ESO SEA LA SOLUCION A TODO
+
 Transform GameObject::GetGlobalTransform() {
 	if (GetParent() == nullptr) return GO_trans;
 
 	Transform global_transform;
 
-	global_transform.position = GO_parentTrans.position - originalParentTrans.position + GO_trans.position;
-	global_transform.rotation = GO_parentTrans.rotation - originalParentTrans.rotation + GO_trans.rotation;
-	global_transform.scale = GO_parentTrans.scale / originalParentTrans.scale * GO_trans.scale;
+	global_transform.position = /*GO_parentTrans.position - originalParentTrans.position +*/ GO_trans.position;
+	global_transform.rotation = /*GO_parentTrans.rotation - originalParentTrans.rotation +*/ GO_trans.rotation;
+	global_transform.scale = /*GO_parentTrans.scale / originalParentTrans.scale **/ GO_trans.scale;
 
 	return global_transform;
 }
