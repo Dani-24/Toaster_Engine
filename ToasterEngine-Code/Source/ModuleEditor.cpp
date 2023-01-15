@@ -193,15 +193,6 @@ void ModuleEditor::Draw(){
 
 				root->name = "New Scene";
 			}
-			if (ImGui::MenuItem("Open Toast", "WIP")) {
-
-			}
-			if (ImGui::MenuItem("Save your Toast", "WIP")) {
-
-			}
-			if (ImGui::MenuItem("Save and Close the fridge", "WIP")) {
-
-			}
 			if (ImGui::MenuItem("Close Butter", "Ctrl+Alt+F4", &closeOpenClose)) {
 
 			}
@@ -209,16 +200,9 @@ void ModuleEditor::Draw(){
 		}
 
 		if (ImGui::BeginMenu("Edit")) {
-			if (ImGui::MenuItem("Undo", "WIP")) {
-
-			}
-			if (ImGui::MenuItem("Redo", "WIP")) {
-
-			}
 			if (ImGui::MenuItem("Toaster Mode", "Just work at toaster speed", &toasterMode)) {
 			
 			}
-
 			ImGui::EndMenu();
 		}
 

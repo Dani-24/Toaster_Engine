@@ -31,6 +31,9 @@ bool ModuleScene::Start()
 	openGameObject->AddTexture(app->textures->LoadTexture("Assets/street_text1.png"));
 	openGameObject->AddTexture(app->textures->LoadTexture("Assets/street_text2.png"));
 	openGameObject->AddMesh(app->mesh3d->LoadFile("Assets/street.fbx", openGameObject));
+	openGameObject->SetPos(vec3(0, 0.1f, 0));
+
+	CreateAnimatedMoai();
 
 	return ret;
 }
@@ -90,4 +93,27 @@ void ModuleScene::DrawLines() {
 	}
 
 	lines.clear();
+}
+
+void ModuleScene::CreateAnimatedMoai() {
+	// Animated Moai
+	GameObject* moai = new GameObject("Animated Moai", app->editor->root);
+	moai->AddTexture(app->textures->LoadTexture("Assets/Moai_texture.png"));
+	moai->AddMesh(app->mesh3d->LoadFile("Assets/Moai.fbx", moai));
+	moai->SetScale(vec3(10, 10, 10));
+
+	GameObject* cubeBody = new GameObject("Moai Body", moai);
+	cubeBody->AddMesh(app->mesh3d->LoadFile("Assets/default_Meshes/cube.fbx"));
+
+	GameObject* cubeLeftArm = new GameObject("Moai Left Arm", cubeBody);
+	cubeLeftArm->AddMesh(app->mesh3d->LoadFile("Assets/default_Meshes/cube.fbx"));
+
+	GameObject* cubeRightArm = new GameObject("Moai Right Arm", cubeBody);
+	cubeRightArm->AddMesh(app->mesh3d->LoadFile("Assets/default_Meshes/cube.fbx"));
+
+	GameObject* cubeLeftLeg = new GameObject("Moai Left Leg", cubeBody);
+	cubeLeftLeg->AddMesh(app->mesh3d->LoadFile("Assets/default_Meshes/cube.fbx"));
+
+	GameObject* cubeRightLeg = new GameObject("Moai Right Leg", cubeBody);
+	cubeRightLeg->AddMesh(app->mesh3d->LoadFile("Assets/default_Meshes/cube.fbx"));
 }

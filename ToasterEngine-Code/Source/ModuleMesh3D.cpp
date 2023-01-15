@@ -125,15 +125,17 @@ Mesh* ModuleMesh3D::LoadFile(string file_path, GameObject* go)
 		return meshes[0];
 	}
 	else {
+		if (go == nullptr) {
+			go = app->editor->root;
+		}
 		for (int i = 0; i < meshes.size(); i++) {
-			if (go == nullptr) {
-				go = app->editor->root;
-			}
 			GameObject* meshChild = new GameObject(meshes[i]->name.c_str(), go);
 			meshChild->AddTexture(go->GetTexture());
 			meshChild->AddMesh(meshes[i]);
 		}
+		
 		go->DeleteTextures();
+		app->editor->SetSelectedGameObject(go);
 
 		aiReleaseImport(scene);
 		return nullptr;
@@ -167,11 +169,11 @@ void ModuleMesh3D::LoadMesh(Mesh* mesh)
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->num_textureCoords * 2, mesh->textureCoords, GL_STATIC_DRAW);
 
 
-	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_bonesIDs);
+	/*glBindBuffer(GL_ARRAY_BUFFER, mesh->id_bonesIDs);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(int) * mesh->num_bonesIDs * 4, mesh->bonesIDs, GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_bonesWeights);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->num_bonesWeights * 5, mesh->bonesWeights, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->num_bonesWeights * 5, mesh->bonesWeights, GL_STATIC_DRAW);*/
 
 	//Unbind buffers
 	glDisableClientState(GL_VERTEX_ARRAY);

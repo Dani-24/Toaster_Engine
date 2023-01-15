@@ -86,13 +86,19 @@ public:
 	void SetGlobalMatrix();
 	Transform GetGlobalTransform();
 
+	// Parent
+	void ParentPosUpdate(vec3 pos);
+	void ParentRotUpdate(vec3 rot);
+	void ParentScaleUpdate(vec3 scale);
+	void ParentTransUpdate(vec3 pos, vec3 rot, vec3 scale);
+
 public:
 	mat4x4 GO_matrix;
 
-	Transform global_transform;
-
 private:
 	Transform GO_trans;
+
+	Transform GO_parentTrans, originalParentTrans;
 
 public:
 	// MESH

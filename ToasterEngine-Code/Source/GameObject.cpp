@@ -100,6 +100,7 @@ void GameObject::AddChild(GameObject* chi) {
 }
 void GameObject::SetParent(GameObject* par) {
 	parent = par;
+	originalParentTrans = par->GO_trans;
 }
 
 // ImGUI
@@ -285,132 +286,91 @@ void GameObject::OnEditor() {
 		
 		if (rootBone == nullptr)
 		{
-			ImGui::TextWrapped("Root Bone not set'nt");
+			ImGui::TextWrapped("Root Bone set'nt");
 		}
 		else {
 			ImGui::Text("Root Bone: ");
 			ImGui::SameLine();
-			ImGui::Button(rootBone->name.c_str());
+			ImGui::TextWrapped(rootBone->name.c_str());
 		}
 
 		ImGui::Spacing();
 
-		/*if (currentAnimation == nullptr) {
-			ImGui::Text("Current Animation: "); ImGui::SameLine(); ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), "None");
+		ImGui::Text("Current Animation: ");
+
+		if (currentAnimation == nullptr) {
+			ImGui::SameLine(); 
+			ImGui::TextWrapped("None");
 		}
 		else {
-			ImGui::Text("Current Animation: "); ImGui::SameLine(); ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), "%s", currentAnimation->name);
-			ImGui::Text("Duration: "); ImGui::SameLine(); ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), "%.2f", currentAnimation->duration);
-			ImGui::Text("Ticks per second: "); ImGui::SameLine(); ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), "%.2f", currentAnimation->ticksPerSec);
-		}*/
+			ImGui::SameLine(); 
+			ImGui::TextWrapped(currentAnimation->name.c_str());
+			ImGui::Text("Duration: "); 
+			ImGui::SameLine(); 
+			ImGui::TextWrapped("%.2f", currentAnimation->duration);
+			ImGui::Text("Ticks per second: "); 
+			ImGui::SameLine(); 
+			ImGui::TextWrapped("%.2f", currentAnimation->ticksPerSec);
+			ImGui::Spacing();
+			ImGui::Checkbox("Loop", &currentAnimation->loop);
+		}
 
-		//List of existing animations
-		static char newName[64];
+		ImGui::Spacing();
 
-		ImGui::Text("Select a new animation");
+		ImGui::TextWrapped("Animation List");
+
+		ImGui::Spacing();
+
 		for (int i = 0; i < GO_animations.size(); i++)
 		{
-			string animName = GO_animations[i]->name;
+			char num = i;
+			string animName = num + " " + GO_animations[i]->name;
 
 			if (currentAnimation == GO_animations[i]) {
 				animName += " (Current)";
 			}
 
-			if (ImGui::Button(animName.c_str())) {
+			ImGui::TextWrapped(animName.c_str());
 
-				for (int i = 0; i < GO_animations.size(); i++)
-				{
-					if (GO_animations[i]->name == animName) {
-						PlayAnim(GO_animations[i]);
-						time = 0.f;
-						sprintf_s(newName, animName.c_str());
-						break;
-					}
-				}
+			if (ImGui::Button("Play")) {
+				PlayAnim(GO_animations[i]);
 			}
 
 			ImGui::SameLine();
 
-			if (ImGui::Button("Remove Animation"))
+			if (ImGui::Button("Delete"))
 			{
 				DeleteAnimation(GO_animations[i]);
 			}
 		}
 
-		if (currentAnimation != nullptr)
-		{
-			ImGui::InputText("Name", newName, IM_ARRAYSIZE(newName));
-			ImGui::Checkbox("Loop", &currentAnimation->loop);
+		ImGui::Spacing();
 
-			ImGui::Separator();
-		}
+		ImGui::Text("Previous Animation Time: "); 
+		ImGui::SameLine(); 
+		ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), "%.2f", prevAnimationT);
 
-		ImGui::Text("Previous Animation Time: "); ImGui::SameLine(); ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), "%.2f", prevAnimationT);
-		ImGui::Text("Current Animation Time: "); ImGui::SameLine(); ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), "%i", currentAnimationT);
-		ImGui::Text("Blend Time: "); ImGui::SameLine(); ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), "%.2f", blendTime);
+		ImGui::Text("Current Animation Time: "); 
+		ImGui::SameLine(); 
+		ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), "%i", currentAnimationT);
+
+		ImGui::Text("Blend Time: "); 
+		ImGui::SameLine(); 
+		ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), "%.2f", blendTime);
 
 		ImGui::Spacing();
+
 		if (playing)
 		{
-			ImGui::Text("Playing: "); ImGui::SameLine(); ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), "true");
+			ImGui::Text("Playing: "); 
+			ImGui::SameLine(); 
+			ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), "true");
 		}
 		else
 		{
-			ImGui::Text("Playing: "); ImGui::SameLine(); ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), "false");
-		}
-
-		ImGui::Spacing();
-
-		//Table header
-		ImGui::Columns(3, "Clips");
-		ImGui::Separator();
-		ImGui::Text("Clips");
-		ImGui::NextColumn();
-		ImGui::Text("Start");
-		ImGui::NextColumn();
-		ImGui::Text("End");
-		ImGui::NextColumn();
-		ImGui::Separator();
-
-		for (size_t i = 0; i < clips.size(); i++)
-		{
-			if (ImGui::Button(GO_animations[i]->name.c_str())) {
-				currentAnimation = GO_animations[i];
-			}
-			ImGui::NextColumn();
-			ImGui::InputFloat("##start", &clips[i].startFrame, 0.0f, 0.0f, 0);
-			ImGui::NextColumn();
-			ImGui::InputFloat("##end", &clips[i].endFrame, 0.0f, 0.0f, 0);
-			ImGui::NextColumn();
-		}
-
-		ImGui::Separator();
-		ImGui::Columns(1);
-		ImGui::Spacing();
-
-		if (ImGui::Button("+"))
-		{
-			if (currentAnimation != nullptr) {
-				AddClip(currentAnimation);
-			}
-		}
-
-		ImGui::SameLine();
-		if (ImGui::Button("-"))
-		{
-			if (selectedClip != nullptr)
-			{
-				std::vector<AnimationClip> remainingClips;
-				for (size_t i = 0; i < clips.size(); i++)
-				{
-					if (selectedClip != &clips[i])
-						remainingClips.push_back(clips[i]);
-				}
-
-				selectedClip = nullptr;
-				clips = remainingClips;
-				remainingClips.clear();
-			}
+			ImGui::Text("Playing: "); 
+			ImGui::SameLine(); 
+			ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), "false");
 		}
 
 		ImGui::Spacing();
@@ -428,22 +388,7 @@ void GameObject::OnEditor() {
 
 		ImGui::Spacing();
 
-		if (ImGui::Button("Apply")) {
-			for (size_t i = 0; i < clips.size(); i++) {
-				Animation* animation = ClipToAnim(clips[i]);
-				AddAnimation(animation);
-			}
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("Cancel")) {
-			selectedClip = nullptr;
-			clips.clear();
-		}
-
-		ImGui::Spacing();
-
 		// Delete ANIMATION Component
-
 		bool deleteAnims = false;
 		ImGui::Selectable("Delete Component", &deleteAnims);
 
@@ -508,14 +453,28 @@ void GameObject::SetTransform(vec3 pos, vec3 rot, vec3 scale) {
 // Apply Transformations
 void GameObject::UpdatePosition() {
 
+	vec3 globalPosition = GO_parentTrans.position - originalParentTrans.position + GO_trans.position;
+
+	for (size_t i = 0; i < childs.size(); i++)
+	{
+		childs[i]->ParentPosUpdate(globalPosition);
+	}
+
 	// Camera
 	if (GO_camera != nullptr) {
-		GO_camera->camFrustum.pos = float3(GO_trans.position.x, GO_trans.position.y, GO_trans.position.z);
+		GO_camera->camFrustum.pos = float3(globalPosition.x, globalPosition.y, globalPosition.z);
 	}
 
 	SetGlobalMatrix();
 }
 void GameObject::UpdateRotation() {
+
+	vec3 globalRotation = GO_parentTrans.rotation - originalParentTrans.rotation + GO_trans.rotation;
+
+	for (size_t i = 0; i < childs.size(); i++)
+	{
+		childs.at(i)->ParentRotUpdate(globalRotation);
+	}
 
 	//Camera
 	if (GO_camera != nullptr) {
@@ -523,7 +482,7 @@ void GameObject::UpdateRotation() {
 
 		GO_camera->camFrustum.WorldMatrix().Decompose(float3(), dir, float3());
 
-		dir = dir.FromEulerXYZ(math::DegToRad(GO_trans.rotation.x), math::DegToRad(GO_trans.rotation.y + 95), math::DegToRad(GO_trans.rotation.z));
+		dir = dir.FromEulerXYZ(math::DegToRad(globalRotation.x), math::DegToRad(globalRotation.y + 95), math::DegToRad(globalRotation.z));
 
 		float4x4 mat = GO_camera->camFrustum.WorldMatrix();
 		mat.SetRotatePart(dir.Normalized());
@@ -534,12 +493,24 @@ void GameObject::UpdateRotation() {
 	SetGlobalMatrix();
 }
 void GameObject::UpdateScale() {
+	vec3 globalScale = GO_parentTrans.scale / originalParentTrans.scale * GO_trans.scale;
+
+	for (size_t i = 0; i < childs.size(); i++)
+	{
+		childs.at(i)->ParentScaleUpdate(globalScale);
+	}
+
 	SetGlobalMatrix();
 }
 
 void GameObject::UpdateTransform() {
 
 	Transform globalTransform = GetGlobalTransform();
+
+	for (size_t i = 0; i < childs.size(); i++)
+	{
+		childs.at(i)->ParentTransUpdate(globalTransform.position, globalTransform.scale, globalTransform.rotation);
+	}
 
 	// Camera
 	if (GO_camera != nullptr) {
@@ -607,13 +578,13 @@ void GameObject::SetTransformMatrix(vec3 _position, vec3 _rotation, vec3 _scale)
 
 	GO_matrix = translationMatrix * rotationMatrix * scaleMatrix;
 
-	if (parent != nullptr) {
+	/*if (parent != nullptr) {
 		GO_matrix = GO_matrix * parent->GO_matrix;
 	}
 
 	for(int i = 0; i < childs.size(); i++){
 		childs[i]->SetGlobalMatrix();
-	}
+	}*/
 
 	aabb.SetPos(float3(_position.x, _position.y, _position.z));
 }
@@ -626,11 +597,32 @@ void GameObject::SetGlobalMatrix() {
 Transform GameObject::GetGlobalTransform() {
 	if (GetParent() == nullptr) return GO_trans;
 
-	global_transform.position = GO_trans.position;
-	global_transform.rotation = GO_trans.rotation;
-	global_transform.scale = GO_trans.scale;
+	Transform global_transform;
+
+	global_transform.position = GO_parentTrans.position - originalParentTrans.position + GO_trans.position;
+	global_transform.rotation = GO_parentTrans.rotation - originalParentTrans.rotation + GO_trans.rotation;
+	global_transform.scale = GO_parentTrans.scale / originalParentTrans.scale * GO_trans.scale;
 
 	return global_transform;
+}
+
+void GameObject::ParentPosUpdate(vec3 pos) {
+	GO_parentTrans.position = pos;
+	UpdatePosition();
+}
+void GameObject::ParentRotUpdate(vec3 rot) {
+	GO_parentTrans.rotation = rot;
+	UpdateRotation();
+}
+void GameObject::ParentScaleUpdate(vec3 scale) {
+	GO_parentTrans.scale = scale;
+	UpdateScale();
+}
+void GameObject::ParentTransUpdate(vec3 pos, vec3 rot, vec3 scale) {
+	GO_parentTrans.position = pos;
+	GO_parentTrans.rotation = rot;
+	GO_parentTrans.scale = scale;
+	UpdateTransform();
 }
 
 // MESH
@@ -699,6 +691,8 @@ void GameObject::CreateAABB()
 
 		aabb.SetNegativeInfinity();
 		aabb.Enclose((float3*)GO_mesh->vertices, GO_mesh->num_vertices);
+
+		//aabb.Scale(float3(0, 0, 0), float3(10, 10, 10));
 	}
 	else {
 		aabb.SetNegativeInfinity();

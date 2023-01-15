@@ -24,6 +24,8 @@ public:
 	void AddLines(float3 line, Color color);
 	void DrawLines();
 
+	void CreateAnimatedMoai();
+
 public:
 	bool axis = true;
 
