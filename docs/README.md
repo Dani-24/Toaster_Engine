@@ -26,17 +26,21 @@ Welcome to the [Toaster Engine](https://github.com/Dani-24/Toaster_Engine) websi
 
 First of all, let me introduce myself, I'm Dani Toledo Rodríguez , in github [Dani24](https://github.com/Dani-24), a student trying to learn and improve in videogame design and development. 
 
-<div id="intro" align="center">
-
 ## Me
 
-![depressed](https://user-images.githubusercontent.com/79161140/212534887-5309dbd6-a156-41b7-b3e2-58e245ffbfef.png)
+<p align="center">
+  
+  <img align="center" src="https://user-images.githubusercontent.com/79161140/212534887-5309dbd6-a156-41b7-b3e2-58e245ffbfef.png">
+  
+</p>
 
-## Engine Trailer
-
-https://user-images.githubusercontent.com/79161140/212535779-41066c7b-0286-4887-84a1-59ec6e022382.mp4
-
-</div>
+<p align="center">
+  
+  ## Engine Trailer
+  
+  <iframe src="https://user-images.githubusercontent.com/79161140/212535779-41066c7b-0286-4887-84a1-59ec6e022382.mp4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+  
+</p>
 
 ## About the Engine : FEATURES
 
@@ -50,11 +54,11 @@ At the center of the screen you can choose between the Editor & the Scene views,
 
 ### Resource Manager & Asset Explorer
 
-<div id="assets" align="center">
+<p align="center">
 
-![image](https://user-images.githubusercontent.com/79161140/212535054-baef8c1d-a1d0-4766-854b-49c7c717eb14.png)
+  <img align="center" src="https://user-images.githubusercontent.com/79161140/212535054-baef8c1d-a1d0-4766-854b-49c7c717eb14.png">
 
-</div>
+</p>
 
 All files located at the engine /Assets folder will be displayed here. 3D meshes and 2d Images can be dragged from here to be applied on the Editor.
 
@@ -62,11 +66,11 @@ What's even better is that you can drag any file from anywhere and Toaster Engin
 
 ### Inspector
 
-<div id="inspector" align="center">
+<p align="center">
 
-![image](https://user-images.githubusercontent.com/79161140/212535201-756d7fda-3969-40a2-b4a4-2889a223853e.png)
+  <img align="center" src="https://user-images.githubusercontent.com/79161140/212535201-756d7fda-3969-40a2-b4a4-2889a223853e.png">
 
-</div>
+</p>
 
 Just select or create a GameObject and the Inspector will show you all its propierties
 
@@ -74,11 +78,11 @@ Just select or create a GameObject and the Inspector will show you all its propi
 
 ### MousePicking and Frustum Culling features to improve the Toaster experience. Which you can improve by activating the Toaster Mode at the Edit menu from the top-bar menu. 
 
-<div id="ToasterMode" align="center">
+<p align="center">
 
-![image](https://user-images.githubusercontent.com/79161140/212535534-80ccccd8-e533-419a-9f7a-b4ec04c9c091.png)
+  <img align="center" src="https://user-images.githubusercontent.com/79161140/212535534-80ccccd8-e533-419a-9f7a-b4ec04c9c091.png">
 
-</div>
+</p>
 
 ### And More
 
@@ -92,19 +96,19 @@ The main functionality of the engine is it's compatibility with animated meshes 
 
 It's complex implementation allows you to see all the bones from your 3d mesh as GameObjects on the Hierarchy.
 
-<div id="skeleton" align="center">
+<p align="center">
 
-![image](https://user-images.githubusercontent.com/79161140/212535270-437bc521-d65a-4625-a572-620a92d246ab.png)
+  <img align="center" src="https://user-images.githubusercontent.com/79161140/212535270-437bc521-d65a-4625-a572-620a92d246ab.png">
 
-</div>
+</p>
 
 Just select the parent of the Skeleton and the Inpector will show you the Animation Component
 
-<div id="animation" align="center">
+<p align="center">
 
-![image](https://user-images.githubusercontent.com/79161140/212535341-6dc308ae-2ad0-416f-b130-4aba9a2690af.png)
+  <img align="center" src="https://user-images.githubusercontent.com/79161140/212535341-6dc308ae-2ad0-416f-b130-4aba9a2690af.png">
 
-</div>
+</p>
 
 ## Toaster Start Manual Guide
 
@@ -143,8 +147,8 @@ No
 [PhysFS](https://icculus.org/physfs/)
 
 
-<div id="license" align="center">
+<p align="center">
 
 ## [Licence](https://github.com/Dani-24/Toaster_Engine/blob/main/LICENSE)
 
-</div>
+</p>
