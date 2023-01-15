@@ -1188,9 +1188,16 @@ void GameObject::PlayAnim(TransAnimationClip* anim, float blendDuration, float S
 }
 
 void GameObject::UpdateTransAnim(float dt) {
-	if (playingAnAnimation == true && currentTransClip->currentFrame < currentTransClip->endFrame && app->editor->playing == true) {
+	if (playingAnAnimation == true && currentTransClip->currentFrame < currentTransClip->endFrame) {
 
 		currentTransClip->midFrame = currentTransClip->endFrame / 2;
+
+		if (app->editor->playing == false) {
+			speed = 200;
+		}
+		else {
+			speed = s;
+		}
 
 		currentTransClip->currentFrame += speed * dt;
 

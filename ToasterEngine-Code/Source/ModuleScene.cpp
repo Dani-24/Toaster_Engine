@@ -40,7 +40,7 @@ bool ModuleScene::Start()
 	app->audio->PlayFx(initSFX2);
 
 	moai->Idle();
-	//app->audio->PlayMusic("Splatoon 3 Alterna Mission 8.ogg");
+	app->audio->PlayMusic("Splatoon 3 Alterna Mission 8.ogg");
 
 	return ret;
 }
@@ -57,6 +57,7 @@ update_status ModuleScene::PreUpdate(float dt) {
 		app->audio->PlayMusic("Lifes Incredible Again.ogg");
 		moai->Walk();
 	}
+	// Kick Animation
 	if (app->input->GetKey(SDL_SCANCODE_2) == KEY_UP) {
 		app->audio->PlayMusic("Splatoon 3 Alterna Mission 8.ogg");
 		moai->Idle();
@@ -67,7 +68,14 @@ update_status ModuleScene::PreUpdate(float dt) {
 
 update_status ModuleScene::Update(float dt)
 {
-	
+	if (app->editor->playing == false) {	// Reset animation pos when engine stops
+		if (moai->currentTransClip != nullptr) {
+			if(moai->currentTransClip->currentFrame > 0.0f){
+				moai->UpdateTransAnim(dt);
+			}
+		}
+	}
+
 	return UPDATE_CONTINUE;
 }
 
@@ -198,7 +206,7 @@ void ModuleScene::CreateAnimatedMoai() {
 	idle->cubeLeftLegMov.go = cubeLeftLeg;
 	idle->cubeRightLegMov.go = cubeRightLeg;
 
-	idle->endFrame = 200;
+	idle->endFrame = 180;
 
 	TransAnimationClip* walk = new TransAnimationClip();
 
@@ -213,8 +221,8 @@ void ModuleScene::CreateAnimatedMoai() {
 	walk->cubeLeftArmMov.go = cubeLeftArm;
 	walk->cubeRightArmMov.go = cubeRightArm;
 
-	idle->cubeLeftLegMov.go = cubeLeftLeg;
-	idle->cubeRightLegMov.go = cubeRightLeg;
+	walk->cubeLeftLegMov.go = cubeLeftLeg;
+	walk->cubeRightLegMov.go = cubeRightLeg;
 
 	walk->endFrame = 69;
 

@@ -168,7 +168,7 @@ public:
 	bool playingAnAnimation = true;
 	bool started = false;
 	float time = 0.f;
-	float speed = 20.f;
+	float speed = 20.f; float s = 20.0f;
 
 	bool channelsLinked = false;
 	bool bonesLinked = false;

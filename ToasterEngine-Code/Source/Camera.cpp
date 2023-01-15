@@ -209,7 +209,11 @@ void Camera::EditorCameraControl(float dt) {
 
 	float speed;
 	if (app->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT) {
-		speed = camSpeed * 2 * dt;
+		speed = camSpeed * 3 * dt;
+	}
+	else if (app->input->GetKey(SDL_SCANCODE_TAB) == KEY_REPEAT)
+	{
+		speed = camSpeed * 0.1f * dt;
 	}
 	else {
 		speed = camSpeed * dt;
@@ -256,7 +260,7 @@ void Camera::EditorCameraControl(float dt) {
 		int dx = -app->input->GetMouseXMotion();
 		int dy = -app->input->GetMouseYMotion();
 
-		float Sensitivity = 0.25f;
+		float Sensitivity = 0.25f * speed;
 
 		Quat dir;
 

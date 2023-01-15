@@ -56,6 +56,13 @@ update_status ModuleEditor::PreUpdate(float dt)
 		app->audio->PlayFx(closeSFX);
 	}
 
+	if (playing && !paused) {
+		app->audio->SetVolume(50);
+	}
+	else {
+		app->audio->SetVolume(0);
+	}
+
 	return UPDATE_CONTINUE;
 }
 
@@ -90,7 +97,7 @@ update_status ModuleEditor::Update(float dt) {
 			gameObjects[i]->UpdateAnimation(dt);
 		}
 
-		if (gameObjects[i]->animatedTransform && gameObjects[i]->currentTransClip != nullptr) {
+		if (gameObjects[i]->animatedTransform && gameObjects[i]->currentTransClip != nullptr && playing == true && paused == false) {
 			gameObjects[i]->UpdateTransAnim(dt);
 		}
 	}
