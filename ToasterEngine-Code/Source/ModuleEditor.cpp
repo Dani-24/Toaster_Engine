@@ -464,6 +464,15 @@ void ModuleEditor::ShowAssetManager(bool* open) {
 		ImGui::End();
 	}
 	else {
+
+		if (!logs.empty()) {
+			ImGui::Text("Console: %s", logs[logs.size() - 1]);
+		}
+		else {
+			ImGui::Text("No Console Message Right Now");
+		}
+
+		ImGui::Spacing();
 		
 		uint forbidenNum = 8;
 		uint forbidenOriginal = forbidenNum;

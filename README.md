@@ -58,7 +58,7 @@ By pressing "2", the Moai changes its idle animation to in place walk animation 
 
 ### SKELETAL ANIMATIONS : MAIN FEATURE
 
-Try loading "BonedMeshRussianRoulette.FBX" from the /Assets to see the incredible Bones hierarchy in action. But BE CAREFUL!!! As the name implies, the russian roulette mesh will crash your Toaster randomly if you're not lucky. Just don't give up and keep trying!! I promise you it works!
+Try loading "RussianRoulette.FBX" from the /Assets to see the incredible Bones hierarchy in action. But BE CAREFUL!!! As the name implies, the russian roulette mesh will crash your Toaster randomly if you're not lucky. Just don't give up and keep trying!! I promise you it works!
 
 <p align="center">
 

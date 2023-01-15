@@ -490,6 +490,18 @@ void GameObject::OnEditor() {
 
 			ImGui::Spacing();
 		}
+
+		// This doesn't work bc yes so commented que te quedas
+		/*if (ImGui::Button("Delete Component")) {
+
+			currentTransClip = nullptr;
+			for (int i = 0; i < transClips.size(); i++)
+			{
+				transClips[i] = nullptr;
+			}
+
+			animatedTransform = false;
+		}*/
 	}
 }
 
