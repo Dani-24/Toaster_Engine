@@ -49,9 +49,10 @@ public:
 		return true; 
 	}
 
-	virtual int RandomIntValue() {
+	virtual int RandomIntValue(int min, int max) {
 		LCG rand;
-		return rand.Int();
+
+		return rand.Int(min, max);
 	}
 
 	virtual void OpenURL(const char* link) {

@@ -282,6 +282,9 @@ void ModuleEditor::Draw(){
 
 				ImGui::EndMenu();
 			}
+			if (ImGui::MenuItem("Create 1000 Moais")) {
+				app->scene->ThousandMoais();
+			}
 			if (ImGui::MenuItem("Create Empty GameObject")) {
 				GameObject* GO = new GameObject("Empty GameObject", root);
 			}

@@ -447,6 +447,19 @@ void GameObject::OnEditor() {
 			if (ImGui::Button("Resume")) {
 				ResumeAnim();
 			}
+
+			if (playingAnAnimation)
+			{
+				ImGui::Text("Playing: ");
+				ImGui::SameLine();
+				ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), "true");
+			}
+			else
+			{
+				ImGui::Text("Playing: ");
+				ImGui::SameLine();
+				ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), "false");
+			}
 		}
 
 		ImGui::Spacing();

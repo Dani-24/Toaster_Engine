@@ -242,3 +242,39 @@ void ModuleScene::CreateAnimatedMoai() {
 	moai->AddTransAnimation(walk);
 	moai->AddTransAnimation(kick);
 }
+
+void ModuleScene::CreateMoai(vec3 pos, vec3 rot, vec3 scl) {
+	GameObject* moaiD = new GameObject("Moai", moaiGOD);
+	moaiD->AddTexture(app->textures->LoadTexture("Assets/Moai_texture.png"));
+	moaiD->AddMesh(app->mesh3d->LoadFile("Assets/Moai.fbx", moaiD));
+	
+	moaiD->SetPos(pos);
+	moaiD->SetRot(rot);
+	moaiD->SetScale(scl);
+}
+
+void ModuleScene::ThousandMoais() {
+	moaiGOD = new GameObject("Just 1000 Moais", app->editor->root);
+
+	for (int i = 0; i < 1000; i++) {
+
+		int scal = RandomIntValue(1, 20);
+
+		int posX = RandomIntValue(20, 80);
+		if (RandomIntValue(0, 1) == 0) {
+			posX = -posX;
+		}
+
+		int posY = RandomIntValue(20, 80);
+		if (RandomIntValue(0, 1) == 0) {
+			posY = -posY;
+		}
+
+		int posZ = RandomIntValue(20, 80);
+		if (RandomIntValue(0, 1) == 0) {
+			posZ = -posZ;
+		}
+
+		CreateMoai(vec3(posX, posY, posZ), vec3(RandomIntValue(0, 360), RandomIntValue(0, 360), RandomIntValue(0, 360)), vec3(scal, scal, scal));
+	}
+}

@@ -29,6 +29,10 @@ public:
 	void CreateSkybox();
 	void CreateStreet();
 	void CreateAnimatedMoai();
+	void CreateMoai(vec3 pos, vec3 rot, vec3 scl);
+
+	// Just create 1000 random moais
+	void ThousandMoais();
 
 public:
 	bool axis = true;
@@ -40,4 +44,6 @@ public:
 private:
 
 	GameObject* moai, *cubeBody, *cubeLeftArm, *cubeRightArm, *cubeRightLeg, *cubeLeftLeg;
+
+	GameObject* moaiGOD;
 };
