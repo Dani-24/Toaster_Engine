@@ -39,6 +39,7 @@ bool ModuleScene::Start()
 
 	app->audio->PlayFx(initSFX2);
 
+	moai->Idle();
 	//app->audio->PlayMusic("Splatoon 3 Alterna Mission 8.ogg");
 
 	return ret;
@@ -49,13 +50,16 @@ update_status ModuleScene::PreUpdate(float dt) {
 	// Attack Animation
 	if (app->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN) {
 		app->audio->PlayFx(attackSFX);
+		moai->Kick();
 	}
 	// Walk Animation
 	if (app->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN) {
 		app->audio->PlayMusic("Lifes Incredible Again.ogg");
+		moai->Walk();
 	}
 	if (app->input->GetKey(SDL_SCANCODE_2) == KEY_UP) {
 		app->audio->PlayMusic("Splatoon 3 Alterna Mission 8.ogg");
+		moai->Idle();
 	}
 
 	return UPDATE_CONTINUE;
@@ -174,37 +178,59 @@ void ModuleScene::CreateAnimatedMoai() {
 
 	app->editor->SetSelectedGameObject(moai);
 
-	TransAnimationClip* iddle = new TransAnimationClip();
+	TransAnimationClip* idle = new TransAnimationClip();
 
-	iddle->name = "Iddle Moai";
-	iddle->loop = true;
+	idle->name = "Idle Moai";
+	idle->loop = true;
 
-	iddle->moaiMov.rotation.y = 1;
+	idle->moaiMov.go = moai;
+	idle->moaiMov.movement.y = 1;
 
-	iddle->cubeLeftArmMov.rotation.y = -1;
-	iddle->cubeRightArmMov.rotation.y = 1;
-	iddle->cubeLeftLegMov.rotation.z = -1;
-	iddle->cubeRightLegMov.rotation.z = 1;
+	idle->cubeLeftArmMov.movement.y = 1;
+	idle->cubeRightArmMov.movement.y = -1;
 
-	iddle->endFrame = 500;
+	idle->cubeLeftLegMov.movement.z = -1;
+	idle->cubeRightLegMov.movement.z = -1;
+
+	idle->cubeLeftArmMov.go = cubeLeftArm;
+	idle->cubeRightArmMov.go = cubeRightArm;
+
+	idle->cubeLeftLegMov.go = cubeLeftLeg;
+	idle->cubeRightLegMov.go = cubeRightLeg;
+
+	idle->endFrame = 200;
 
 	TransAnimationClip* walk = new TransAnimationClip();
 
 	walk->name = "Walking Moai";
+	walk->loop = true;
 
-	walk->cubeLeftArmMov.rotation.x = -1;
-	walk->cubeRightArmMov.rotation.x = -1;
-	walk->cubeLeftLegMov.rotation.x = 1;
-	walk->cubeRightLegMov.rotation.x = 1;
+	walk->cubeLeftArmMov.movement.x = -1;
+	walk->cubeRightArmMov.movement.x = -1;
+	walk->cubeLeftLegMov.movement.x = 1;
+	walk->cubeRightLegMov.movement.x = 1;
 
-	walk->endFrame = 300;
+	walk->cubeLeftArmMov.go = cubeLeftArm;
+	walk->cubeRightArmMov.go = cubeRightArm;
+
+	idle->cubeLeftLegMov.go = cubeLeftLeg;
+	idle->cubeRightLegMov.go = cubeRightLeg;
+
+	walk->endFrame = 69;
 
 	TransAnimationClip* kick = new TransAnimationClip();
 
 	kick->name = "Kick Moai";
 
-	kick->cubeLeftArmMov.rotation.x = -1;
-	kick->cubeBodyMov.rotation.y = -1;
+	kick->cubeLeftArmMov.movement.x = -1;
+	kick->cubeBodyMov.movement.y = -1;
 
-	kick->endFrame = 60;
+	kick->cubeLeftArmMov.go = cubeLeftArm;
+	kick->cubeBodyMov.go = cubeBody;
+
+	kick->endFrame = 30;
+
+	moai->AddTransAnimation(idle);
+	moai->AddTransAnimation(walk);
+	moai->AddTransAnimation(kick);
 }

@@ -16,6 +16,8 @@ struct Transform {
 		scale = vec3(1.0f, 1.0f, 1.0f);
 };
 
+struct GameObject;
+
 struct AnimationClip
 {
 	AnimationClip();
@@ -25,13 +27,19 @@ struct AnimationClip
 	Animation* originalAnimation;
 };
 
+struct GOTransC {
+	GameObject* go;
+	float original = 0;
+	vec3 movement;
+};
+
 struct TransAnimationClip {
 
-	Transform moaiMov, cubeBodyMov, cubeLeftArmMov, cubeRightArmMov, cubeRightLegMov, cubeLeftLegMov;
+	GOTransC moaiMov, cubeBodyMov, cubeLeftArmMov, cubeRightArmMov, cubeRightLegMov, cubeLeftLegMov;
 
 	string name;
 	float startFrame = 0, endFrame, midFrame, currentFrame = 0;
-	bool loop;
+	bool loop = false;
 };
 
 class GameObject
@@ -157,10 +165,10 @@ public:
 	// ANIMATIONS
 public:
 
-	bool playing = true;
+	bool playingAnAnimation = true;
 	bool started = false;
 	float time = 0.f;
-	float speed = 1.f;
+	float speed = 20.f;
 
 	bool channelsLinked = false;
 	bool bonesLinked = false;
@@ -231,5 +239,13 @@ public:
 
 	void PlayAnim(TransAnimationClip* anim, float blendDuration = 0.2f, float Speed = 1.0f);
 
-	void UpdateTransAnim();
+	void UpdateTransAnim(float dt);
+
+	void AddTransAnimation(TransAnimationClip* anim);
+
+	void AnimateTrans(float speed, bool positive);
+
+	void Idle();
+	void Walk();
+	void Kick();
 };

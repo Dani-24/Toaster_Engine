@@ -89,6 +89,10 @@ update_status ModuleEditor::Update(float dt) {
 		if (!gameObjects[i]->GO_animations.empty()) {
 			gameObjects[i]->UpdateAnimation(dt);
 		}
+
+		if (gameObjects[i]->animatedTransform && gameObjects[i]->currentTransClip != nullptr) {
+			gameObjects[i]->UpdateTransAnim(dt);
+		}
 	}
 
 	deltaT = dt;

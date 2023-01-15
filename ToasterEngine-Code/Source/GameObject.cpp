@@ -360,7 +360,7 @@ void GameObject::OnEditor() {
 
 		ImGui::Spacing();
 
-		if (playing)
+		if (playingAnAnimation)
 		{
 			ImGui::Text("Playing: "); 
 			ImGui::SameLine(); 
@@ -434,7 +434,19 @@ void GameObject::OnEditor() {
 			ImGui::SameLine();
 			ImGui::TextWrapped("%.2f", currentTransClip->endFrame);
 			ImGui::Spacing();
+			ImGui::TextWrapped("Current Frame");
+			ImGui::Spacing();
+			ImGui::TextWrapped("%.2f", currentTransClip->currentFrame);
+			ImGui::Spacing();
 			ImGui::Checkbox("Loop", &currentTransClip->loop);
+
+			if (ImGui::Button("Pause")) {
+				PauseAnim();
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Resume")) {
+				ResumeAnim();
+			}
 		}
 
 		ImGui::Spacing();
@@ -451,14 +463,19 @@ void GameObject::OnEditor() {
 			if (currentTransClip == transClips[i]) {
 				animName += " (Current)";
 			}
+			if (previousTransClip == transClips[i] && previousTransClip != currentTransClip) {
+				animName += " (Previous)";
+			}
 
 			ImGui::TextWrapped(animName.c_str());
+
+			ImGui::SameLine();
 
 			if (ImGui::Button("Play")) {
 				PlayAnim(transClips[i]);
 			}
 
-			ImGui::SameLine();
+			ImGui::Spacing();
 		}
 	}
 }
@@ -885,7 +902,7 @@ void GameObject::StartAnimation() {
 void GameObject::UpdateAnimation(float dt) {
 
 	// Update Current Animation
-	if (this->playing) {
+	if (this->playingAnAnimation) {
 		if (!started) { StartAnimation(); }
 		else {
 			if (currentAnimation != nullptr) {
@@ -1135,10 +1152,10 @@ void GameObject::PlayAnim(Animation* anim, float blendDuration, float Speed){
 	SetAnimationChannelToBones(prevAnimation, bonesPrevAnim);
 }
 void GameObject::PauseAnim() {
-	playing = false;
+	playingAnAnimation = false;
 }
 void GameObject::ResumeAnim() {
-	playing = true;
+	playingAnAnimation = true;
 }
 
 AnimationClip::AnimationClip() : name("Namen't"), startFrame(0), endFrame(0), originalAnimation(nullptr), loop(false) {
@@ -1159,25 +1176,166 @@ Animation* GameObject::ClipToAnim(AnimationClip clip)
 void GameObject::PlayAnim(TransAnimationClip* anim, float blendDuration, float Speed) {
 
 	previousTransClip = currentTransClip;
-	previousTransClip->endFrame = currentTransClip->endFrame;
 
 	currentTransClip = anim;
 
-	blendTimeDuration = blendDuration;
+	/*blendTimeDuration = blendDuration;
 	blendTime = 0.0f;
 	time = 0;
-	this->speed = speed;
+	this->speed = speed;*/
 
-	playing = true;
+	playingAnAnimation = true;
 }
 
-void GameObject::UpdateTransAnim() {
-	if (currentTransClip->currentFrame < currentTransClip->midFrame) {
-		// + Anim
-	}
-	else {
-		// - Anim (back)
+void GameObject::UpdateTransAnim(float dt) {
+	if (playingAnAnimation == true && currentTransClip->currentFrame < currentTransClip->endFrame && app->editor->playing == true) {
+
+		currentTransClip->midFrame = currentTransClip->endFrame / 2;
+
+		currentTransClip->currentFrame += speed * dt;
+
+		if (currentTransClip->currentFrame < currentTransClip->midFrame) {
+			// + Anim
+			AnimateTrans(speed * dt, true);
+		}
+		else {
+			// - Anim (back)
+			AnimateTrans(speed * dt, false);
+		}
 	}
 
+	// Loop
+	if (currentTransClip->currentFrame >= currentTransClip->endFrame) {
+		if (currentTransClip->loop == true) {
+			currentTransClip->currentFrame = currentTransClip->startFrame;
+		}
+		else {
+			playingAnAnimation = false;
+			currentTransClip->currentFrame = currentTransClip->startFrame;
 
+			if (currentTransClip == transClips[2]) {
+				if (previousTransClip == transClips[0]) {
+					Idle();
+				}
+				else {
+					Walk();
+				}
+			}
+		}
+	}
+}
+
+void GameObject::AddTransAnimation(TransAnimationClip* anim) {
+	transClips.push_back(anim);
+}
+
+void GameObject::AnimateTrans(float speed, bool positive) {
+
+	// CODE OPTIMIZATION IS MY PASSION :D
+
+	if (!positive) {
+		speed = -speed;
+	}
+
+	// moai
+	if (currentTransClip->moaiMov.go != nullptr) {
+		if (currentTransClip->moaiMov.movement.x != 0) {
+			speed = speed * currentTransClip->moaiMov.movement.x;
+			currentTransClip->moaiMov.go->SetRot(vec3(currentTransClip->moaiMov.go->GetRot().x + speed, currentTransClip->moaiMov.go->GetRot().y, currentTransClip->moaiMov.go->GetRot().z));
+		}
+		if (currentTransClip->moaiMov.movement.y != 0) {
+			speed = speed * currentTransClip->moaiMov.movement.y;
+			currentTransClip->moaiMov.go->SetRot(vec3(currentTransClip->moaiMov.go->GetRot().x, currentTransClip->moaiMov.go->GetRot().y + speed, currentTransClip->moaiMov.go->GetRot().z));
+		}
+		if (currentTransClip->moaiMov.movement.z != 0) {
+			speed = speed * currentTransClip->moaiMov.movement.z;
+			currentTransClip->moaiMov.go->SetRot(vec3(currentTransClip->moaiMov.go->GetRot().x, currentTransClip->moaiMov.go->GetRot().y, currentTransClip->moaiMov.go->GetRot().z + speed));
+		}
+	}
+
+	// cubeBodyMov
+	if (currentTransClip->cubeBodyMov.go != nullptr) {
+		if (currentTransClip->cubeBodyMov.movement.x != 0) {
+			speed = speed * currentTransClip->cubeBodyMov.movement.x;
+			currentTransClip->cubeBodyMov.go->SetRot(vec3(currentTransClip->cubeBodyMov.go->GetRot().x + speed, currentTransClip->cubeBodyMov.go->GetRot().y, currentTransClip->cubeBodyMov.go->GetRot().z));
+		}
+		if (currentTransClip->cubeBodyMov.movement.y != 0) {
+			speed = speed * currentTransClip->cubeBodyMov.movement.y;
+			currentTransClip->cubeBodyMov.go->SetRot(vec3(currentTransClip->cubeBodyMov.go->GetRot().x, currentTransClip->cubeBodyMov.go->GetRot().y + speed, currentTransClip->cubeBodyMov.go->GetRot().z));
+		}
+		if (currentTransClip->cubeBodyMov.movement.z != 0) {
+			speed = speed * currentTransClip->cubeBodyMov.movement.z;
+			currentTransClip->cubeBodyMov.go->SetRot(vec3(currentTransClip->cubeBodyMov.go->GetRot().x, currentTransClip->cubeBodyMov.go->GetRot().y, currentTransClip->cubeBodyMov.go->GetRot().z + speed));
+		}
+	}
+	// cubeLeftArmMov
+	if (currentTransClip->cubeLeftArmMov.go != nullptr) {
+		if (currentTransClip->cubeLeftArmMov.movement.x != 0) {
+			speed = speed * currentTransClip->cubeLeftArmMov.movement.x;
+			currentTransClip->cubeLeftArmMov.go->SetRot(vec3(currentTransClip->cubeLeftArmMov.go->GetRot().x + speed, currentTransClip->cubeLeftArmMov.go->GetRot().y, currentTransClip->cubeLeftArmMov.go->GetRot().z));
+		}
+		if (currentTransClip->cubeLeftArmMov.movement.y != 0) {
+			speed = speed * currentTransClip->cubeLeftArmMov.movement.y;
+			currentTransClip->cubeLeftArmMov.go->SetRot(vec3(currentTransClip->cubeLeftArmMov.go->GetRot().x, currentTransClip->cubeLeftArmMov.go->GetRot().y + speed, currentTransClip->cubeLeftArmMov.go->GetRot().z));
+		}
+		if (currentTransClip->cubeLeftArmMov.movement.z != 0) {
+			speed = speed * currentTransClip->cubeLeftArmMov.movement.z;
+			currentTransClip->cubeLeftArmMov.go->SetRot(vec3(currentTransClip->cubeLeftArmMov.go->GetRot().x, currentTransClip->cubeLeftArmMov.go->GetRot().y, currentTransClip->cubeLeftArmMov.go->GetRot().z + speed));
+		}
+	}
+	// cubeRightArmMov, 
+	if (currentTransClip->cubeRightArmMov.go != nullptr) {
+		if (currentTransClip->cubeRightArmMov.movement.x != 0) {
+			speed = speed * currentTransClip->cubeRightArmMov.movement.x;
+			currentTransClip->cubeRightArmMov.go->SetRot(vec3(currentTransClip->cubeRightArmMov.go->GetRot().x + speed, currentTransClip->cubeRightArmMov.go->GetRot().y, currentTransClip->cubeRightArmMov.go->GetRot().z));
+		}
+		if (currentTransClip->cubeRightArmMov.movement.y != 0) {
+			speed = speed * currentTransClip->cubeRightArmMov.movement.y;
+			currentTransClip->cubeRightArmMov.go->SetRot(vec3(currentTransClip->cubeRightArmMov.go->GetRot().x, currentTransClip->cubeRightArmMov.go->GetRot().y + speed, currentTransClip->cubeRightArmMov.go->GetRot().z));
+		}
+		if (currentTransClip->cubeRightArmMov.movement.z != 0) {
+			speed = speed * currentTransClip->cubeRightArmMov.movement.z;
+			currentTransClip->cubeRightArmMov.go->SetRot(vec3(currentTransClip->cubeRightArmMov.go->GetRot().x, currentTransClip->cubeRightArmMov.go->GetRot().y, currentTransClip->cubeRightArmMov.go->GetRot().z + speed));
+		}
+	}
+	// cubeRightLegMov, 
+	if (currentTransClip->cubeRightLegMov.go != nullptr) {
+		if (currentTransClip->cubeRightLegMov.movement.x != 0) {
+			speed = speed * currentTransClip->cubeRightLegMov.movement.x;
+			currentTransClip->cubeRightLegMov.go->SetRot(vec3(currentTransClip->cubeRightLegMov.go->GetRot().x + speed, currentTransClip->cubeRightLegMov.go->GetRot().y, currentTransClip->cubeRightLegMov.go->GetRot().z));
+		}
+		if (currentTransClip->cubeRightLegMov.movement.y != 0) {
+			speed = speed * currentTransClip->cubeRightLegMov.movement.y;
+			currentTransClip->cubeRightLegMov.go->SetRot(vec3(currentTransClip->cubeRightLegMov.go->GetRot().x, currentTransClip->cubeRightLegMov.go->GetRot().y + speed, currentTransClip->cubeRightLegMov.go->GetRot().z));
+		}
+		if (currentTransClip->cubeRightLegMov.movement.z != 0) {
+			speed = speed * currentTransClip->cubeRightLegMov.movement.z;
+			currentTransClip->cubeRightLegMov.go->SetRot(vec3(currentTransClip->cubeRightLegMov.go->GetRot().x, currentTransClip->cubeRightLegMov.go->GetRot().y, currentTransClip->cubeRightLegMov.go->GetRot().z + speed));
+		}
+	}
+	// cubeLeftLegMov;
+	if (currentTransClip->cubeLeftLegMov.go != nullptr) {
+		if (currentTransClip->cubeLeftLegMov.movement.x != 0) {
+			speed = speed * currentTransClip->cubeLeftLegMov.movement.x;
+			currentTransClip->cubeLeftLegMov.go->SetRot(vec3(currentTransClip->cubeLeftLegMov.go->GetRot().x + speed, currentTransClip->cubeLeftLegMov.go->GetRot().y, currentTransClip->cubeLeftLegMov.go->GetRot().z));
+		}
+		if (currentTransClip->cubeLeftLegMov.movement.y != 0) {
+			speed = speed * currentTransClip->cubeLeftLegMov.movement.y;
+			currentTransClip->cubeLeftLegMov.go->SetRot(vec3(currentTransClip->cubeLeftLegMov.go->GetRot().x, currentTransClip->cubeLeftLegMov.go->GetRot().y + speed, currentTransClip->cubeLeftLegMov.go->GetRot().z));
+		}
+		if (currentTransClip->cubeLeftLegMov.movement.z != 0) {
+			speed = speed * currentTransClip->cubeLeftLegMov.movement.z;
+			currentTransClip->cubeLeftLegMov.go->SetRot(vec3(currentTransClip->cubeLeftLegMov.go->GetRot().x, currentTransClip->cubeLeftLegMov.go->GetRot().y, currentTransClip->cubeLeftLegMov.go->GetRot().z + speed));
+		}
+	}
+}
+
+void GameObject::Idle() {
+	PlayAnim(transClips[0]);
+}
+void GameObject::Walk() {
+	PlayAnim(transClips[1]);
+}
+void GameObject::Kick() {
+	PlayAnim(transClips[2]);
 }
