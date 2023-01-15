@@ -22,7 +22,7 @@
 
 ## Introduction
 
-Welcome to the [Toaster Engine](https://github.com/Dani-24/Toaster_Engine) website. Here you can find anything related with the developed engine and it's functionalities.
+Welcome to the [Toaster Engine](https://github.com/Dani-24/Toaster_Engine) website. Here you can find anything related with the developed engine and it's functionalities or it's lastest release link right here -> [Last Toaster Engine Release](https://github.com/Dani-24/Toaster_Engine/releases).
 
 First of all, let me introduce myself, I'm Dani Toledo Rodríguez , in github [Dani24](https://github.com/Dani-24), a student trying to learn and improve in videogame design and development. 
 
@@ -83,6 +83,8 @@ Just select or create a GameObject and the Inspector will show you all its propi
 ### And More
 
 Just test all the top-bar menu options to see all the UI features as window options & Engine information and 3rd party software used as [Glew](https://glew.sourceforge.net) [Mmgr](https://github.com/RIscRIpt/mmgr), [GPUDetector](https://www.intel.es/content/www/es/es/homepage.html) and [DevIL](https://openil.sourceforge.net)
+
+Remember to check Window -> Configuration to play with some render functionalities, check the input and the memory use.
 
 ## Special Functionalities : Skeletal Animations
 
