@@ -187,7 +187,7 @@ void Camera::DebugDraw() {
 bool Camera::FrustumCulling(GameObject* go) {
 	bool canRender = false;
 	if (frustumCulling) {
-		if (camFrustum.Contains(go->aabb)) {
+		if (camFrustum.Contains(go->aabb) || go->alwaysRender == true) {
 			canRender = true;
 		}
 	}

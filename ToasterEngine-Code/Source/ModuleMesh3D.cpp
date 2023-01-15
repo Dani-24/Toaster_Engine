@@ -232,7 +232,7 @@ void ModuleMesh3D::Import(const aiMesh* sceneMesh, Mesh* meshData) {
 		meshData->num_bonesWeights = sceneMesh->mNumVertices;
 
 		meshData->bonesIDs = new int[4];
-		for (uint i = 0; i < 4; ++i) meshData->bonesIDs[i] = -1;
+		for (uint i = 0; i < 4; i++) meshData->bonesIDs[i] = -1;
 
 		meshData->bonesWeights = new float[5];
 		for (uint i = 0; i < 5; ++i) meshData->bonesWeights[i] = .0f;

@@ -118,6 +118,8 @@ private:
 public:
 	bool renderMesh;
 
+	bool alwaysRender = false;
+
 public:
 	// TEXTURE
 	void AddTexture(Texture* texture);

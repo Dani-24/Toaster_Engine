@@ -580,23 +580,24 @@ void GameObject::SetTransformMatrix(vec3 _position, vec3 _rotation, vec3 _scale)
 
 	GO_matrix = translationMatrix * rotationMatrix * scaleMatrix;
 
+	// Ta guapa la clase de mates en la que te dicen A * B no es B * A en matrices y tu dices si jaja
+
 	if (parent != nullptr) {
 		GO_matrix = parent->GO_matrix * GO_matrix;
 	}
 
+	aabb.SetPos(float3(_position.x, _position.y, _position.z));
+	aabb.Scale(float3(0, 0, 0),float3(_scale.x, _scale.y, _scale.z));
+
 	for(int i = 0; i < childs.size(); i++){
 		childs[i]->SetGlobalMatrix();
 	}
-
-	aabb.SetPos(float3(_position.x, _position.y, _position.z));
 }
 void GameObject::SetGlobalMatrix() {
 
 	Transform gTrans = GetGlobalTransform();
 	SetTransformMatrix(gTrans.position, gTrans.rotation, gTrans.scale);
 }
-
-// HACER ALGO PARA LOCAL TRANSFORM -> PUEDE QUE ESO SEA LA SOLUCION A TODO -> (Yo del futuro : No lo es)
 
 Transform GameObject::GetGlobalTransform() {
 	if (GetParent() == nullptr) return GO_trans;
@@ -665,10 +666,26 @@ void GameObject::DisplayMesh(bool display) {
 // TEXTURE
 void GameObject::AddTexture(Texture* t) {
 
-	// Assign texture to childs when adding a texture to an empty object
-	if (GO_mesh == nullptr && !childs.empty()) {
+	// Manage textures with children
+	if (!childs.empty()) {
 		for (int i = 0; i < childs.size(); i++) {
-			childs[i]->AddTexture(t);
+
+			bool exists = false;
+
+			for (int o = 0; o < childs[i]->GO_allTextures.size(); o++) {
+				if (childs[i]->GO_allTextures[o]->OpenGLID == t->OpenGLID) {
+					exists = true;
+				}
+			}
+
+			if (!exists) {
+				if (childs[i]->GO_texture == nullptr) {
+					childs[i]->AddTexture(t);
+				}
+				else {
+					childs[i]->GO_allTextures.push_back(t);
+				}
+			}
 		}
 	}
 

@@ -118,6 +118,8 @@ void ModuleScene::CreateSkybox() {
 	skybox->AddMesh(app->mesh3d->LoadFile("Assets/default_Meshes/skybox.fbx", skybox));
 	skybox->SetScale(vec3(200, 200, 200));
 	skybox->SetRot(vec3(90, 0, 0));
+	skybox->alwaysRender = true;
+	skybox->aabb.SetPos(float3(2000, 2000, 2000));
 }
 
 void ModuleScene::CreateStreet() {
@@ -133,33 +135,33 @@ void ModuleScene::CreateAnimatedMoai() {
 	GameObject* moai = new GameObject("Animated Moai", app->editor->root);
 	moai->AddTexture(app->textures->LoadTexture("Assets/Moai_texture.png"));
 	moai->AddMesh(app->mesh3d->LoadFile("Assets/Moai.fbx", moai));
-	moai->SetScale(vec3(10, 10, 10));
-	moai->SetPos(vec3(0, 0.5, 0));
+	//moai->SetScale(vec3(10, 10, 10));
+	moai->SetPos(vec3(0, 2, 0));
 
 	GameObject* cubeBody = new GameObject("Moai Body", moai);
 	cubeBody->AddMesh(app->mesh3d->LoadFile("Assets/default_Meshes/cube.fbx"));
-	cubeBody->SetPos(vec3(0, 0, 0));
-	cubeBody->SetScale(vec3(1, 2, 1));
+	cubeBody->SetPos(vec3(0, -1, 0));
+	//cubeBody->SetScale(vec3(0.1, 0.2, 0.1));
 
 	GameObject* cubeLeftArm = new GameObject("Moai Left Arm", cubeBody);
 	cubeLeftArm->AddMesh(app->mesh3d->LoadFile("Assets/default_Meshes/cube.fbx"));
 	cubeLeftArm->SetPos(vec3(2, 0, 0));
-	cubeLeftArm->SetScale(vec3(1, 1, 1));
+	//cubeLeftArm->SetScale(vec3(1, 0.5, 1));
 
 	GameObject* cubeRightArm = new GameObject("Moai Right Arm", cubeBody);
 	cubeRightArm->AddMesh(app->mesh3d->LoadFile("Assets/default_Meshes/cube.fbx"));
 	cubeRightArm->SetPos(vec3(-2, 0, 0));
-	cubeRightArm->SetScale(vec3(1, 1, 1));
+	//cubeRightArm->SetScale(vec3(1, 0.5, 1));
 
 	GameObject* cubeLeftLeg = new GameObject("Moai Left Leg", cubeBody);
 	cubeLeftLeg->AddMesh(app->mesh3d->LoadFile("Assets/default_Meshes/cube.fbx"));
 	cubeLeftLeg->SetPos(vec3(2, -2, 0));
-	cubeLeftLeg->SetScale(vec3(1, 1, 1));
+	//cubeLeftLeg->SetScale(vec3(1, 0.5, 1));
 
 	GameObject* cubeRightLeg = new GameObject("Moai Right Leg", cubeBody);
 	cubeRightLeg->AddMesh(app->mesh3d->LoadFile("Assets/default_Meshes/cube.fbx"));
 	cubeRightLeg->SetPos(vec3(-2, -2, 0));
-	cubeRightLeg->SetScale(vec3(1, 1, 1));
+	//cubeRightLeg->SetScale(vec3(1, 0.5, 1));
 
 	app->editor->SetSelectedGameObject(moai);
 }
