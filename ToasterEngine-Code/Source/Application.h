@@ -13,6 +13,7 @@
 #include "ModuleImporter.h"
 #include "ModuleTexture.h"
 #include "ModuleAnimation.h"
+#include "ModuleAudio.h"
 
 #include "GameObject.h"
 
@@ -29,6 +30,7 @@ public:
 	ModuleAnimation* anim3d;
 	ModuleImporter* importer;
 	ModuleTexture* textures;
+	ModuleAudio* audio;
 
 private:
 

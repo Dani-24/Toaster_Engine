@@ -4,7 +4,6 @@
 #include "../External/SDL/include/SDL.h"
 
 class Application;
-struct PhysBody3D;
 
 class Module
 {
@@ -49,9 +48,6 @@ public:
 	{ 
 		return true; 
 	}
-
-	virtual void OnCollision(PhysBody3D* body1, PhysBody3D* body2)
-	{}
 
 	virtual int RandomIntValue() {
 		LCG rand;

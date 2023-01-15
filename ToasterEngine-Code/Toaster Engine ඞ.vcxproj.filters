@@ -703,6 +703,12 @@
     <ClInclude Include="Source\ModuleAnimation.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
+    <ClInclude Include="Source\ModuleAudio.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="External\SDL_mixer\include\SDL_mixer.h">
+      <Filter>External Toasts\SDL\SDL_mixer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Sources">
@@ -785,6 +791,9 @@
     </Filter>
     <Filter Include="Sources\Modules\Camera">
       <UniqueIdentifier>{4a1a0866-fc88-499e-873d-f44db34bd554}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="External Toasts\SDL\SDL_mixer">
+      <UniqueIdentifier>{dce8ef25-c8ea-4dbc-a406-e4374a50a987}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -991,6 +1000,9 @@
       <Filter>Sources\Tools</Filter>
     </ClCompile>
     <ClCompile Include="Source\ModuleAnimation.cpp">
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ModuleAudio.cpp">
       <Filter>Sources\Modules</Filter>
     </ClCompile>
   </ItemGroup>

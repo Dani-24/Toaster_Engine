@@ -23,7 +23,7 @@ GameObject::GameObject(std::string name, GameObject* parent, Camera* camera)
 
 	CreateAABB();
 
-	LOG("Created GameObject %s", name.c_str());
+	LOG("TOASTER: Created GameObject %s", name.c_str());
 
 	app->editor->SetSelectedGameObject(this);
 }
@@ -576,7 +576,9 @@ void GameObject::SetTransformMatrix(vec3 _position, vec3 _rotation, vec3 _scale)
 
 	scaleMatrix.scale(_scale.x, _scale.y, _scale.z);
 
-	GO_matrix = scaleMatrix * rotationMatrix * translationMatrix;
+	//GO_matrix = scaleMatrix * rotationMatrix * translationMatrix;
+
+	GO_matrix = translationMatrix * rotationMatrix * scaleMatrix;
 
 	if (parent != nullptr) {
 		GO_matrix = parent->GO_matrix * GO_matrix;
@@ -594,7 +596,7 @@ void GameObject::SetGlobalMatrix() {
 	SetTransformMatrix(gTrans.position, gTrans.rotation, gTrans.scale);
 }
 
-// HACER ALGO PARA LOCAL TRANSFORM -> PUEDE QUE ESO SEA LA SOLUCION A TODO
+// HACER ALGO PARA LOCAL TRANSFORM -> PUEDE QUE ESO SEA LA SOLUCION A TODO -> (Yo del futuro : No lo es)
 
 Transform GameObject::GetGlobalTransform() {
 	if (GetParent() == nullptr) return GO_trans;

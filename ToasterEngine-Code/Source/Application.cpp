@@ -18,11 +18,14 @@ Application::Application()
 	anim3d = new ModuleAnimation(this);
 	importer = new ModuleImporter(this);
 	textures = new ModuleTexture(this);
+	audio = new ModuleAudio(this);
 
 	// Main Modules
 	AddModule(window);
 	AddModule(camera);
 	AddModule(input);
+
+	AddModule(audio);
 
 	AddModule(importer);
 	

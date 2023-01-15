@@ -24,10 +24,14 @@ public:
 	void AddLines(float3 line, Color color);
 	void DrawLines();
 
+	void CreateSkybox();
+	void CreateStreet();
 	void CreateAnimatedMoai();
 
 public:
 	bool axis = true;
 
 	std::vector<f3line> lines;
+
+	uint initSFX, initSFX2, attackSFX;
 };

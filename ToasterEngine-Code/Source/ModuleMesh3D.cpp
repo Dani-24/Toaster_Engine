@@ -197,7 +197,7 @@ void ModuleMesh3D::Import(const aiMesh* sceneMesh, Mesh* meshData) {
 		for (uint i = 0; i < sceneMesh->mNumFaces; ++i)
 		{
 			if (sceneMesh->mFaces[i].mNumIndices != 3) {
-				LOG("WARNING, geometry face with != 3 indices!");
+				LOG("WARNING: geometry face with != 3 indices!");
 			}
 			else
 			{
@@ -227,7 +227,7 @@ void ModuleMesh3D::Import(const aiMesh* sceneMesh, Mesh* meshData) {
 
 	if (sceneMesh->HasBones())
 	{
-		LOG("Loading Mesh Bones");
+		LOG("MESH : Loading Mesh Bones");
 		meshData->num_bonesIDs = sceneMesh->mNumVertices;
 		meshData->num_bonesWeights = sceneMesh->mNumVertices;
 
@@ -283,7 +283,7 @@ void ModuleMesh3D::ReadNodeHierarchy(aiNode* pnode, Mesh* meshData)
 	if (meshData->bonesMap.find(NodeName) != meshData->bonesMap.end()) {
 		allBonesNodes.push_back(pnode);
 
-		LOG("Loading Bone Node %s", NodeName.c_str());
+		LOG("MESH : Loading Bone Node %s", NodeName.c_str());
 	}
 
 	for (uint i = 0; i < pnode->mNumChildren; i++) {
@@ -314,7 +314,7 @@ void ModuleMesh3D::NodeToHierarchy() {
 		cont = 0;
 	}
 
-	LOG("Root Bone is %s", rootBoneNode->mName.data);
+	LOG("MESH : Root Bone is %s", rootBoneNode->mName.data);
 }
 
 void ModuleMesh3D::NodeToGO(aiNode* root, GameObject* parent, Mesh* parentMesh) 
@@ -422,7 +422,7 @@ void Mesh::Render(uint texture, mat4x4 matrix)
 		glUniformMatrix4fv(GL_FLOAT, boneTransforms.size(), GL_FALSE, (GLfloat*)&boneTransforms[0]);
 		calculatedBonesThisFrame = false;
 
-		LOG("Huesos Render?");
+		//LOG("MESH : Huesos Render?");
 	}
 
 	glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, NULL);
@@ -441,7 +441,7 @@ void Mesh::Render(uint texture, mat4x4 matrix)
 
 void Mesh::SetRootBone(GameObject* go) {
 	if (go == nullptr) {
-		LOG("Trying to assign null root bone");
+		LOG("MESH : Trying to assign null root bone");
 		return;
 	}
 

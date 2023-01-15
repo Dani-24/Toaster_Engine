@@ -35,6 +35,8 @@ bool ModuleEditor::Start() {
 	Camera* mainSceneCam = new Camera();
 	app->camera->AddCamera(mainSceneCam, "Main Scene Camera");
 
+	closeSFX = app->audio->LoadFx("ps2 Start.wav");
+
 	return true;
 }
 
@@ -47,6 +49,11 @@ update_status ModuleEditor::PreUpdate(float dt)
 	}
 	else {
 		assetsReload -= 1;
+	}
+
+	if (app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN) {
+		plsClose = true;
+		app->audio->PlayFx(closeSFX);
 	}
 
 	return UPDATE_CONTINUE;
@@ -83,6 +90,8 @@ update_status ModuleEditor::Update(float dt) {
 			gameObjects[i]->UpdateAnimation(dt);
 		}
 	}
+
+	deltaT = dt;
 
 	return UPDATE_CONTINUE;
 }
@@ -171,6 +180,8 @@ void ModuleEditor::Draw(){
 	static bool showAssetManager = true;
 	static bool showAssetExplorer = true;
 	
+	if (plsClose)closeOpenClose = true;
+
 	if (toasterMode)			{ app->maxFps = 10; } else { app->maxFps = 60; }
 	if (closeOpenClose)			AreYouSureAboutThat(&closeOpenClose);
 	if (showDemoWindow)			ImGui::ShowDemoWindow(&showDemoWindow);
@@ -194,7 +205,7 @@ void ModuleEditor::Draw(){
 				root->name = "New Scene";
 			}
 			if (ImGui::MenuItem("Close Butter", "Ctrl+Alt+F4", &closeOpenClose)) {
-
+				app->audio->PlayFx(closeSFX);
 			}
 			ImGui::EndMenu();
 		}
@@ -834,7 +845,8 @@ void ModuleEditor::AreYouSureAboutThat(bool* open) {
 	int sizeX = 300;
 	int sizeY = 60;
 	ImGui::SetNextWindowSize(ImVec2(sizeX, sizeY));
-	ImGui::SetNextWindowPos(ImVec2(SCREEN_WIDTH / 2 - sizeX / 2, SCREEN_HEIGHT / 2 - sizeY / 2));
+
+	ImGui::SetNextWindowPos(ImVec2(app->window->width / 2 - sizeX / 2, app->window->height / 2 - sizeY / 2));
 
 	if (!ImGui::Begin("Closing this toaster in :", open)) {
 		ImGui::End();
@@ -845,7 +857,11 @@ void ModuleEditor::AreYouSureAboutThat(bool* open) {
 			exit = true;
 		}
 		else {
-			cooldown -= 2;
+			cooldown -= 17 * deltaT;
+
+			volume -= 20 * deltaT;
+
+			app->audio->SetVolume(volume);
 		}
 
 		char progressText[32];
