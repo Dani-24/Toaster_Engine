@@ -101,19 +101,32 @@ void ModuleScene::CreateAnimatedMoai() {
 	moai->AddTexture(app->textures->LoadTexture("Assets/Moai_texture.png"));
 	moai->AddMesh(app->mesh3d->LoadFile("Assets/Moai.fbx", moai));
 	moai->SetScale(vec3(10, 10, 10));
+	moai->SetPos(vec3(0, 2, 0));
 
 	GameObject* cubeBody = new GameObject("Moai Body", moai);
 	cubeBody->AddMesh(app->mesh3d->LoadFile("Assets/default_Meshes/cube.fbx"));
+	cubeBody->SetPos(vec3(0, 0, 0));
+	cubeBody->SetScale(vec3(5, 10, 5));
 
 	GameObject* cubeLeftArm = new GameObject("Moai Left Arm", cubeBody);
 	cubeLeftArm->AddMesh(app->mesh3d->LoadFile("Assets/default_Meshes/cube.fbx"));
+	cubeLeftArm->SetPos(vec3(2, 0, 0));
+	cubeLeftArm->SetScale(vec3(3, 5, 3));
 
 	GameObject* cubeRightArm = new GameObject("Moai Right Arm", cubeBody);
 	cubeRightArm->AddMesh(app->mesh3d->LoadFile("Assets/default_Meshes/cube.fbx"));
+	cubeRightArm->SetPos(vec3(-2, 0, 0));
+	cubeRightArm->SetScale(vec3(3, 5, 3));
 
 	GameObject* cubeLeftLeg = new GameObject("Moai Left Leg", cubeBody);
 	cubeLeftLeg->AddMesh(app->mesh3d->LoadFile("Assets/default_Meshes/cube.fbx"));
+	cubeLeftLeg->SetPos(vec3(2, -2, 0));
+	cubeLeftLeg->SetScale(vec3(3, 5, 3));
 
 	GameObject* cubeRightLeg = new GameObject("Moai Right Leg", cubeBody);
 	cubeRightLeg->AddMesh(app->mesh3d->LoadFile("Assets/default_Meshes/cube.fbx"));
+	cubeRightLeg->SetPos(vec3(-2, -2, 0));
+	cubeRightLeg->SetScale(vec3(3, 5, 3));
+
+	app->editor->SetSelectedGameObject(moai);
 }

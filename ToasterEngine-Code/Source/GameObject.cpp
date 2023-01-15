@@ -576,15 +576,15 @@ void GameObject::SetTransformMatrix(vec3 _position, vec3 _rotation, vec3 _scale)
 
 	scaleMatrix.scale(_scale.x, _scale.y, _scale.z);
 
-	GO_matrix = translationMatrix * rotationMatrix * scaleMatrix;
+	GO_matrix = scaleMatrix * rotationMatrix * translationMatrix;
 
-	/*if (parent != nullptr) {
+	if (parent != nullptr) {
 		GO_matrix = GO_matrix * parent->GO_matrix;
 	}
 
 	for(int i = 0; i < childs.size(); i++){
 		childs[i]->SetGlobalMatrix();
-	}*/
+	}
 
 	aabb.SetPos(float3(_position.x, _position.y, _position.z));
 }
