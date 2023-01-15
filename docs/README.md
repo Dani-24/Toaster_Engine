@@ -146,9 +146,4 @@ No
 
 [PhysFS](https://icculus.org/physfs/)
 
-
-<p align="center">
-
 ## [Licence](https://github.com/Dani-24/Toaster_Engine/blob/main/LICENSE)
-
-</p>
