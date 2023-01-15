@@ -38,7 +38,7 @@ First of all, let me introduce myself, I'm Dani Toledo Rodríguez , in github [D
   
 <p align="center">
   
-  <iframe width="1280" height="720" src="https://user-images.githubusercontent.com/79161140/212535779-41066c7b-0286-4887-84a1-59ec6e022382.mp4" title="Video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+  <iframe width="1024" height="576" src="https://user-images.githubusercontent.com/79161140/212535779-41066c7b-0286-4887-84a1-59ec6e022382.mp4" title="Video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
   
 </p>
 
