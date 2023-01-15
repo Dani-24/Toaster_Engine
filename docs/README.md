@@ -26,7 +26,7 @@ Welcome to the [Toaster Engine](https://github.com/Dani-24/Toaster_Engine) websi
 
 First of all, let me introduce myself, I'm Dani Toledo Rodríguez , in github [Dani24](https://github.com/Dani-24), a student trying to learn and improve in videogame design and development. 
 
-<div id="header" align="center">
+<div id="intro" align="center">
 
 ## Me
 
@@ -50,7 +50,7 @@ At the center of the screen you can choose between the Editor & the Scene views,
 
 ### Resource Manager & Asset Explorer
 
-<div id="header" align="center">
+<div id="assets" align="center">
 
 ![image](https://user-images.githubusercontent.com/79161140/212535054-baef8c1d-a1d0-4766-854b-49c7c717eb14.png)
 
@@ -62,7 +62,7 @@ What's even better is that you can drag any file from anywhere and Toaster Engin
 
 ### Inspector
 
-<div id="header" align="center">
+<div id="inspector" align="center">
 
 ![image](https://user-images.githubusercontent.com/79161140/212535201-756d7fda-3969-40a2-b4a4-2889a223853e.png)
 
@@ -74,7 +74,7 @@ Just select or create a GameObject and the Inspector will show you all its propi
 
 ### MousePicking and Frustum Culling features to improve the Toaster experience. Which you can improve by activating the Toaster Mode at the Edit menu from the top-bar menu. 
 
-<div id="header" align="center">
+<div id="ToasterMode" align="center">
 
 ![image](https://user-images.githubusercontent.com/79161140/212535534-80ccccd8-e533-419a-9f7a-b4ec04c9c091.png)
 
@@ -90,7 +90,7 @@ The main functionality of the engine is it's compatibility with animated meshes 
 
 It's complex implementation allows you to see all the bones from your 3d mesh as GameObjects on the Hierarchy.
 
-<div id="header" align="center">
+<div id="skeleton" align="center">
 
 ![image](https://user-images.githubusercontent.com/79161140/212535270-437bc521-d65a-4625-a572-620a92d246ab.png)
 
@@ -98,7 +98,7 @@ It's complex implementation allows you to see all the bones from your 3d mesh as
 
 Just select the parent of the Skeleton and the Inpector will show you the Animation Component
 
-<div id="header" align="center">
+<div id="animation" align="center">
 
 ![image](https://user-images.githubusercontent.com/79161140/212535341-6dc308ae-2ad0-416f-b130-4aba9a2690af.png)
 
@@ -141,7 +141,7 @@ No
 [PhysFS](https://icculus.org/physfs/)
 
 
-<div id="header" align="center">
+<div id="license" align="center">
 
 ## [Licence](https://github.com/Dani-24/Toaster_Engine/blob/main/LICENSE)
 
