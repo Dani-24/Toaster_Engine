@@ -110,7 +110,7 @@ Just select the parent of the Skeleton and the Inpector will show you the Animat
 
 </p>
 
-## Toaster Start Manual Guide
+## Toaster Starting Guide
 
 1 - Download the lastest release
 
