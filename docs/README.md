@@ -108,6 +108,8 @@ Just select the parent of the Skeleton and the Inpector will show you the Animat
 
   <img align="center" src="https://user-images.githubusercontent.com/79161140/212535341-6dc308ae-2ad0-416f-b130-4aba9a2690af.png">
 
+  <img align="center" src="https://user-images.githubusercontent.com/79161140/212563306-fd013b75-15bd-4ffa-b4cd-6eeb7078ada6.png">
+
 </p>
 
 ## Toaster Starting Guide
