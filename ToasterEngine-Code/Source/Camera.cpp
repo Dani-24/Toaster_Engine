@@ -187,7 +187,7 @@ void Camera::DebugDraw() {
 bool Camera::FrustumCulling(GameObject* go) {
 	bool canRender = false;
 	if (frustumCulling) {
-		if (camFrustum.Contains(go->aabb)) {
+		if (camFrustum.Contains(go->aabb) || go->alwaysRender == true) {
 			canRender = true;
 		}
 	}
@@ -209,7 +209,11 @@ void Camera::EditorCameraControl(float dt) {
 
 	float speed;
 	if (app->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT) {
-		speed = camSpeed * 2 * dt;
+		speed = camSpeed * 3 * dt;
+	}
+	else if (app->input->GetKey(SDL_SCANCODE_TAB) == KEY_REPEAT)
+	{
+		speed = camSpeed * 0.1f * dt;
 	}
 	else {
 		speed = camSpeed * dt;
@@ -256,7 +260,7 @@ void Camera::EditorCameraControl(float dt) {
 		int dx = -app->input->GetMouseXMotion();
 		int dy = -app->input->GetMouseYMotion();
 
-		float Sensitivity = 0.25f;
+		float Sensitivity = 0.25f * speed;
 
 		Quat dir;
 
@@ -298,6 +302,8 @@ void Camera::CalculateMousePicking()
 	float mouseX = (((float)app->input->GetMouseX() - app->editor->editorPos.x) / app->editor->editorSize.x) - 0.5f;
 	float mouseY = (((float)app->input->GetMouseY() - app->editor->editorPos.y) / app->editor->editorSize.y) - 0.5f;
 
+	//LOG("%.2f %.2f", mouseX * 2, mouseY * 2);
+
 	LineSegment raycast = camFrustum.UnProjectLineSegment(mouseX * 2, -mouseY * 2);
 
 	std::vector<GO_Hitted> go_hits;
@@ -306,10 +312,10 @@ void Camera::CalculateMousePicking()
 	{
 		if (raycast.Intersects(app->editor->gameObjects[i]->aabb))
 		{
-			LOG("HIT");
 			GO_Hitted go;
 
 			go.gameObject = app->editor->gameObjects[i];
+
 			go.distance = Sqrt((this->GetPos().x - app->editor->gameObjects[i]->GetPos().x) * (this->GetPos().x - app->editor->gameObjects[i]->GetPos().x) +
 				(this->GetPos().y - app->editor->gameObjects[i]->GetPos().y) * (this->GetPos().y - app->editor->gameObjects[i]->GetPos().y) +
 				(this->GetPos().z - app->editor->gameObjects[i]->GetPos().z) * (this->GetPos().z - app->editor->gameObjects[i]->GetPos().z));
@@ -338,4 +344,8 @@ void Camera::CalculateMousePicking()
 		app->editor->SetSelectedGameObject(go_hits[i].gameObject);
 		break;
 	}
+}
+
+void Camera::RegenBuffer(int w, int h) {
+	cameraBuffer.SetBufferDimensions(w, h);
 }

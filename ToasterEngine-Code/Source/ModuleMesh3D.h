@@ -34,10 +34,32 @@ struct Mesh {
 	uint num_textureCoords = 0;
 	float* textureCoords = nullptr;
 
+	uint id_bonesIDs = 0;
+	uint num_bonesIDs = 0;
+	int* bonesIDs = nullptr;
+
+	uint id_bonesWeights = 0;
+	uint num_bonesWeights = 0;
+	float* bonesWeights = nullptr;
+
 	string name;
 	string path;
 
+	GameObject* asignedGo = nullptr;
+	GameObject* rootBone = nullptr;
+
+	std::map<std::string, uint> bonesMap;
+	std::vector<float4x4> boneTransforms;
+	std::vector<float4x4> bonesOffsets;
+
 	void Render(uint texture, mat4x4 matrix);
+
+	void SetRootBone(GameObject* bone);
+
+	void GetBoneMapping();
+
+	void TryCalculateBones();
+	bool calculatedBonesThisFrame = false;
 };
 
 class ModuleMesh3D : public Module
@@ -55,7 +77,10 @@ public:
 
 	void Import(const aiMesh* sceneMesh, Mesh* meshData);
 
-private:
+	std::vector<aiNode*> allBonesNodes;
+	aiNode* rootBoneNode = nullptr;
 
-	//vector<Mesh*> meshes;
+	void ReadNodeHierarchy(aiNode* node, Mesh* meshData);
+	void NodeToHierarchy();
+	void NodeToGO(aiNode* rootNode, GameObject* parent, Mesh* mesh = nullptr);
 };

@@ -158,38 +158,38 @@ uint ModuleTexture::ImportTexture(std::string path)
 	ModuleTexture::loadedTextures[desired_texture] = engineTexture; // Add loaded texture inside TextureManager.
 	ModuleTexture::usedPaths[ModuleImporter::GetFileName(path, false)] = desired_texture;
 
-	int error = glGetError();
-
-	if (error) {
-		LOG("Error loading texture %s", path.c_str());
-		switch (error)
-		{
-		case GL_INVALID_ENUM:
-			LOG("GL ERROR : Invalid enum");
-			break;
-		case GL_INVALID_VALUE:
-			LOG("GL ERROR : Invalid value");
-			break;
-		case GL_INVALID_OPERATION:
-			LOG("GL ERROR : Invalid operation");
-			break;
-		case GL_NO_ERROR:
-			LOG("GL ERROR : No error");
-			break;
-		case GL_STACK_OVERFLOW:
-			LOG("GL ERROR : Stack overflow.com");
-			break;
-		case GL_STACK_UNDERFLOW:
-			LOG("GL ERROR : Stack underflow");
-			break;
-		case GL_OUT_OF_MEMORY:
-			LOG("GL ERROR : Out of memory");
-			break;
-		}		
-	}
-	else{
-		LOG("Loaded %s as %d", engineTexture.name.c_str(), desired_texture);
-	}
+	//int error = glGetError();
+	//
+	//if (error) {
+	//	LOG("Error loading texture %s", path.c_str());
+	//	switch (error)
+	//	{
+	//	case GL_INVALID_ENUM:
+	//		LOG("GL ERROR : Invalid enum");
+	//		break;
+	//	case GL_INVALID_VALUE:
+	//		LOG("GL ERROR : Invalid value");
+	//		break;
+	//	case GL_INVALID_OPERATION:
+	//		LOG("GL ERROR : Invalid operation");
+	//		break;
+	//	case GL_NO_ERROR:
+	//		LOG("GL ERROR : No error");
+	//		break;
+	//	case GL_STACK_OVERFLOW:
+	//		LOG("GL ERROR : Stack overflow.com");
+	//		break;
+	//	case GL_STACK_UNDERFLOW:
+	//		LOG("GL ERROR : Stack underflow");
+	//		break;
+	//	case GL_OUT_OF_MEMORY:
+	//		LOG("GL ERROR : Out of memory");
+	//		break;
+	//	}		
+	//}
+	//else{
+	//	LOG("Loaded %s as %d", engineTexture.name.c_str(), desired_texture);
+	//}
 
 	return desired_texture;
 }

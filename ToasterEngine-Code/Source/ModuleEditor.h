@@ -128,10 +128,16 @@ private:
 
 	int assetsReload = 100;
 
+	uint closeSFX;
+
 public:
 	// Log a const char*
 	void AddLogMsg(const char* msg);
 
 	bool playing = false;
 	bool paused = false;
+
+	bool plsClose = false;
+	float deltaT;
+	float volume = 100;
 };

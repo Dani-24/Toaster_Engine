@@ -19,6 +19,8 @@ public:
 
 	Camera* CreateCamera();
 
+	void RenewCameraBuffers(int w, int h);
+
 public:
 	Camera* editorCamera;
 	bool moveEditCam = false;
@@ -27,4 +29,7 @@ public:
 	uint camerasID = 0;
 
 	Camera* activeCamera = nullptr;
+
+	bool renewBuffer = false;
+	int renewW, renewH;
 };

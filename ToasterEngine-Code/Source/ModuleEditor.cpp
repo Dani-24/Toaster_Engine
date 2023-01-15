@@ -35,6 +35,8 @@ bool ModuleEditor::Start() {
 	Camera* mainSceneCam = new Camera();
 	app->camera->AddCamera(mainSceneCam, "Main Scene Camera");
 
+	closeSFX = app->audio->LoadFx("ps2 Start.wav");
+
 	return true;
 }
 
@@ -47,6 +49,18 @@ update_status ModuleEditor::PreUpdate(float dt)
 	}
 	else {
 		assetsReload -= 1;
+	}
+
+	if (app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN) {
+		plsClose = true;
+		app->audio->PlayFx(closeSFX);
+	}
+
+	if (playing && !paused) {
+		app->audio->SetVolume(50);
+	}
+	else {
+		app->audio->SetVolume(0);
 	}
 
 	return UPDATE_CONTINUE;
@@ -75,6 +89,20 @@ update_status ModuleEditor::Update(float dt) {
 			mslog.push_back(dt);
 		}
 	}
+
+	// GameObjects Animations
+
+	for (int i = 0; i < gameObjects.size(); i++) {
+		if (!gameObjects[i]->GO_animations.empty()) {
+			gameObjects[i]->UpdateAnimation(dt);
+		}
+
+		if (gameObjects[i]->animatedTransform && gameObjects[i]->currentTransClip != nullptr && playing == true && paused == false) {
+			gameObjects[i]->UpdateTransAnim(dt);
+		}
+	}
+
+	deltaT = dt;
 
 	return UPDATE_CONTINUE;
 }
@@ -163,6 +191,8 @@ void ModuleEditor::Draw(){
 	static bool showAssetManager = true;
 	static bool showAssetExplorer = true;
 	
+	if (plsClose)closeOpenClose = true;
+
 	if (toasterMode)			{ app->maxFps = 10; } else { app->maxFps = 60; }
 	if (closeOpenClose)			AreYouSureAboutThat(&closeOpenClose);
 	if (showDemoWindow)			ImGui::ShowDemoWindow(&showDemoWindow);
@@ -185,32 +215,16 @@ void ModuleEditor::Draw(){
 
 				root->name = "New Scene";
 			}
-			if (ImGui::MenuItem("Open Toast", "WIP")) {
-
-			}
-			if (ImGui::MenuItem("Save your Toast", "WIP")) {
-
-			}
-			if (ImGui::MenuItem("Save and Close the fridge", "WIP")) {
-
-			}
 			if (ImGui::MenuItem("Close Butter", "Ctrl+Alt+F4", &closeOpenClose)) {
-
+				app->audio->PlayFx(closeSFX);
 			}
 			ImGui::EndMenu();
 		}
 
 		if (ImGui::BeginMenu("Edit")) {
-			if (ImGui::MenuItem("Undo", "WIP")) {
-
-			}
-			if (ImGui::MenuItem("Redo", "WIP")) {
-
-			}
 			if (ImGui::MenuItem("Toaster Mode", "Just work at toaster speed", &toasterMode)) {
 			
 			}
-
 			ImGui::EndMenu();
 		}
 
@@ -267,6 +281,9 @@ void ModuleEditor::Draw(){
 				}
 
 				ImGui::EndMenu();
+			}
+			if (ImGui::MenuItem("Create 1000 Moais")) {
+				app->scene->ThousandMoais();
 			}
 			if (ImGui::MenuItem("Create Empty GameObject")) {
 				GameObject* GO = new GameObject("Empty GameObject", root);
@@ -447,6 +464,15 @@ void ModuleEditor::ShowAssetManager(bool* open) {
 		ImGui::End();
 	}
 	else {
+
+		if (!logs.empty()) {
+			ImGui::Text("Console: %s", logs[logs.size() - 1]);
+		}
+		else {
+			ImGui::Text("No Console Message Right Now");
+		}
+
+		ImGui::Spacing();
 		
 		uint forbidenNum = 8;
 		uint forbidenOriginal = forbidenNum;
@@ -707,7 +733,7 @@ void ModuleEditor::ShowAboutMenu(bool* open) {
 			ShellExecute(0, 0, "https://github.com/Dani-24", 0, 0, SW_SHOW);
 		}
 
-		ImGui::TextWrapped("All i want for christmass ...");
+		ImGui::TextWrapped("End my suffering plz");
 
 		Space();
 
@@ -734,7 +760,7 @@ void ModuleEditor::ShowAboutMenu(bool* open) {
 
 		// LICENSE
 		ImGui::TextWrapped("MIT License");
-		ImGui::TextWrapped("Copyright(c) 2022 Dani - 24");
+		ImGui::TextWrapped("Copyright(c) 2023 Dani Toledo");
 		ImGui::TextWrapped("Permission is hereby granted, free of charge, to any person obtaining a copy of this softwareand associated documentation files(the `Software`), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and /or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions : ");
 		ImGui::TextWrapped("The above copyright noticeand this permission notice shall be included in all copies or substantial portions of the Software.");
 		ImGui::TextWrapped("THE SOFTWARE IS PROVIDED `AS IS`, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.");
@@ -756,9 +782,9 @@ void ModuleEditor::ShowConfiguration(bool* open) {
 	else {
 		if (ImGui::CollapsingHeader("Toaster Application", ImGuiTreeNodeFlags_DefaultOpen))
 		{
-			ImGui::InputText("This thing name", "Toaster Engine", 13);
+			ImGui::InputText("This thing name:", "Toaster Engine", 13);
 
-			ImGui::InputText("Creator", "Dani Toledo", 12);
+			ImGui::InputText("Creator:", "Dani Toledo", 12);
 
 			Space();
 
@@ -791,7 +817,7 @@ void ModuleEditor::ShowConfiguration(bool* open) {
 
 			ImGui::NewLine();
 
-			ImGui::TextWrapped("TOP 10 Bunch of Useless info here for memory fans :");
+			ImGui::TextWrapped("TOP info here for memory fans (not myself) :");
 
 			ImGui::NewLine();
 
@@ -842,7 +868,8 @@ void ModuleEditor::AreYouSureAboutThat(bool* open) {
 	int sizeX = 300;
 	int sizeY = 60;
 	ImGui::SetNextWindowSize(ImVec2(sizeX, sizeY));
-	ImGui::SetNextWindowPos(ImVec2(SCREEN_WIDTH / 2 - sizeX / 2, SCREEN_HEIGHT / 2 - sizeY / 2));
+
+	ImGui::SetNextWindowPos(ImVec2(app->window->width / 2 - sizeX / 2, app->window->height / 2 - sizeY / 2));
 
 	if (!ImGui::Begin("Closing this toaster in :", open)) {
 		ImGui::End();
@@ -853,7 +880,13 @@ void ModuleEditor::AreYouSureAboutThat(bool* open) {
 			exit = true;
 		}
 		else {
-			cooldown -= 2;
+			cooldown -= 17 * deltaT;
+
+			volume -= 20 * deltaT;
+
+			if (playing == true && paused == false) {
+				app->audio->SetVolume(volume);
+			}
 		}
 
 		char progressText[32];
@@ -863,7 +896,6 @@ void ModuleEditor::AreYouSureAboutThat(bool* open) {
 
 		ImGui::End();
 	}
-
 }
 
 void ModuleEditor::Space() {

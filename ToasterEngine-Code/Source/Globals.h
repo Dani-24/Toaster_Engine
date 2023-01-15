@@ -33,8 +33,8 @@ enum update_status
 };
 
 // Configuration -----------
-#define SCREEN_WIDTH 1280
-#define SCREEN_HEIGHT 720
+#define SCREEN_WIDTH 1024
+#define SCREEN_HEIGHT 768
 #define SCREEN_SIZE 1
 #define WIN_FULLSCREEN false
 #define WIN_RESIZABLE true
@@ -42,7 +42,7 @@ enum update_status
 #define WIN_FULLSCREEN_DESKTOP false
 #define WIN_MAXIMIZED true
 #define VSYNC true
-#define TITLE "Toaster Engine v0.2.0"
+#define TITLE "Toaster Engine v0.3.0"
 
 #define RELEASE( x ) \
     {                        \

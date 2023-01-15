@@ -15,23 +15,28 @@ Application::Application()
 	camera = new ModuleCamera3D(this);
 	editor = new ModuleEditor(this);
 	mesh3d = new ModuleMesh3D(this);
+	anim3d = new ModuleAnimation(this);
 	importer = new ModuleImporter(this);
 	textures = new ModuleTexture(this);
+	audio = new ModuleAudio(this);
 
 	// Main Modules
 	AddModule(window);
 	AddModule(camera);
 	AddModule(input);
 
+	AddModule(audio);
+
 	AddModule(importer);
 	
 	// Scenes
-
 	AddModule(editor);
 
 	AddModule(scene);
 
 	AddModule(mesh3d);
+	AddModule(anim3d);
+
 	AddModule(textures);
 
 	// Renderer last!
