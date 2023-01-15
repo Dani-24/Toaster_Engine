@@ -4,6 +4,8 @@
 
 #include "Primitive.h"
 
+#include "GameObject.h"
+
 struct f3line {
 	float3 line;
 	Color color;
@@ -34,4 +36,8 @@ public:
 	std::vector<f3line> lines;
 
 	uint initSFX, initSFX2, attackSFX;
+
+private:
+
+	GameObject* moai, *cubeBody, *cubeLeftArm, *cubeRightArm, *cubeRightLeg, *cubeLeftLeg;
 };

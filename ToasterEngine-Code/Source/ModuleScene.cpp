@@ -23,7 +23,7 @@ bool ModuleScene::Start()
 
 	CreateSkybox();
 
-	//CreateStreet();
+	CreateStreet();
 
 	CreateAnimatedMoai();
 
@@ -39,7 +39,7 @@ bool ModuleScene::Start()
 
 	app->audio->PlayFx(initSFX2);
 
-	app->audio->PlayMusic("Splatoon 3 Alterna Mission 8.ogg");
+	//app->audio->PlayMusic("Splatoon 3 Alterna Mission 8.ogg");
 
 	return ret;
 }
@@ -131,37 +131,80 @@ void ModuleScene::CreateStreet() {
 }
 
 void ModuleScene::CreateAnimatedMoai() {
+
 	// Animated Moai
-	GameObject* moai = new GameObject("Animated Moai", app->editor->root);
+	moai = new GameObject("Animated Moai", app->editor->root);
 	moai->AddTexture(app->textures->LoadTexture("Assets/Moai_texture.png"));
 	moai->AddMesh(app->mesh3d->LoadFile("Assets/Moai.fbx", moai));
-	//moai->SetScale(vec3(10, 10, 10));
-	moai->SetPos(vec3(0, 2, 0));
+	//moai->SetScale(vec3(2, 2, 2));
+	moai->SetPos(vec3(0, 9.1, 0));
 
-	GameObject* cubeBody = new GameObject("Moai Body", moai);
+	cubeBody = new GameObject("Moai Body", moai);
 	cubeBody->AddMesh(app->mesh3d->LoadFile("Assets/default_Meshes/cube.fbx"));
-	cubeBody->SetPos(vec3(0, -1, 0));
-	//cubeBody->SetScale(vec3(0.1, 0.2, 0.1));
+	cubeBody->AddTexture(app->textures->LoadTexture("Assets/cube.png"));
+	cubeBody->SetPos(vec3(0, -2, 0));
+	cubeBody->SetScale(vec3(1, 2, 1));
 
-	GameObject* cubeLeftArm = new GameObject("Moai Left Arm", cubeBody);
+	cubeLeftArm = new GameObject("Moai Left Arm", cubeBody);
 	cubeLeftArm->AddMesh(app->mesh3d->LoadFile("Assets/default_Meshes/cube.fbx"));
-	cubeLeftArm->SetPos(vec3(2, 0, 0));
-	//cubeLeftArm->SetScale(vec3(1, 0.5, 1));
+	cubeLeftArm->AddTexture(app->textures->LoadTexture("Assets/cube.png"));
+	cubeLeftArm->SetPos(vec3(2, 0, 1));
+	cubeLeftArm->SetScale(vec3(0.5, 0.25, 2));
 
-	GameObject* cubeRightArm = new GameObject("Moai Right Arm", cubeBody);
+	cubeRightArm = new GameObject("Moai Right Arm", cubeBody);
 	cubeRightArm->AddMesh(app->mesh3d->LoadFile("Assets/default_Meshes/cube.fbx"));
-	cubeRightArm->SetPos(vec3(-2, 0, 0));
-	//cubeRightArm->SetScale(vec3(1, 0.5, 1));
+	cubeRightArm->AddTexture(app->textures->LoadTexture("Assets/cube.png"));
+	cubeRightArm->SetPos(vec3(-2, 0, 1));
+	cubeRightArm->SetScale(vec3(0.5, 0.25, 2));
 
-	GameObject* cubeLeftLeg = new GameObject("Moai Left Leg", cubeBody);
+	cubeLeftLeg = new GameObject("Moai Left Leg", cubeBody);
 	cubeLeftLeg->AddMesh(app->mesh3d->LoadFile("Assets/default_Meshes/cube.fbx"));
+	cubeLeftLeg->AddTexture(app->textures->LoadTexture("Assets/cube.png"));
 	cubeLeftLeg->SetPos(vec3(2, -2, 0));
-	//cubeLeftLeg->SetScale(vec3(1, 0.5, 1));
+	cubeLeftLeg->SetScale(vec3(1, 1.5, 1));
 
-	GameObject* cubeRightLeg = new GameObject("Moai Right Leg", cubeBody);
+	cubeRightLeg = new GameObject("Moai Right Leg", cubeBody);
 	cubeRightLeg->AddMesh(app->mesh3d->LoadFile("Assets/default_Meshes/cube.fbx"));
+	cubeRightLeg->AddTexture(app->textures->LoadTexture("Assets/cube.png"));
 	cubeRightLeg->SetPos(vec3(-2, -2, 0));
-	//cubeRightLeg->SetScale(vec3(1, 0.5, 1));
+	cubeRightLeg->SetScale(vec3(1, 1.5, 1));
+
+	moai->animatedTransform = true;
+	moai->rootBone = cubeBody;
 
 	app->editor->SetSelectedGameObject(moai);
+
+	TransAnimationClip* iddle = new TransAnimationClip();
+
+	iddle->name = "Iddle Moai";
+	iddle->loop = true;
+
+	iddle->moaiMov.rotation.y = 1;
+
+	iddle->cubeLeftArmMov.rotation.y = -1;
+	iddle->cubeRightArmMov.rotation.y = 1;
+	iddle->cubeLeftLegMov.rotation.z = -1;
+	iddle->cubeRightLegMov.rotation.z = 1;
+
+	iddle->endFrame = 500;
+
+	TransAnimationClip* walk = new TransAnimationClip();
+
+	walk->name = "Walking Moai";
+
+	walk->cubeLeftArmMov.rotation.x = -1;
+	walk->cubeRightArmMov.rotation.x = -1;
+	walk->cubeLeftLegMov.rotation.x = 1;
+	walk->cubeRightLegMov.rotation.x = 1;
+
+	walk->endFrame = 300;
+
+	TransAnimationClip* kick = new TransAnimationClip();
+
+	kick->name = "Kick Moai";
+
+	kick->cubeLeftArmMov.rotation.x = -1;
+	kick->cubeBodyMov.rotation.y = -1;
+
+	kick->endFrame = 60;
 }

@@ -396,6 +396,71 @@ void GameObject::OnEditor() {
 			GO_animations.clear();
 		}
 	}
+
+	// ANIMATED TRANSFORM COMPONENT
+	if (animatedTransform) {
+		app->editor->Space();
+
+		ImGui::TextWrapped("Component : ANIMATION"); ImGui::NewLine();
+
+		ImGui::Checkbox("Show Bones", &drawBones);
+
+		if (drawBones == true) {
+			DrawBones(rootBone);
+		}
+
+		if (rootBone == nullptr)
+		{
+			ImGui::TextWrapped("Root Bone set'nt");
+		}
+		else {
+			ImGui::Text("Root Bone: ");
+			ImGui::SameLine();
+			ImGui::TextWrapped(rootBone->name.c_str());
+		}
+
+		ImGui::Spacing();
+
+		ImGui::Text("Current Animation: ");
+
+		if (currentTransClip == nullptr) {
+			ImGui::SameLine();
+			ImGui::TextWrapped("None");
+		}
+		else {
+			ImGui::SameLine();
+			ImGui::TextWrapped(currentTransClip->name.c_str());
+			ImGui::Text("Duration: ");
+			ImGui::SameLine();
+			ImGui::TextWrapped("%.2f", currentTransClip->endFrame);
+			ImGui::Spacing();
+			ImGui::Checkbox("Loop", &currentTransClip->loop);
+		}
+
+		ImGui::Spacing();
+
+		ImGui::TextWrapped("Animation List");
+
+		ImGui::Spacing();
+
+		for (int i = 0; i < transClips.size(); i++)
+		{
+			char num = i;
+			string animName = num + " " + transClips[i]->name;
+
+			if (currentTransClip == transClips[i]) {
+				animName += " (Current)";
+			}
+
+			ImGui::TextWrapped(animName.c_str());
+
+			if (ImGui::Button("Play")) {
+				PlayAnim(transClips[i]);
+			}
+
+			ImGui::SameLine();
+		}
+	}
 }
 
 // TRANSFORM
@@ -442,7 +507,6 @@ void GameObject::SetScale(vec3 scale) {
 		UpdateScale();
 	}
 }
-
 void GameObject::SetTransform(vec3 pos, vec3 rot, vec3 scale) {
 	this->GO_trans.position = pos;
 	this->GO_trans.rotation = rot;
@@ -640,7 +704,6 @@ void GameObject::AddMesh(Mesh* m) {
 
 	CreateAABB();
 }
-
 void GameObject::RenderMesh() {
 	if (GO_mesh != nullptr && renderMesh)
 	{
@@ -652,7 +715,6 @@ void GameObject::RenderMesh() {
 		}
 	}
 }
-
 void GameObject::DisplayMesh(bool display) {
 	if (GO_mesh != nullptr) {
 		renderMesh = display;
@@ -669,23 +731,7 @@ void GameObject::AddTexture(Texture* t) {
 	// Manage textures with children
 	if (!childs.empty()) {
 		for (int i = 0; i < childs.size(); i++) {
-
-			bool exists = false;
-
-			for (int o = 0; o < childs[i]->GO_allTextures.size(); o++) {
-				if (childs[i]->GO_allTextures[o]->OpenGLID == t->OpenGLID) {
-					exists = true;
-				}
-			}
-
-			if (!exists) {
-				if (childs[i]->GO_texture == nullptr) {
-					childs[i]->AddTexture(t);
-				}
-				else {
-					childs[i]->GO_allTextures.push_back(t);
-				}
-			}
+			childs[i]->AddTexture(t);
 		}
 	}
 
@@ -699,7 +745,6 @@ void GameObject::AddTexture(Texture* t) {
 	GO_texture = t;
 	GO_allTextures.push_back(GO_texture);
 }
-
 void GameObject::DeleteTextures() {
 	GO_texture = nullptr;
 	GO_allTextures.clear();
@@ -734,7 +779,6 @@ void GameObject::CreateAABB()
 		aabb.Enclose(p);
 	}
 }
-
 void GameObject::DrawAABB() {
 	if (this != app->editor->root) {
 			float3 corners[8];
@@ -838,7 +882,6 @@ void GameObject::StartAnimation() {
 		}
 	}
 }
-
 void GameObject::UpdateAnimation(float dt) {
 
 	// Update Current Animation
@@ -907,7 +950,6 @@ void GameObject::DrawBones(GameObject* p)
 		}
 	}
 }
-
 bool GameObject::FindRootBone()
 {
 	bool ret = true;
@@ -940,13 +982,30 @@ bool GameObject::FindRootBone()
 
 	return ret;
 }
-
 void GameObject::StoreBoneMapping(GameObject* go) {
 	bones[go->name] = go;
 
 	for (int i = 0; i < go->childs.size(); i++)
 	{
 		StoreBoneMapping(go->childs[i]);
+	}
+}
+void GameObject::SetAnimationChannelToBones(Animation* animation, std::map<GameObject*, Channel*>& lookUpTable)
+{
+	if (animation == nullptr)
+		return;
+
+	lookUpTable.clear();
+
+	std::map<std::string, GameObject*>::iterator boneIt = bones.begin();
+	for (boneIt; boneIt != bones.end(); ++boneIt)
+	{
+		std::map<std::string, Channel>::iterator channelIt = animation->channels.find(boneIt->first);
+
+		if (channelIt != animation->channels.end())
+		{
+			lookUpTable[boneIt->second] = &channelIt->second;
+		}
 	}
 }
 
@@ -984,7 +1043,6 @@ void GameObject::UpdateChannelsTransform(const Animation* animationPlaying, cons
 		boneIt->first->SetTransform(vec3(position.x, position.y, position.z), vec3(rotation.x, rotation.y, rotation.z), vec3(scale.x, scale.y, scale.z));
 	}
 }
-
 float3	GameObject::GetChannelPosition(const Channel& ch, float currentKey, float3 defPos) const {
 	if (ch.posKeys.size() > 0)
 	{
@@ -1008,7 +1066,6 @@ float3	GameObject::GetChannelPosition(const Channel& ch, float currentKey, float
 
 	return defPos;
 }
-
 float3	GameObject::GetChannelRotation(const Channel& ch, float currentKey, float3 defRot) const {
 	if (ch.posKeys.size() > 0)
 	{
@@ -1032,7 +1089,6 @@ float3	GameObject::GetChannelRotation(const Channel& ch, float currentKey, float
 
 	return defRot;
 }
-
 float3	GameObject::GetChannelScale(const Channel& ch, float currentKey, float3 defScale) const {
 	if (ch.scaleKeys.size() > 0)
 	{
@@ -1078,11 +1134,9 @@ void GameObject::PlayAnim(Animation* anim, float blendDuration, float Speed){
 	SetAnimationChannelToBones(currentAnimation, bonesCurrentAnim);
 	SetAnimationChannelToBones(prevAnimation, bonesPrevAnim);
 }
-
 void GameObject::PauseAnim() {
 	playing = false;
 }
-
 void GameObject::ResumeAnim() {
 	playing = true;
 }
@@ -1090,7 +1144,6 @@ void GameObject::ResumeAnim() {
 AnimationClip::AnimationClip() : name("Namen't"), startFrame(0), endFrame(0), originalAnimation(nullptr), loop(false) {
 
 }
-
 Animation* GameObject::ClipToAnim(AnimationClip clip)
 {
 	Animation* animation = new Animation(clip.name, clip.endFrame - clip.startFrame, clip.originalAnimation->ticksPerSec);
@@ -1101,21 +1154,30 @@ Animation* GameObject::ClipToAnim(AnimationClip clip)
 	return animation;
 }
 
-void GameObject::SetAnimationChannelToBones(Animation* animation, std::map<GameObject*, Channel*>& lookUpTable)
-{
-	if (animation == nullptr)
-		return;
+// Trans Animation
 
-	lookUpTable.clear();
+void GameObject::PlayAnim(TransAnimationClip* anim, float blendDuration, float Speed) {
 
-	std::map<std::string, GameObject*>::iterator boneIt = bones.begin();
-	for (boneIt; boneIt != bones.end(); ++boneIt)
-	{
-		std::map<std::string, Channel>::iterator channelIt = animation->channels.find(boneIt->first);
+	previousTransClip = currentTransClip;
+	previousTransClip->endFrame = currentTransClip->endFrame;
 
-		if (channelIt != animation->channels.end())
-		{
-			lookUpTable[boneIt->second] = &channelIt->second;
-		}
+	currentTransClip = anim;
+
+	blendTimeDuration = blendDuration;
+	blendTime = 0.0f;
+	time = 0;
+	this->speed = speed;
+
+	playing = true;
+}
+
+void GameObject::UpdateTransAnim() {
+	if (currentTransClip->currentFrame < currentTransClip->midFrame) {
+		// + Anim
 	}
+	else {
+		// - Anim (back)
+	}
+
+
 }

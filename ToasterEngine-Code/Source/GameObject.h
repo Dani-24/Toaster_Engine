@@ -25,6 +25,15 @@ struct AnimationClip
 	Animation* originalAnimation;
 };
 
+struct TransAnimationClip {
+
+	Transform moaiMov, cubeBodyMov, cubeLeftArmMov, cubeRightArmMov, cubeRightLegMov, cubeLeftLegMov;
+
+	string name;
+	float startFrame = 0, endFrame, midFrame, currentFrame = 0;
+	bool loop;
+};
+
 class GameObject
 {
 public:
@@ -95,9 +104,8 @@ public:
 public:
 	mat4x4 GO_matrix;
 
-private:
 	Transform GO_trans;
-
+private:
 	Transform GO_parentTrans, originalParentTrans;
 
 public:
@@ -213,4 +221,15 @@ public:
 	void ResumeAnim();
 
 	void SetAnimationChannelToBones(Animation* animation, std::map<GameObject*, Channel*>& lookUpTable);
+
+	// Transform ANimations
+	public:
+	bool animatedTransform = false;
+
+	std::vector<TransAnimationClip*> transClips;
+	TransAnimationClip* currentTransClip = nullptr, *previousTransClip = nullptr;
+
+	void PlayAnim(TransAnimationClip* anim, float blendDuration = 0.2f, float Speed = 1.0f);
+
+	void UpdateTransAnim();
 };
