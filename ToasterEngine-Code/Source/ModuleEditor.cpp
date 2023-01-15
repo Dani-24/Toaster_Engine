@@ -884,7 +884,9 @@ void ModuleEditor::AreYouSureAboutThat(bool* open) {
 
 			volume -= 20 * deltaT;
 
-			app->audio->SetVolume(volume);
+			if (playing == true && paused == false) {
+				app->audio->SetVolume(volume);
+			}
 		}
 
 		char progressText[32];
@@ -894,7 +896,6 @@ void ModuleEditor::AreYouSureAboutThat(bool* open) {
 
 		ImGui::End();
 	}
-
 }
 
 void ModuleEditor::Space() {
