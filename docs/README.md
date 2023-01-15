@@ -112,6 +112,16 @@ Just select the parent of the Skeleton and the Inpector will show you the Animat
 
 </p>
 
+### Default Animations
+
+By default the engines opens up with an animated moai playing an idle animation.
+
+By pressing "1", the Moai triggers an attack animation.
+
+By pressing "2", the Moai changes its idle animation to in place walk animation until the key is released
+
+Enjoy the background music then.
+
 ## Toaster Starting Guide
 
 1 - Download the lastest release
@@ -140,7 +150,13 @@ Any specific shortcut is shown at the engine UI.
 
 ## FAQ
 
-No
+Q: How Can I create 1000 moais??
+
+A: Just go to GameObjects -> Create 1000 moais & wait:
+
+<img align="center" src="https://user-images.githubusercontent.com/79161140/212564483-ffa530a9-80f8-404e-8730-f8ab26267067.png">
+
+<img align="center" src="https://user-images.githubusercontent.com/79161140/212564399-7dd71a7c-90c5-4ca1-8080-5fb36e4d148f.png">
 
 ### Other 3rd Party Software
 
